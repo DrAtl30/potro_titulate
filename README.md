@@ -1,0 +1,1 @@
+Software para la automatización del proceso para la obtención de grado académico a nivel licenciatura, recurriendo a la digitalización como herramienta para la entrega de documentos a través de una interfaz, a la par, facilite el cotejo y aprobación de la documentación exigida por parte del Departamento de Evaluación Profesional.
