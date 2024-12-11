@@ -233,7 +233,7 @@
           <mxGeometry x="160" width="20" height="20" as="geometry" />
         </mxCell>
         <mxCell id="TnUoFVtTnflH-mQjwPww-34" value="Pagina de &quot;Inicio&quot;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" parent="1" vertex="1">
-          <mxGeometry x="558" y="-20" width="170" height="30" as="geometry" />
+          <mxGeometry x="576" y="-30" width="170" height="30" as="geometry" />
         </mxCell>
         <mxCell id="TnUoFVtTnflH-mQjwPww-35" value="Página de &quot;Perfil Usuario&quot;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" parent="1" vertex="1">
           <mxGeometry x="550" y="3750" width="250" height="30" as="geometry" />
