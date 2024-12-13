@@ -1059,7 +1059,7 @@
           <mxGeometry x="1760" y="-2090" width="170" height="100" as="geometry" />
         </mxCell>
         <mxCell id="zmCjXDzP5PFRtkjjZbqq-74" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
-          <mxGeometry x="2370" y="-2120" width="1020" height="1020" as="geometry" />
+          <mxGeometry x="2280" y="-2120" width="1250" height="1250" as="geometry" />
         </mxCell>
         <mxCell id="zmCjXDzP5PFRtkjjZbqq-78" value="cerrar sesion " style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="3210" y="-2080" width="160" height="50" as="geometry" />
@@ -1082,20 +1082,35 @@
         <mxCell id="vKKCMiz_sTo2Kg1ZSpSs-2" value="opcion de titulacion" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="vKKCMiz_sTo2Kg1ZSpSs-1">
           <mxGeometry y="30" width="360" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="vKKCMiz_sTo2Kg1ZSpSs-8" value="&#xa;Fecha de última actualización&#xa;&#xa;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="vKKCMiz_sTo2Kg1ZSpSs-1">
+        <mxCell id="vKKCMiz_sTo2Kg1ZSpSs-8" value="aqui aparecera su correo " style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="vKKCMiz_sTo2Kg1ZSpSs-1">
           <mxGeometry x="360" y="110" width="360" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="vKKCMiz_sTo2Kg1ZSpSs-6" value="ultima actualizacion" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="vKKCMiz_sTo2Kg1ZSpSs-6" value="correo institucional " style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="2520" y="-1790" width="360" height="40" as="geometry" />
         </mxCell>
         <mxCell id="vKKCMiz_sTo2Kg1ZSpSs-21" value="Mensaje " style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="3010" y="-1510" width="160" height="50" as="geometry" />
+          <mxGeometry x="3100" y="-1510" width="160" height="50" as="geometry" />
         </mxCell>
         <mxCell id="vKKCMiz_sTo2Kg1ZSpSs-23" value="Revision de Requisitos" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="2560" y="-1510" width="160" height="50" as="geometry" />
+          <mxGeometry x="2520" y="-1510" width="160" height="50" as="geometry" />
         </mxCell>
         <mxCell id="vKKCMiz_sTo2Kg1ZSpSs-25" value="Pagina de &quot;informacion de aspirante &quot;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
           <mxGeometry x="2880" y="-2170" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GANc0ZOA-5hODBck_BRo-1" value="No, de cuenta" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2520" y="-1750" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GANc0ZOA-5hODBck_BRo-2" value="&#xa;Fecha de última actualización&#xa;&#xa;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2520" y="-1710" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GANc0ZOA-5hODBck_BRo-4" value="&#xa;Fecha de última actualización&#xa;&#xa;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2880" y="-1710" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GANc0ZOA-5hODBck_BRo-5" value="en la revision mostrara la lista de requisitos, el estado en el que estan, fecha de entrega y comentarios " style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="2740" y="-1530" width="170" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="GANc0ZOA-5hODBck_BRo-8" value="17266253" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2880" y="-1750" width="360" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
