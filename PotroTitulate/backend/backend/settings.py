@@ -77,10 +77,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'nombre_de_la_bd',
+        'USER': 'usuario',
+        'PASSWORD': 'contraseña',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
@@ -129,3 +134,5 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3120',
     # Agrega más dominios según sean necesarios
 ]
+
+
