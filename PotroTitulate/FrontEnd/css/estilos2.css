@@ -1,0 +1,112 @@
+/* Estilos generales */
+body, html {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    height: 100%;
+}
+
+/* Barra de navegación (Header) */
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #5a7561;
+    padding: 5px 20px; /* Barra más delgada */
+    color: white;
+    z-index: 2; /* Asegura que la barra esté sobre otros elementos */
+    width: 100%;
+}
+
+.header-left {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    margin-bottom: 5px;
+}
+
+header img {
+    max-height: 120px; /* Ajusta el tamaño del escudo */
+}
+
+header nav {
+    display: flex;
+    gap: 20px;
+}
+
+header nav a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 8px;
+}
+
+header nav a:hover {
+    text-decoration: underline;
+}
+
+/* Eliminar botones de iniciar sesión y registrarse */
+.header-right {
+    display: none; /* Ocultamos los botones */
+}
+
+/* Estilo de los dropdowns */
+nav .dropdown {
+    position: relative;
+}
+
+nav .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+nav .dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+nav .dropdown-menu a {
+    color: #333;
+    padding: 8px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+nav .dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Pie de página (Footer) */
+
+.footer-text {
+    position: relative;
+    z-index: 2;
+    color: white;
+    padding-left: 20px;
+    text-align: left;
+}
+
+/* Barra verde separada del escudo */
+.barra-verde {
+    width: 100%;
+    height: 30px; /* Barra más delgada */
+    background-color: #5a7561;
+    margin-top: 10px; /* Justo debajo del escudo */
+}
+/* Estilo de la barra de progreso */
+.progress {
+    height: 20px; /* Altura personalizada */
+    margin-top: 20px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.progress-bar {
+    background-color: #0ddd44; /* Color de la barra de progreso */
+}
+
+
+
