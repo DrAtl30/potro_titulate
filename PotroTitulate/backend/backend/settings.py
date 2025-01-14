@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -78,9 +80,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'nombre_de_la_bd',
-        'USER': 'usuario',
-        'PASSWORD': 'contraseña',
+        'NAME': 'PruebaPT',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
         'HOST': 'localhost',
         'PORT': '5432',
     }
