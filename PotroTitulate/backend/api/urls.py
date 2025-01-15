@@ -1,6 +1,9 @@
 from django.urls import path
-from . import views
+from .views import RegistroView, LoginView, redirect_to_index
 
 urlpatterns = [
-    path('saludo/', views.saludo, name='saludo'),
+    path('registro/', RegistroView.as_view(), name='registro'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('', redirect_to_index, name='home'),
+    
 ]
