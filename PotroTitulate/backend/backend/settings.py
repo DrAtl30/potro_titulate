@@ -80,13 +80,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'PruebaPT',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': 'potrotitulate',
+        'USER': 'admin',
+        'PASSWORD': 'adminPotro',
+        'HOST': '127.0.0.1',  # Conexión local mediante el túnel SSH
+        'PORT': '5433',       # Puerto local redirigido
+        'OPTIONS': {
+            'sslmode': 'prefer',  # Usa SSL
+        },
     }
 }
+
 
 
 
