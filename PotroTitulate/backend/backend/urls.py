@@ -16,11 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from api.views import redirect_to_index, RegistroView, registro
+from api.views import  RegistroView, registro, index, inicio_sesion
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),  # Ruta para las APIs
-    path('', redirect_to_index),  # Esto redirige la raíz a la vista 'index'
-    path('registro/', registro, name='registro'),
+    path('', index),  # Esto redirige la raíz a la vista 'index'
+    path('index/', index, name='index'),  # Ruta para "index"
+    path('registro/', registro, name='registro'),  # Ruta para "registrarse"
+    path('iniciosesion/', inicio_sesion, name='inicio_sesion'),  # Ruta para "iniciar sesión"
 ]

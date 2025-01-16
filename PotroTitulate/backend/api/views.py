@@ -9,12 +9,11 @@ from django.shortcuts import render
 def index(request):
     return render(request, 'index(2).html')
 
-
-def redirect_to_index(request):
-    return redirect('/static/index(2).html')  # Redirige al archivo 'index.html'
-
 def registro(request):
     return render(request, 'registro.html')
+
+def inicio_sesion(request):
+    return render(request, 'iniciosesion.html')
 
 class RegistroView(APIView):
     def post(self, request):
