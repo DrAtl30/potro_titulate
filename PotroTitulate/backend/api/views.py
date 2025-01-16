@@ -16,7 +16,7 @@ def inicio_sesion(request):
     return render(request, 'iniciosesion.html')
 
 class RegistroView(APIView):
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = SustentanteRegistroSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

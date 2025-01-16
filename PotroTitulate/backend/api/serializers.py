@@ -9,8 +9,10 @@ class SustentanteRegistroSerializer(serializers.ModelSerializer):
         fields = ['nombre', 'apellido', 'numero_cuenta', 'correo_electronico', 'contrasena', 'opcion_titulacion']
 
     def validate_contrasena(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError("La contraseña debe tener al menos 8 caracteres.")
         return make_password(value)
-    
+
 class SustentanteLoginSerializer(serializers.Serializer):
     correo_electronico = serializers.EmailField()
     contrasena = serializers.CharField(write_only=True)
@@ -24,4 +26,8 @@ class SustentanteLoginSerializer(serializers.Serializer):
         if not check_password(data['contrasena'], sustentante.contrasena):
             raise serializers.ValidationError("Correo electrónico o contraseña incorrectos.")
         
-        return {'id_sustentante': sustentante.id_sustentante, 'nombre': sustentante.nombre}
+        return {
+            'id_sustentante': sustentante.id_sustentante,
+            'nombre': sustentante.nombre,
+            'correo_electronico': sustentante.correo_electronico
+        }

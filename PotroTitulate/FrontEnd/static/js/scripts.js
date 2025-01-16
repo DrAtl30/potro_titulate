@@ -12,9 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //Script para Registro
+const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
 document.getElementById('registro-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevenir el envío normal del formulario
+    event.preventDefault();
 
     const nombre = document.getElementById('nombre').value;
     const numCuenta = document.getElementById('numCuenta').value;
@@ -23,70 +24,72 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
     const contrasena = document.getElementById('contrasena').value;
     const confirmarContrasena = document.getElementById('confirmarContrasena').value;
 
-    // Verificar que las contraseñas coinciden
     if (contrasena !== confirmarContrasena) {
         alert('Las contraseñas no coinciden');
         return;
     }
 
-    // Crear el objeto de datos para enviar
     const data = {
-        nombre: nombre,
+        nombre,
         numero_cuenta: numCuenta,
         correo_electronico: correo,
-        contrasena: contrasena,
+        contrasena,
         opcion_titulacion: licenciatura
     };
-
-    // Enviar la solicitud POST a la API de Django
-    fetch('http://localhost:8000/api/registro/', {
+    fetch('/api/registro/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken // Asegúrate de incluir el token CSRF aquí
         },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.mensaje) {
+    
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
             alert('Registro exitoso');
-            // Redirigir a otra página si es necesario
-        } else {
-            alert('Error: ' + JSON.stringify(data));
-        }
-    })
-    .catch(error => console.error('Error:', error));
+            window.location.href = '/iniciosesion/';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error en el registro: ' + (error.detail || 'Revisa los campos.'));
+        });
 });
+
 
 //Script para Login
 document.getElementById('login-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevenir el envío normal del formulario
+    event.preventDefault();
 
     const correo = document.getElementById('correo').value;
     const contrasena = document.getElementById('contrasena').value;
 
-    const data = {
-        correo_electronico: correo,
-        contrasena: contrasena
-    };
+    const data = { correo_electronico: correo, contrasena };
 
-    // Enviar la solicitud POST a la API de Django
     fetch('http://localhost:8000/api/login/', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.id_sustentante) {
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
             alert('Login exitoso');
-            // Redirigir a otra página si es necesario
-        } else {
-            alert('Error: ' + JSON.stringify(data));
-        }
-    })
-    .catch(error => console.error('Error:', error));
+            window.location.href = '/dashboard/'; // Redirigir a la página principal o dashboard
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error en el inicio de sesión: ' + (error.detail || 'Credenciales incorrectas.'));
+        });
 });
+
 
