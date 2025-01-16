@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //Script para Registro
-const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+//const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
 document.getElementById('registro-form').addEventListener('submit', function(event) {
     event.preventDefault();
@@ -23,6 +23,9 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
     const correo = document.getElementById('correo').value;
     const contrasena = document.getElementById('contrasena').value;
     const confirmarContrasena = document.getElementById('confirmarContrasena').value;
+
+    console.log('Formulario enviado');
+    console.log({ nombre, numCuenta, licenciatura, correo, contrasena, confirmarContrasena });
 
     if (contrasena !== confirmarContrasena) {
         alert('Las contraseñas no coinciden');
@@ -36,15 +39,17 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
         contrasena,
         opcion_titulacion: licenciatura
     };
+
+    console.log('Datos a enviar:', data);
+
     fetch('/api/registro/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken // Asegúrate de incluir el token CSRF aquí
+            'X-CSRFToken': csrfToken
         },
         body: JSON.stringify(data)
     })
-    
         .then(response => {
             if (!response.ok) {
                 return response.json().then(err => { throw err; });
@@ -60,6 +65,7 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
             alert('Error en el registro: ' + (error.detail || 'Revisa los campos.'));
         });
 });
+
 
 
 //Script para Login
