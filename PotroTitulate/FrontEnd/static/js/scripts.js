@@ -11,9 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-//Script para Registro
-const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
+
+//Script para Registro
+const csrfTokenRegistro = document.querySelector('[name=csrfmiddlewaretoken]');
 document.getElementById('registro-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
@@ -46,7 +47,7 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken
+            'X-CSRFToken': csrfTokenRegistro
         },
         body: JSON.stringify(data)
     })

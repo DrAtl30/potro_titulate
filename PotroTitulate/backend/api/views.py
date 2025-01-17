@@ -5,12 +5,14 @@ from .serializers import SustentanteRegistroSerializer
 from .serializers import SustentanteLoginSerializer
 from django.shortcuts import redirect
 from django.shortcuts import render
+from datetime import datetime
 
 def index(request):
     return render(request, 'index(2).html')
 
 def registro(request):
-    return render(request, 'registro.html')
+    timestamp = datetime.now().timestamp() # Genera una marca de tiempo
+    return render(request, 'registro.html', {'timestamp': timestamp})
 
 def inicio_sesion(request):
     return render(request, 'iniciosesion.html')
