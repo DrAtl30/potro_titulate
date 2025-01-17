@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //Script para Registro
-//const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
 document.getElementById('registro-form').addEventListener('submit', function(event) {
     event.preventDefault();
@@ -37,7 +37,7 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
         numero_cuenta: numCuenta,
         correo_electronico: correo,
         contrasena,
-        opcion_titulacion: licenciatura
+        licenciatura: licenciatura
     };
 
     console.log('Datos a enviar:', data);
@@ -46,7 +46,7 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken
+            'X-CSRFToken': tokenRegistro
         },
         body: JSON.stringify(data)
     })
