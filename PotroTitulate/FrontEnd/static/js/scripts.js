@@ -46,7 +46,7 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': tokenRegistro
+            'X-CSRFToken': csrfToken
         },
         body: JSON.stringify(data)
     })
