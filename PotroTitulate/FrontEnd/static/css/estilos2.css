@@ -1,4 +1,3 @@
-/* Estilos generales */
 body, html {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -7,15 +6,14 @@ body, html {
     height: 100%;
 }
 
-/* Barra de navegación (Header) */
 header {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #5a7561;
-    padding: 5px 20px; /* Barra más delgada */
+    padding: 5px 20px;
     color: white;
-    z-index: 2; /* Asegura que la barra esté sobre otros elementos */
+    z-index: 2; 
     width: 100%;
 }
 
@@ -27,7 +25,7 @@ header {
 }
 
 header img {
-    max-height: 120px; /* Ajusta el tamaño del escudo */
+    max-height: 120px; 
 }
 
 header nav {
@@ -41,72 +39,42 @@ header nav a {
     padding: 5px 8px;
 }
 
+
 header nav a:hover {
     text-decoration: underline;
 }
 
-/* Eliminar botones de iniciar sesión y registrarse */
-.header-right {
-    display: none; /* Ocultamos los botones */
-}
-
-/* Estilo de los dropdowns */
-nav .dropdown {
-    position: relative;
-}
-
-nav .dropdown-menu {
-    display: none;
-    position: absolute;
-    background-color: #fff;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-}
-
-nav .dropdown:hover .dropdown-menu {
-    display: block;
-}
-
-nav .dropdown-menu a {
-    color: #333;
-    padding: 8px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-nav .dropdown-menu a:hover {
-    background-color: #f1f1f1;
-}
-
-/* Pie de página (Footer) */
-
-.footer-text {
-    position: relative;
-    z-index: 2;
-    color: white;
-    padding-left: 20px;
-    text-align: left;
-}
-
-/* Barra verde separada del escudo */
 .barra-verde {
     width: 100%;
-    height: 30px; /* Barra más delgada */
+    height: 30px; 
     background-color: #5a7561;
-    margin-top: 10px; /* Justo debajo del escudo */
-}
-/* Estilo de la barra de progreso */
-.progress {
-    height: 20px; /* Altura personalizada */
-    margin-top: 20px;
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
+    margin-top: 10px; 
 }
 
 .progress-bar {
-    background-color: #0ddd44; /* Color de la barra de progreso */
+    background-color: #0ddd44;
 }
+
+.estado {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+.requisito-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.requisito-texto {
+    flex: 1;
+}
+.ms-auto {
+    margin-left: auto;  /* Esto mueve el botón de cerrar sesión hacia la derecha */
+}
+
 
 
 

@@ -93,7 +93,10 @@
         <form id="registro-form" class="registro-form" method="post">
             {% csrf_token %}
             <div class="mb-3">
-                <input type="text" class="form-control" id="nombre" placeholder="Nombre completo">
+                <input type="text" class="form-control" id="nombre" placeholder="Nombre">
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="apellidos" placeholder="Apellidos">
             </div>
             <div class="mb-3">
                 <input type="text" class="form-control" id="numCuenta" placeholder="Num. Cuenta">

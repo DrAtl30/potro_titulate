@@ -15,7 +15,16 @@ def registro(request):
     return render(request, 'registro.html', {'timestamp': timestamp})
 
 def inicio_sesion(request):
-    return render(request, 'iniciosesion.html')
+    timestamp = datetime.now().timestamp() # Genera una marca de tiempo
+    return render(request, 'iniciosesion.html', {'timestamp': timestamp})
+
+def administrador(request):
+    timestamp = datetime.now().timestamp() # Genera una marca de tiempo
+    return render(request, 'administrador.html', {'timestamp': timestamp})
+
+def perfilUsuario(request):
+    timestamp = datetime.now().timestamp() # Genera una marca de tiempo
+    return render(request, 'perfilDeUsuario.html', {'timestamp': timestamp})
 
 class RegistroView(APIView):
     def post(self, request, *args, **kwargs):
