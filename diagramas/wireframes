@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0" version="26.0.7" pages="2">
   <diagram name="USUARIO" id="R-SKQRLzCb2xS6ncJQb2">
-    <mxGraphModel dx="3270" dy="2428" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
+    <mxGraphModel dx="2274" dy="1881" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -991,7 +991,7 @@
           <mxGeometry x="3570" y="1560" width="330" height="30" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-48" value="&lt;div&gt;Que el usuario se genera de forma automática a partir del correo electrónico proporcionado por el sustentante: ejemplo&lt;/div&gt;&lt;div&gt;tllerar001@uaemex.mx sería el usuario tllerar001&lt;br&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
-          <mxGeometry x="2810" y="1490" width="220" height="100" as="geometry" />
+          <mxGeometry x="2810" y="1490" width="230" height="180" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.742;entryY=0.37;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="xgjCUsAdV28F978Jb8Wz-48" target="VhQDF4Rb8uRBOlTfAY3P-4">
           <mxGeometry relative="1" as="geometry" />
