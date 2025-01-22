@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0" version="26.0.7" pages="2">
   <diagram name="USUARIO" id="R-SKQRLzCb2xS6ncJQb2">
-    <mxGraphModel dx="1858" dy="1653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
+    <mxGraphModel dx="3270" dy="2428" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -948,14 +948,53 @@
         <mxCell id="xgjCUsAdV28F978Jb8Wz-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="xgjCUsAdV28F978Jb8Wz-5" target="xgjCUsAdV28F978Jb8Wz-5">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="xgjCUsAdV28F978Jb8Wz-25" value="Se quita el la plantilla del registro la opción de contraseña, ya que es mejo" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
-          <mxGeometry x="3130" y="3060" width="240" height="140" as="geometry" />
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-25" value="&lt;div&gt;Se quita el la plantilla del registro la opción de contraseña, se delega al formulario T002.A&lt;/div&gt;&lt;div&gt;Se agrega el campo &quot;Opción de titulación&quot; para que elija la que desea. Ya el Administrativo VALIDARÁ si es elegible.&lt;br&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="3060" y="2980" width="240" height="140" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-27" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=5;" vertex="1" parent="1">
           <mxGeometry x="3841" y="3341" width="330" height="40" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-28" value="Opción de titulación" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="3841" y="3300" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.023;entryY=0.572;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="xgjCUsAdV28F978Jb8Wz-25" target="xgjCUsAdV28F978Jb8Wz-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-30" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=1;" vertex="1" parent="1">
+          <mxGeometry x="3120" y="1605" width="1240" height="830" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-32" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=3;" vertex="1" parent="1">
+          <mxGeometry x="3527" y="1825" width="410" height="385" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-33" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="3547" y="1860" width="370" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-35" value="&lt;b&gt;Nueva contraseña&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="3570" y="1912" width="195" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-36" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="3567" y="1944" width="330" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-37" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="3567" y="2055" width="330" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-38" value="&lt;b&gt;Confirmar contraseña&lt;br&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="3567" y="2022" width="213" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-40" value="" style="triangle;whiteSpace=wrap;html=1;direction=west;" vertex="1" parent="1">
+          <mxGeometry x="3280" y="1700" width="40" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-46" value="T002.A" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontColor=#FF3333;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="3210" y="1550" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-47" value="Página de &quot;Actualizar Contraseña&quot;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="3570" y="1560" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-48" value="&lt;div&gt;Que el usuario se genera de forma automática a partir del correo electrónico proporcionado por el sustentante: ejemplo&lt;/div&gt;&lt;div&gt;tllerar001@uaemex.mx sería el usuario tllerar001&lt;br&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="2810" y="1490" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="xgjCUsAdV28F978Jb8Wz-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.742;entryY=0.37;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="xgjCUsAdV28F978Jb8Wz-48" target="VhQDF4Rb8uRBOlTfAY3P-4">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
