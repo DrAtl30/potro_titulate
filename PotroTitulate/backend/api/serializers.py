@@ -6,12 +6,17 @@ from .models import Sustentante
 class SustentanteRegistroSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sustentante
-        fields = ['nombre', 'apellido', 'numero_cuenta', 'correo_electronico', 'contrasena']
+        fields = ['nombre', 'apellidos', 'numero_cuenta', 'correo_electronico', 'contrasena']
 
     def validate_contrasena(self, value):
         if len(value) < 8:
             raise serializers.ValidationError("La contraseña debe tener al menos 8 caracteres.")
         return make_password(value)
+
+    def validate_correo_electronico(self, value):
+        if Sustentante.objects.filter(correo_electronico=value).exists():
+            raise serializers.ValidationError("El correo electrónico ya está registrado.")
+        return value
 
 class SustentanteLoginSerializer(serializers.Serializer):
     correo_electronico = serializers.EmailField()

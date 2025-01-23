@@ -14,11 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 //Script para Registro
-const csrfTokenRegistro = document.querySelector('[name=csrfmiddlewaretoken]');
+const csrfTokenRegistro = document.querySelector('[name=csrfmiddlewaretoken]').value;
 document.getElementById('registro-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
     const nombre = document.getElementById('nombre').value;
+    const apellidos = document.getElementById('apellidos').value;
     const numCuenta = document.getElementById('numCuenta').value;
     const licenciatura = document.getElementById('licenciatura').value;
     const correo = document.getElementById('correo').value;
@@ -26,15 +27,22 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
     const confirmarContrasena = document.getElementById('confirmarContrasena').value;
 
     console.log('Formulario enviado');
-    console.log({ nombre, numCuenta, licenciatura, correo, contrasena, confirmarContrasena });
+    console.log({ nombre, apellidos, numCuenta, licenciatura, correo, contrasena, confirmarContrasena });
 
     if (contrasena !== confirmarContrasena) {
         alert('Las contraseñas no coinciden');
         return;
     }
 
+    if (contrasena.length < 8) {
+        alert('La contraseña debe tener al menos 8 caracteres');
+        return;
+    }
+    
+
     const data = {
         nombre,
+        apellidos,
         numero_cuenta: numCuenta,
         correo_electronico: correo,
         contrasena,
@@ -70,6 +78,7 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
 
 
 //Script para Login
+const csrfTokenLogin = document.querySelector('[name=csrfmiddlewaretoken]').value;
 document.getElementById('login-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
@@ -78,9 +87,11 @@ document.getElementById('login-form').addEventListener('submit', function(event)
 
     const data = { correo_electronico: correo, contrasena };
 
-    fetch('http://localhost:8000/api/login/', {
+    fetch('/api/login/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 
+            'X-CSRFToken': csrfTokenLogin
+        },
         body: JSON.stringify(data)
     })
         .then(response => {
@@ -91,7 +102,7 @@ document.getElementById('login-form').addEventListener('submit', function(event)
         })
         .then(data => {
             alert('Login exitoso');
-            window.location.href = '/dashboard/'; // Redirigir a la página principal o dashboard
+            window.location.href = '/index(2)/'; // Redirigir a la página principal o dashboard
         })
         .catch(error => {
             console.error('Error:', error);
