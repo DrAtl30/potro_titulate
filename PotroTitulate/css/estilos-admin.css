@@ -1,0 +1,165 @@
+/* Estilos generales */
+body, html {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    height: 100%;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #5a7561;
+    padding: 10px 20px;
+    color: white;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+}
+
+.header-right {
+    display: flex;
+    gap: 15px; 
+}
+
+header img {
+    max-height: 90px;
+}
+
+header nav {
+    display: flex;
+    gap: 20px; 
+}
+
+header nav a, .header-right a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 8px;
+}
+
+header nav a:hover, .header-right a:hover {
+    text-decoration: underline;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    position: relative;
+    background-color: #6e7b68;
+    padding: 0;
+    text-align: center;
+    margin-top: auto;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+footer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(1px);
+}
+
+.footer-text {
+    position: absolute;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+footer {
+    position: relative;
+    background-color: #6e7b68;
+    padding: 0;
+    text-align: left;
+    margin-top: auto;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+footer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+}
+
+.footer-text {
+    position: relative;
+    z-index: 2;
+    color: white;
+    padding-left: 20px;
+    text-align: left;
+}
+
+.btn-plain {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    text-transform: uppercase;
+    padding: 8px 12px;
+}
+
+.btn-plain:hover {
+    background-color: rgba(255, 255, 255, 0.2); 
+    text-decoration: underline;
+}
+
+.selected {
+    background-color: #e0e0e0;
+    font-weight: bold;
+}
+
+.list-group-item {
+    cursor: pointer;
+}
+
+.list-group-item:hover {
+    background-color: #f0f0f0;
+}
+.semaforo-container {
+    display: flex;
+    gap: 10px;
+}
+
+.semaforo {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.semaforo.espera {
+    background-color: yellow;
+}
+
+.semaforo.revision {
+    background-color: orange;
+}
+
+.semaforo.aprobado {
+    background-color: green;
+}
