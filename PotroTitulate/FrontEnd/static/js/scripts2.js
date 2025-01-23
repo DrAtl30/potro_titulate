@@ -9,7 +9,44 @@ function showRequirements(option) {
     const requisitos = {
         'Opción 1': ['Requisito A', 'Requisito B', 'Requisito C'],
         'Opción 2': ['Requisito D', 'Requisito E'],
-        'Opción 3': ['Requisito F', 'Requisito G', 'Requisito H']
+        'Creditos en estudios avanzados': [
+            { nombre: 'Formato 8.1 con sus firmas', descripcion: '' },
+            { nombre: 'Certificado de 100% de plan de estudios', descripcion: '' },
+            { nombre: 'Certificado de Servicio Social', descripcion: '' },
+            { nombre: 'Certificado de Prácticas Profesionales', descripcion: '' },
+            { nombre: 'Acta de nacimiento', descripcion: '' },
+            { nombre: 'Certificado de Bachillerato', descripcion: '' },
+            { nombre: 'Constancia de no adeudo a biblioteca', descripcion: '' },
+            { nombre: 'Constancia de no adeudo a Dirección de Control Escolar', descripcion: '' },
+            { nombre: 'Constancia de no adeudo a la UAEM-Contraloría', descripcion: '' },
+            { nombre: 'Comprobante de Expedición de Titulo', descripcion: '' },
+            { nombre: 'Comprobante-Baucher pago a derecho a Evaluación Profesional', descripcion: '' },
+            { nombre: 'Aviso Firmado de Privacidad de la UAEM', descripcion: '' },
+            { nombre: 'Formato de Llenado de Datos Personales', descripcion: '' },
+            { nombre: 'Formato 8.9', descripcion: '' },
+            { nombre: '*Oficio de solicitud', descripcion: '' },
+            { nombre: 'Certificado de Diplomado Superior', descripcion: '' }
+        ],
+        'Examen General para el egreso de la Licenciatura EGEL':[
+            { nombre: 'Formato 8.1 con sus firmas', descripcion: '' },
+            { nombre: 'Certificado de 100% de plan de estudios', descripcion: '' },
+            { nombre: 'Certificado de Servicio Social', descripcion: '' },
+            { nombre: 'Certificado de Prácticas Profesionales', descripcion: '' },
+            { nombre: 'Acta de nacimiento', descripcion: '' },
+            { nombre: 'aviso firmado de privacidad de la UAEM', descripcion: '' },
+            { nombre: 'oficio de solicitud', descripcion: '' },
+            { nombre: 'Certificado de bachilletaro', descripcion: '' },
+            { nombre: 'Constancia de no adeudo a biblioteca', descripcion: '' },
+            { nombre: 'Constancia de no adeudo a Dirección de Control Escolar', descripcion: '' },
+            { nombre: 'Constancia de no adeudo a la UAEM-Contraloría', descripcion: '' },
+            { nombre: 'Comprobante de Expedición de Titulo', descripcion: '' },
+            { nombre: 'Comprobante-Baucher pago a derecho a Evaluación Profesional', descripcion: '' },
+            { nombre: 'Formato de Llenado de Datos Personales', descripcion: '' },
+            { nombre: 'formato 8.9', descripcion: '' },
+            { nombre: 'Testimonio que les manda SENEVAL a su correo', descripcion: '' }
+        ]
+
+
     };
 
     const ul = document.createElement('ul');
