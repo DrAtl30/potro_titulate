@@ -19,7 +19,7 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
     event.preventDefault();
 
     const nombre = document.getElementById('nombre').value;
-    const apellidos = document.getElementById('apellidos').value;
+    const apellido = document.getElementById('apellidos').value;
     const numCuenta = document.getElementById('numCuenta').value;
     const licenciatura = document.getElementById('licenciatura').value;
     const correo = document.getElementById('correo').value;
@@ -27,7 +27,7 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
     const confirmarContrasena = document.getElementById('confirmarContrasena').value;
 
     console.log('Formulario enviado');
-    console.log({ nombre, apellidos, numCuenta, licenciatura, correo, contrasena, confirmarContrasena });
+    console.log({ nombre, apellido, numCuenta, licenciatura, correo, contrasena, confirmarContrasena });
 
     if (contrasena !== confirmarContrasena) {
         alert('Las contraseñas no coinciden');
@@ -42,7 +42,7 @@ document.getElementById('registro-form').addEventListener('submit', function(eve
 
     const data = {
         nombre,
-        apellidos,
+        apellido,
         numero_cuenta: numCuenta,
         correo_electronico: correo,
         contrasena,
