@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0" version="26.0.7" pages="2">
   <diagram name="USUARIO" id="R-SKQRLzCb2xS6ncJQb2">
-    <mxGraphModel dx="2867" dy="2207" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
+    <mxGraphModel dx="2274" dy="1881" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -907,7 +907,7 @@
           <mxGeometry x="3805" y="2931" width="410" height="559" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-5" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=5;" parent="1" vertex="1">
-          <mxGeometry x="3825" y="2966" width="370" height="454" as="geometry" />
+          <mxGeometry x="3825" y="2966" width="370" height="434" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-6" value="Registrarse" style="rounded=1;whiteSpace=wrap;html=1;arcSize=5;fontStyle=1;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="3931" y="3431" width="170" height="40" as="geometry" />
@@ -928,22 +928,22 @@
           <mxGeometry x="3950" y="2721" width="140" height="140" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-12" value="Núm. Cuenta" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;" parent="1" vertex="1">
-          <mxGeometry x="3837" y="3062" width="138" height="30" as="geometry" />
+          <mxGeometry x="3846" y="3122.5" width="138" height="30" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-13" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=5;" parent="1" vertex="1">
-          <mxGeometry x="3841" y="3091" width="330" height="40" as="geometry" />
+          <mxGeometry x="3832" y="3163" width="330" height="40" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-14" value="&lt;span&gt;Licenciatura&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;" parent="1" vertex="1">
-          <mxGeometry x="3871" y="3141" width="60" height="30" as="geometry" />
+          <mxGeometry x="3871" y="3216" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-15" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=5;" parent="1" vertex="1">
-          <mxGeometry x="3841" y="3169" width="330" height="28" as="geometry" />
+          <mxGeometry x="3837" y="3262" width="330" height="28" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-16" value="Correo electrónico institucional" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;" parent="1" vertex="1">
-          <mxGeometry x="3830" y="3215" width="320" height="30" as="geometry" />
+          <mxGeometry x="3841" y="3290" width="320" height="30" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-17" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=5;" parent="1" vertex="1">
-          <mxGeometry x="3837" y="3243" width="330" height="40" as="geometry" />
+          <mxGeometry x="3845" y="3341" width="330" height="40" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="xgjCUsAdV28F978Jb8Wz-5" target="xgjCUsAdV28F978Jb8Wz-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -989,6 +989,12 @@
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.742;entryY=0.37;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="xgjCUsAdV28F978Jb8Wz-48" target="VhQDF4Rb8uRBOlTfAY3P-4" edge="1">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rTE6pA32o9m5rssSw8GQ-1" value="&lt;b&gt;Nombre completo&lt;br&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="3841" y="3046" width="192" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rTE6pA32o9m5rssSw8GQ-2" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="3846" y="3076" width="330" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
