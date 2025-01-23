@@ -985,7 +985,7 @@
           <mxGeometry x="3570" y="1560" width="330" height="30" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-48" value="&lt;div&gt;Que el usuario se genera de forma automática a partir del correo electrónico proporcionado por el sustentante: ejemplo&lt;/div&gt;&lt;div&gt;tllerar001@uaemex.mx sería el usuario tllerar001&lt;br&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" parent="1" vertex="1">
-          <mxGeometry x="2490" y="1425" width="230" height="180" as="geometry" />
+          <mxGeometry x="2480" y="1445" width="230" height="135" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.742;entryY=0.37;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="xgjCUsAdV28F978Jb8Wz-48" target="VhQDF4Rb8uRBOlTfAY3P-4" edge="1">
           <mxGeometry relative="1" as="geometry" />
