@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0" version="26.0.7" pages="2">
   <diagram name="USUARIO" id="R-SKQRLzCb2xS6ncJQb2">
-    <mxGraphModel dx="2524" dy="1841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
+    <mxGraphModel dx="2867" dy="2207" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -950,12 +950,6 @@
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-25" value="&lt;div&gt;Se quita el la plantilla del registro la opción de contraseña, se delega al formulario T002.A&lt;/div&gt;&lt;div&gt;Se agrega el campo &quot;Opción de titulación&quot; para que elija la que desea. Ya el Administrativo VALIDARÁ si es elegible.&lt;br&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" parent="1" vertex="1">
           <mxGeometry x="3060" y="2980" width="240" height="220" as="geometry" />
-        </mxCell>
-        <mxCell id="xgjCUsAdV28F978Jb8Wz-27" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=5;" parent="1" vertex="1">
-          <mxGeometry x="3841" y="3341" width="330" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="xgjCUsAdV28F978Jb8Wz-28" value="Opción de titulación" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;" parent="1" vertex="1">
-          <mxGeometry x="3841" y="3300" width="320" height="30" as="geometry" />
         </mxCell>
         <mxCell id="xgjCUsAdV28F978Jb8Wz-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.023;entryY=0.572;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="xgjCUsAdV28F978Jb8Wz-25" target="xgjCUsAdV28F978Jb8Wz-4" edge="1">
           <mxGeometry relative="1" as="geometry" />
