@@ -7,8 +7,36 @@ function showRequirements(option) {
     requisitosContainer.innerHTML = '';
 
     const requisitos = {
-        'Opción 1': ['Requisito A', 'Requisito B', 'Requisito C'],
-        'Opción 2': ['Requisito D', 'Requisito E'],
+        'Trabajo escrito': [
+        'Formato 8.1 con sus firmas',
+        'Aviso Firmado de Privacidad de la UAEM',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Formato 8.3',
+        'Formato 8.5',
+        'Nuevo: Reporte de porcentaje de similitud',
+        'Formato 8.11',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante/Baucher de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9',
+        'Evaluación Profesional: Formato 8.2',
+        'Evaluación Profesional: Formato 8.4',
+        'Evaluación Profesional: Formato 8.6',
+        'Evaluación Profesional: Formato 8.8'      
+        ],
+
+        'Opción 2': [
+            'Requisito D',
+            'Requisito E'
+        ],
+        
         'Creditos en estudios avanzados': [
             'Formato 8.1 con sus firmas',
             'Certificado de 100% de plan de estudios',
