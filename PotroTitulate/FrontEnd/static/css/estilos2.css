@@ -4,6 +4,8 @@ body, html {
     padding: 0;
     background-color: #f4f4f4;
     height: 100%;
+    display: flex;
+    flex-direction: column; 
 }
 
 header {
@@ -39,7 +41,6 @@ header nav a {
     padding: 5px 8px;
 }
 
-
 header nav a:hover {
     text-decoration: underline;
 }
@@ -71,10 +72,28 @@ header nav a:hover {
 .requisito-texto {
     flex: 1;
 }
+
 .ms-auto {
-    margin-left: auto;  /* Esto mueve el botón de cerrar sesión hacia la derecha */
+    margin-left: auto; 
 }
 
+.banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: #5a7561;
+    z-index: 10; 
+}
 
+.banner img {
+    width: 100%; 
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
 
-
+main {
+    flex: 1;
+}
