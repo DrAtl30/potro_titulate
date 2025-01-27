@@ -102,7 +102,13 @@
                 <input type="text" class="form-control" id="numCuenta" placeholder="Num. Cuenta">
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="licenciatura" placeholder="Licenciatura">
+                <select class="form-control" id="licenciatura" name="licenciatura" required>
+                    <option value="" disabled selected>Seleccione una licenciatura</option>
+                    <option value="ingenieria_sistemas">Administración</option>
+                    <option value="derecho">Contaduria</option>
+                    <option value="medicina">Mercadotecnia</option>
+                    <option value="contaduria">Informatica Administrativa</option>
+                </select>
             </div>
             <div class="mb-3">
                 <input type="email" class="form-control" id="correo" placeholder="Correo Institucional">
