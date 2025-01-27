@@ -102,16 +102,16 @@
         <form id="login-form" class="login-form" method="post">
             {% csrf_token %}
             <div class="mb-3">
-                <input type="text" class="form-control" id="usuario" placeholder="Usuario">
+                <input type="email" class="form-control" id="correo" name="correo_electronico" placeholder="Correo Electrónico">
             </div>
             <div class="mb-3">
-                <input type="password" class="form-control" id="contraseña" placeholder="Contraseña">
+                <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña">
             </div>
             <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
             <div class="forgot-password">
                 <a href="#">¿Olvidaste tu contraseña?</a>
             </div>
-        </form>
+        </form>        
     </div>
     <footer>
         <div class="footer-overlay">

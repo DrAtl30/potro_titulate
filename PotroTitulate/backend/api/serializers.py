@@ -6,7 +6,7 @@ from .models import Sustentante
 class SustentanteRegistroSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sustentante
-        fields = ['nombre', 'apellido', 'numero_cuenta', 'correo_electronico', 'contrasena']
+        fields = ['nombre', 'apellido', 'numero_cuenta', 'correo_electronico', 'contrasena', 'licenciatura']
 
     def validate_contrasena(self, value):
         if len(value) < 8:
