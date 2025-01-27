@@ -71,6 +71,13 @@ class SistemaSeguridad(models.Model):
 
 
 class Sustentante(models.Model):
+    LICENCIATURA_OPCIONES = [
+        ('Administracion', 'Administración'),
+        ('Contaduria', 'Contaduría'),
+        ('Mercadotecnia', 'Mercadotecnia'),
+        ('Informatica_Administrativa', 'Informática Administrativa'),
+    ]
+
     id_sustentante = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
@@ -78,10 +85,12 @@ class Sustentante(models.Model):
     correo_electronico = models.CharField(unique=True, max_length=100)
     contrasena = models.CharField(max_length=100)
     id_opcion = models.ForeignKey(OpcionTitulacion, models.DO_NOTHING, db_column='id_opcion', blank=True, null=True)
+    licenciatura = models.CharField(max_length=100, choices=LICENCIATURA_OPCIONES, default='Administracion')
 
     class Meta:
         managed = False
         db_table = 'sustentante'
+
 
 
 class Tramites(models.Model):
