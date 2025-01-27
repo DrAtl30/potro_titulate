@@ -84,8 +84,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'potrotitulate',
-        'USER': 'admin',
-        'PASSWORD': 'adminPotro',
+        'USER': 'potroadmin',
+        'PASSWORD': 'admin',
         'HOST': '127.0.0.1',  # Conexión local mediante el túnel SSH
         'PORT': '5433',       # Puerto local redirigido
         'OPTIONS': {
