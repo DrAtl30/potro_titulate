@@ -155,3 +155,11 @@ CORS_ALLOWED_ORIGINS = [
 # Permitir todas las solicitudes de origen cruzado (CORS)
 CORS_ALLOW_ALL_ORIGINS = True
 
+# Configuración para el envío de correos electrónicos
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Cambia según el proveedor de correo
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'potrotitulate@gmail.com'  # dirección de correo
+EMAIL_HOST_PASSWORD = 'PotroTitulate2025!'  # Contraseña o App Password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

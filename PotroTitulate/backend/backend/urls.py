@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from api.views import index, registro, inicio_sesion, RegistroView, LoginView, administrador, perfilUsuario
+from api.views import *;
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +27,11 @@ urlpatterns = [
     path('iniciosesion/', inicio_sesion, name='inicio_sesion'),  # Ruta para "iniciar sesión"
     path('administrador/', administrador, name='administrador'),  # Ruta para "administrador"
     path('perfilUsuario/', perfilUsuario, name='perfilUsuario'),  # Ruta para "perfil de
+    path('recuperarContrasena/', recuperarContrasena, name='recuperarContrasena'),  # Ruta para "recuperar contraseña"
+    path('inicioSesionAdmin/', loginAdmin, name='inicioSesionAdmin'),  # Ruta para "loginAdmin"
+
+    path('recuperarContrasena/recuperarContra', recuperar_contrasena, name='procesar_recuperacion'),
+
 
     # Ruta para la API de registro
     path('api/registro/', RegistroView.as_view(), name='api_registro'),  # API para registro
