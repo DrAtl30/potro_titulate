@@ -110,3 +110,54 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Seleccionar el formulario de recuperación
+    const csrfTokenRecuperar = document.querySelector('[name=csrfmiddlewaretoken]');
+    const recuperarForm = document.querySelector('.recuperar-form');
+
+    if (recuperarForm) {
+        recuperarForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita el comportamiento predeterminado del formulario
+            console.log('Formulario de recuperación enviado');
+
+            // Obtener el correo ingresado
+            const correo = document.getElementById('correoInstitucional').value;
+
+            // Validar que el correo tenga un formato válido
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(correo)) {
+                alert('Por favor, ingresa un correo electrónico válido.');
+                return;
+            }
+
+            // Datos a enviar al servidor
+            const data = { correo_electronico: correo };
+
+            // Realizar la solicitud POST
+            fetch('/api/recuperarContra/', { // Cambia esta URL según tu backend
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfTokenRecuperar ? csrfTokenRecuperar.value : ''
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Si el correo ingresado está registrado, recibirás un mensaje con instrucciones para restablecer tu contraseña.');
+                console.log('Respuesta del servidor:', data);
+                recuperarForm.reset(); // Opcional: limpia el formulario tras enviarlo
+            })
+            .catch(error => {
+                console.error('Error en la recuperación de contraseña:', error);
+                alert('Hubo un problema al procesar tu solicitud. Inténtalo de nuevo más tarde.');
+            });
+        });
+    }
+});

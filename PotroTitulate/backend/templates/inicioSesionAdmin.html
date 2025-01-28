@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
+    <title>Inicio de Sesión - Administrador</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
     <style>
@@ -99,31 +99,24 @@
         <div class="login-header">
             <img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}" alt="Escudo UAEM">
         </div>
-        <form id="login-form" class="login-form" method="post">
+        <form id="admin-login-form" class="login-form" method="post" action="{% url 'inicioSesionAdmin' %}">
             {% csrf_token %}
             <div class="mb-3">
-                <input type="email" class="form-control" id="correo" name="correo_electronico" placeholder="Correo Electrónico">
+                <input type="email" class="form-control" id="correo" name="correo_electronico" placeholder="Correo Electrónico" required>
             </div>
             <div class="mb-3">
-                <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña">
+                <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña" required>
             </div>
             <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-            <div class="forgot-password">
-                <a href="{% url 'recuperarContrasena' %}">¿Olvidaste tu contraseña?</a>
-            </div>
         </form>        
     </div>
     <footer>
         <div class="footer-overlay">
             <div class="footer-text">
-                <p>Texto </p>
+                <p>Administración UAEM</p>
             </div>
         </div>
-        <img src="{% static 'img/pleca con hexágonos LARGA.jpg' %}" alt="Imagen del pie de página">
+        <img src="{% static 'img/footer-image.jpeg' %}">
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Enlace a Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'js/scripts.js' %} ?v={{ timestamp }}"></script>
 </body>
 </html>

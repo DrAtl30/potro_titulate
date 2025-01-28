@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 from .models import Sustentante
+import re
 
 class SustentanteRegistroSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,8 +15,24 @@ class SustentanteRegistroSerializer(serializers.ModelSerializer):
         return make_password(value)
 
     def validate_correo_electronico(self, value):
+        # Validar el formato del correo electrónico
+        #if not re.match(r'[a-zA-Z0-9_.+-]+@alumno+\.uaemex+\.mx$', value):
+         #   raise serializers.ValidationError("El correo electrónico debe ser un correo institucional válido (ejemplo: usuario@alumno.uaemex.mx).")
+
         if Sustentante.objects.filter(correo_electronico=value).exists():
             raise serializers.ValidationError("El correo electrónico ya está registrado.")
+        
+        return value
+
+    def validate_numero_cuenta(self, value):
+        # Validar la longitud del número de cuenta
+        if len(value) != 7:
+            raise serializers.ValidationError("El número de cuenta debe tener 7 dígitos.")
+        
+        # Validar si el número de cuenta ya existe
+        if Sustentante.objects.filter(numero_cuenta=value).exists():
+            raise serializers.ValidationError("El número de cuenta ya está registrado.")
+        
         return value
 
 class SustentanteLoginSerializer(serializers.Serializer):
