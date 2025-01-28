@@ -32,7 +32,7 @@ function showRequirements(option) {
             'Evaluación Profesional: Formato 8.8'      
         ],
 
-        'Aprovechamiento académico': [
+        'Aprovechamiento academico': [
             'Formato 8.1 con sus firmas',
             'Certificado de 100% de plan de estudios',
             'Certificado de Servicio Social',
