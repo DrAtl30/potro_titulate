@@ -161,5 +161,5 @@ EMAIL_HOST = 'smtp.gmail.com'  # Cambia según el proveedor de correo
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'potrotitulate@gmail.com'  # dirección de correo
-EMAIL_HOST_PASSWORD = 'PotroTitulate2025!'  # Contraseña o App Password
+EMAIL_HOST_PASSWORD = 'rissfdweuasuaxkb'  # Contraseña o App Password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
