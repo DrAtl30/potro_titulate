@@ -73,91 +73,47 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Script para Login
-    const csrfTokenLogin = document.querySelector('[name=csrfmiddlewaretoken]');
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            console.log('Formulario de login enviado');
+        const csrfTokenLogin = document.querySelector('[name=csrfmiddlewaretoken]');
+        const loginForm = document.getElementById('login-form');
+    
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                console.log('Formulario de login enviado');
+    
+                const correo = document.getElementById('correo').value;
+                const contrasena = document.getElementById('contrasena').value;
+    
+                const data = { correo_electronico: correo, contrasena: contrasena };
+    
+                fetch('/api/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfTokenLogin ? csrfTokenLogin.value : ''
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err; });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Respuesta del servidor:', data);
 
-            const correo = document.getElementById('correo').value;
-            const contrasena = document.getElementById('contrasena').value;
-
-            const data = { correo_electronico: correo, contrasena: contrasena };
-
-            fetch('/api/login/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfTokenLogin ? csrfTokenLogin.value : ''
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => { throw err; });
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert('Login exitoso');
-                window.location.href = '/perfilUsuario/'; // Redirigir a la página principal o dashboard
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error en el inicio de sesión: ' + (error.detail || 'Credenciales incorrectas.'));
+                    if (data.redirigir_a_cambiar_contrasena && data.id_sustentante) {
+                        window.location.href = `/cambiarContrasena/${data.id_sustentante}/`;
+                    } else {
+                        alert('Login exitoso');
+                        window.location.href = '/perfilUsuario/'; // Redirigir a la página principal o dashboard
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error en el inicio de sesión: ' + (error.detail || 'Credenciales incorrectas.'));
+                });
             });
-        });
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Seleccionar el formulario de recuperación
-    const csrfTokenRecuperar = document.querySelector('[name=csrfmiddlewaretoken]');
-    const recuperarForm = document.querySelector('.recuperar-form');
-
-    if (recuperarForm) {
-        recuperarForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Evita el comportamiento predeterminado del formulario
-            console.log('Formulario de recuperación enviado');
-
-            // Obtener el correo ingresado
-            const correo = document.getElementById('correoInstitucional').value;
-
-            // Validar que el correo tenga un formato válido
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(correo)) {
-                alert('Por favor, ingresa un correo electrónico válido.');
-                return;
-            }
-
-            // Datos a enviar al servidor
-            const data = { correo_electronico: correo };
-
-            // Realizar la solicitud POST
-            fetch('/api/recuperarContra/', { // Cambia esta URL según tu backend
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfTokenRecuperar ? csrfTokenRecuperar.value : ''
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => { throw err; });
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert('Si el correo ingresado está registrado, recibirás un mensaje con instrucciones para restablecer tu contraseña.');
-                console.log('Respuesta del servidor:', data);
-                recuperarForm.reset(); // Opcional: limpia el formulario tras enviarlo
-            })
-            .catch(error => {
-                console.error('Error en la recuperación de contraseña:', error);
-                alert('Hubo un problema al procesar tu solicitud. Inténtalo de nuevo más tarde.');
-            });
-        });
-    }
-});
+        }
+    });

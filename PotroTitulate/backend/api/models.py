@@ -84,6 +84,7 @@ class Sustentante(models.Model):
     numero_cuenta = models.CharField(unique=True, max_length=15)
     correo_electronico = models.CharField(unique=True, max_length=100)
     contrasena = models.CharField(max_length=100)
+    contrasena_temporal = models.BooleanField(default=False)
     id_opcion = models.ForeignKey(OpcionTitulacion, models.DO_NOTHING, db_column='id_opcion', blank=True, null=True)
     licenciatura = models.CharField(max_length=100, choices=LICENCIATURA_OPCIONES, default='Administracion')
 
