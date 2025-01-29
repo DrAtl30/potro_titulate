@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import SustentanteRegistroSerializer
+from .serializers import AdministradorLoginSerializer, SustentanteRegistroSerializer
 from .serializers import SustentanteLoginSerializer
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -54,6 +54,13 @@ class RegistroView(APIView):
 class LoginView(APIView):
     def post(self, request):
         serializer = SustentanteLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class AdministradorLoginView(APIView):
+    def post(self, request):
+        serializer = AdministradorLoginSerializer(data=request.data)
         if serializer.is_valid():
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -123,3 +130,4 @@ def cambiar_contrasena(request):
             })
 
     return render(request, 'cambiar_contrasena.html')
+
