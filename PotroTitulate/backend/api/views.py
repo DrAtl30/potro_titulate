@@ -73,6 +73,7 @@ class LoginView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class AdministradorLoginView(APIView):
+    
     def post(self, request):
         serializer = AdministradorLoginSerializer(data=request.data)
         if serializer.is_valid():
@@ -133,13 +134,8 @@ class CambiarContrasenaView(APIView):
             return Response({'error': 'Sustentante no encontrado'}, status=status.HTTP_404_NOT_FOUND)
         
         sustentante.contrasena = make_password(nueva_contrasena)
-        sustentante.contrasena_temporal = False #Marcar contrase cono no temporal
-
+        sustentante.contrasena_temporal = False  # Marcar contraseña como no temporal
         sustentante.save()
 
-<<<<<<< HEAD
-    return render(request, 'cambiar_contrasena.html')
-
-=======
+        # Aquí retornamos la respuesta correctamente
         return Response({'mensaje': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
->>>>>>> 5c9b5ab03f121e3d29cd38e46f04580c6e50eaff
