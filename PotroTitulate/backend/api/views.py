@@ -38,6 +38,10 @@ def recuperarContrasena(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'recuperarContrasena.html', {'timestamp': timestamp})
 
+def cambiarContrasena(request):
+    timestamp = datetime.now().timestamp() # Genera una marca de tiempo
+    return render(request, 'cambiar_contrasena.html', {'timestamp': timestamp})
+
 def loginAdmin(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'inicioSesionAdmin.html', {'timestamp': timestamp})
@@ -55,7 +59,17 @@ class LoginView(APIView):
     def post(self, request):
         serializer = SustentanteLoginSerializer(data=request.data)
         if serializer.is_valid():
-            return Response(serializer.validated_data, status=status.HTTP_200_OK)
+            data = serializer.validated_data
+            print('Datos validos:', data)
+
+            if data['contrasena_temporal']:
+                return Response({
+                    'mensaje': 'Debes cambiar tu contraseña temporal.',
+                    'redirigir_a_cambiar_contrasena': True,
+                    'id_sustentante': data['id_sustentante']
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response(data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class AdministradorLoginView(APIView):
@@ -65,69 +79,67 @@ class AdministradorLoginView(APIView):
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def recuperar_contrasena(request):
-    if request.method == 'POST':
-        correo = request.POST.get('correoInstitucional')
+class RecuperarContraseñaView(APIView):
+    def post(self, request):
+        correo = request.data.get('correo_electronico')
 
-        # Verificar que el correo no esté vacío
         if not correo:
-            return render(request, 'recuperarContrasena.html', {
-                'error': 'Por favor, proporciona un correo electrónico válido.',
-            })
+            return Response({'error': 'Por favor, proporciona un correo electrónico válido'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            sustentante = Sustentante.objects.get(correo_electronico=correo)
+        except Sustentante.DoesNotExist:
+            return Response({'error': 'No se encontró un sustentante con el correo electrónico proporcionado'}, status=status.HTTP_404_NOT_FOUND)
+        
+        token = get_random_string(32)
+        sustentante.contrasena = make_password(token)
+        sustentante.contrasena_temporal = True #Marcar la contrasena como temporal
 
-        # Buscar al sustentante por correo electrónico
-        sustentante = Sustentante.objects.filter(correo_electronico__iexact=correo).first()
-        if not sustentante:
-            return render(request, 'recuperarContrasena.html', {
-                'error': 'No existe una cuenta asociada a ese correo.',
-            })
-
-        # Generar una contraseña temporal y encriptarla
-        token = get_random_string(32)  # Contraseña temporal en texto plano
-        contraseña_encriptada = make_password(token)
-        sustentante.contrasena = contraseña_encriptada
         sustentante.save()
 
-        # Enviar correo con la contraseña temporal
         try:
             send_mail(
                 'Recuperación de contraseña',
-                f'Hola {sustentante.nombre},\n\nTu nueva contraseña temporal es: {token}\nPor favor, cámbiala al iniciar sesión.',
-                'potrotitulate@gmail.com',  # Cambiar al email configurado
+                f'Hola {sustentante.nombre},\n\nTu nueva contraseña temporal es: {token}\n\nPor favor, cambia tu contraseña al iniciar sesión.',
+                'potrotitulate@gmail.com',
                 [correo],
                 fail_silently=False,
             )
         except BadHeaderError:
             return render(request, 'recuperarContrasena.html', {
-                'error': 'Se produjo un error al enviar el correo. Inténtalo nuevamente.',
-            })
+                'error': 'Se produjo un eror al enviar el correo. Inténtalo de nuevo.'})
+        
+        return render(request,'recuperarContrasenaExito.html')
+        #return Response({'mensaje': 'Se ha enviado un correo con tu nueva contraseña temporal'}, status=status.HTTP_200_OK)
+    
+class CambiarContrasenaView(APIView):
+    def get(self, request, id_sustentante):
+        return render(request, "cambiar_contrasena.html", {"id_sustentante": id_sustentante})
 
-        # Renderizar página de éxito
-        return render(request, 'recuperarContrasenaExito.html')
-
-    # Si el método no es POST, renderizar la página de recuperación
-    return render(request, 'recuperarContrasena.html')
-
-
-@login_required
-def cambiar_contrasena(request):
-    if request.method == 'POST':
-        nueva_contrasena = request.POST.get('nueva_contrasena')
-        confirmar_contrasena = request.POST.get('confirmar_contrasena')
+    def post(self, request, *args, **kwargs):
+        id_sustentante = kwargs.get('id_sustentante')
+        nueva_contrasena = request.data.get('nueva_contrasena')
+        confirmar_contrasena = request.data.get('confirmar_contrasena')
 
         if not nueva_contrasena or not confirmar_contrasena:
-            return render(request, 'cambiar_contrasena.html', {
-                'error': 'Ambos campos son obligatorios.',
-            })
+            return Response({'error': 'Ambos campos son obligatorios'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if nueva_contrasena != confirmar_contrasena:
+            return Response({'error': 'Las contraseñas no coinciden'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            sustentante = Sustentante.objects.get(id_sustentante=id_sustentante)
+        except Sustentante.DoesNotExist:
+            return Response({'error': 'Sustentante no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        
+        sustentante.contrasena = make_password(nueva_contrasena)
+        sustentante.contrasena_temporal = False #Marcar contrase cono no temporal
 
-        if nueva_contrasena == confirmar_contrasena:
-            request.user.set_password(nueva_contrasena)
-            request.user.save()
-            return redirect('inicio_sesion')  # Redirige al login después de cambiar la contraseña
-        else:
-            return render(request, 'cambiar_contrasena.html', {
-                'error': 'Las contraseñas no coinciden.',
-            })
+        sustentante.save()
 
+<<<<<<< HEAD
     return render(request, 'cambiar_contrasena.html')
 
+=======
+        return Response({'mensaje': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
+>>>>>>> 5c9b5ab03f121e3d29cd38e46f04580c6e50eaff

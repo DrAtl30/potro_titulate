@@ -48,10 +48,16 @@ class SustentanteLoginSerializer(serializers.Serializer):
         if not check_password(data['contrasena'], sustentante.contrasena):
             raise serializers.ValidationError("Correo electrónico o contraseña incorrectos.")
         
+        #Verificar si la contraseña es temporal
+        if sustentante.contrasena_temporal:
+            data['contrasena_temporal'] = True
+        else:
+            data['contrasena_temporal'] = False
         return {
             'id_sustentante': sustentante.id_sustentante,
             'nombre': sustentante.nombre,
-            'correo_electronico': sustentante.correo_electronico
+            'correo_electronico': sustentante.correo_electronico,
+            'contrasena_temporal': data['contrasena_temporal']  # Agregar si la contraseña es temporal
         }
 class AdministradorLoginSerializer(serializers.Serializer):
     correo_electronico = serializers.EmailField()

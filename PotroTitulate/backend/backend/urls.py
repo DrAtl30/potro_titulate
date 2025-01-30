@@ -29,8 +29,10 @@ urlpatterns = [
     path('perfilUsuario/', perfilUsuario, name='perfilUsuario'),  # Ruta para "perfil de
     path('recuperarContrasena/', recuperarContrasena, name='recuperarContrasena'),  # Ruta para "recuperar contraseña"
     path('inicioSesionAdmin/', loginAdmin, name='inicioSesionAdmin'),  # Ruta para "loginAdmin"
+    path('cambiarContrasena/', cambiarContrasena, name='cambiarContrasena'),  # Ruta para "cambiar contraseña"
 
-    path('recuperarContrasena/recuperarContra', recuperar_contrasena, name='procesar_recuperacion'),
+    path('recuperarContrasena/recuperarContra', RecuperarContraseñaView.as_view(), name='procesar_recuperacion'),
+    path('cambiarContrasena/<int:id_sustentante>/', CambiarContrasenaView.as_view(), name='cambiar_contrasena'),  # Ruta para "cambiar contraseña"
 
 
     # Ruta para la API de registro
