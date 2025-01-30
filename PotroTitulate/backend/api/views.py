@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import JsonResponse, HttpResponseRedirect
 from rest_framework import status
 from .serializers import SustentanteRegistroSerializer
 from .serializers import SustentanteLoginSerializer
@@ -46,6 +47,10 @@ def loginAdmin(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'inicioSesionAdmin.html', {'timestamp': timestamp})
 
+def recuperarContrasenaExito(request):
+    timestamp = datetime.now().timestamp() # Genera una marca de tiempo
+    return render(request, 'recuperarContrasenaExito.html', {'timestamp': timestamp})
+
 
 class RegistroView(APIView):
     def post(self, request, *args, **kwargs):
@@ -73,7 +78,7 @@ class LoginView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RecuperarContraseñaView(APIView):
-    def post(self, request):
+    def post(self, request, format=None):
         correo = request.data.get('correo_electronico')
 
         if not correo:
@@ -82,7 +87,7 @@ class RecuperarContraseñaView(APIView):
         try:
             sustentante = Sustentante.objects.get(correo_electronico=correo)
         except Sustentante.DoesNotExist:
-            return Response({'error': 'No se encontró un sustentante con el correo electrónico proporcionado'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'No se encontró un sustentante con el correo electrónico proporcionado'}, status=status.HTTP_200_OK)
         
         token = get_random_string(32)
         sustentante.contrasena = make_password(token)
@@ -102,7 +107,8 @@ class RecuperarContraseñaView(APIView):
             return render(request, 'recuperarContrasena.html', {
                 'error': 'Se produjo un eror al enviar el correo. Inténtalo de nuevo.'})
         
-        return render(request,'recuperarContrasenaExito.html')
+        return JsonResponse({'redirect': '/recuperarContrasenaExito'}, status=status.HTTP_200_OK)
+        #return render(request,'recuperarContrasenaExito.html')
         #return Response({'mensaje': 'Se ha enviado un correo con tu nueva contraseña temporal'}, status=status.HTTP_200_OK)
     
 class CambiarContrasenaView(APIView):

@@ -117,3 +117,129 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    //Script para el Modal de recuperar contrasena
+    const recuperarForm = document.querySelector('.recuperarForm');
+    if(recuperarForm) {
+        recuperarForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            var email = document.getElementById('correo_electronico').value;
+        
+            fetch('/recuperarContrasena/recuperarContra', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ correo_electronico: email }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP Error ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.redirect) {
+                    window.location.href = data.redirect;  // Redirige si la respuesta tiene 'redirect'
+                } else if (data.error) {
+                    mostrarModal(data.error, 'errorModal');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarModal('Hubo un problema al procesar tu solicitud. Inténtalo de nuevo.', 'errorModal');
+            });
+
+        });
+        
+    }
+
+    //Script para el Modal de cambiar contrasena
+    const cambiarContrasenaForm = document.querySelector('.cambiarContrasenaForm');
+    const csrfTokeCambiarContrasena = document.querySelector('[name=csrfmiddlewaretoken]');
+    if (cambiarContrasenaForm) {
+        cambiarContrasenaForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Obtener los valores de los campos de contraseña
+            var nuevaContrasena = document.getElementById('nueva_contrasena').value;
+            var confirmarContrasena = document.getElementById('confirmar_contrasena').value;
+            
+            // Obtener el id_sustentante desde el formulario o desde algún otro lugar en la página
+            var idSustentante = document.getElementById('id_sustentante').value;
+    
+            // Realizar la solicitud fetch
+            fetch(`/cambiarContrasena/${idSustentante}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRFToken': csrfTokeCambiarContrasena ? csrfTokeCambiarContrasena.value : ''
+                },
+                body: JSON.stringify({ 
+                    nueva_contrasena: nuevaContrasena, 
+                    confirmar_contrasena: confirmarContrasena 
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP Error ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.redirect) {
+                    window.location.href = data.redirect;  // Redirige si la respuesta tiene 'redirect'
+                } else if (data.error) {
+                    mostrarModal(data.error, 'errorModal');
+                } else {
+                    mostrarModal('Contraseña actualizada correctamente', 'successModal');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarModal('Hubo un problema al procesar tu solicitud. Inténtalo de nuevo.', 'errorModal');
+            });
+        });
+    }
+
+    function mostrarModal(mensaje, modalId) {
+        var modal = document.getElementById(modalId);
+        if (!modal) {
+            console.error(`No se encontró el modal con ID ${modalId}`);
+            return;
+        }
+    
+        var modalMessage = modal.querySelector('.modalMessage');
+        if (modalMessage) {
+            modalMessage.textContent = mensaje;
+        } else {
+            console.warn(`No se encontró el elemento con clase 'modalMessage' dentro de ${modalId}`);
+        }
+    
+        modal.style.display = 'flex';
+    
+        var closeBtn = modal.querySelector('.close');
+        if (closeBtn) {
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+            };
+        } else {
+            console.warn(`No se encontró el botón de cierre en ${modalId}`);
+        }
+    
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+    
+        window.onkeydown = function(event) {
+            if (event.key === 'Escape') {
+                modal.style.display = 'none';
+            }
+        };
+    }
+    
+    

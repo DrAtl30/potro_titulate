@@ -163,3 +163,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'potrotitulate@gmail.com'  # dirección de correo
 EMAIL_HOST_PASSWORD = 'rissfdweuasuaxkb'  # Contraseña o App Password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',  # 👈 Solo JSON, nunca HTML
+    )
+}
+
