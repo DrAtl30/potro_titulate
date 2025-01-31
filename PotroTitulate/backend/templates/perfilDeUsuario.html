@@ -27,7 +27,7 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <li><a class="dropdown-item" href="#" onclick="showRequirements('Trabajo escrito')">Trabajo escrito</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="showRequirements('Aprovechamiento academico')">Aprovechamiento academico</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="showRequirements('Aprovechamiento académico')">Aprovechamiento académico</a></li>
                         <li><a class="dropdown-item" href="#" onclick="showRequirements('Creditos en estudios avanzados')">Creditos en estudios avanzados</a></li>
                         <li><a class="dropdown-item" href="#" onclick="showRequirements('Examen General para el egreso de la Licenciatura EGEL')">Examen General para el egreso de la Licenciatura EGEL</a></li>
                     </ul>    
@@ -93,6 +93,6 @@
     <!-- Enlace a Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Enlace a scripts.js -->
-    <script src="{%static 'js/scripts2.js' %}"></script>
+    <script src="{%static 'js/scripts2.js' %} ?v={{timestamp}}"></script>
 </body>
 </html>

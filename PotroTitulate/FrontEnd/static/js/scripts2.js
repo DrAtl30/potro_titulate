@@ -153,5 +153,5 @@ function updateEstado(requisito, nuevoEstado) {
     }
 }
 function cerrarSesion() {
-    window.location.href = 'index(2).html'; 
+    window.location.href ='/index/'; 
 }

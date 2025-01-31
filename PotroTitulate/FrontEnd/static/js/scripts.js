@@ -62,12 +62,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     return response.json();
                 })
                 .then(data => {
-                    alert('Registro exitoso');
-                    window.location.href = '/iniciosesion/';
+                    mostrarModal('Registro exitoso', 'successModal');
+                    esperarCierreModal('successModal').then(() => {
+                        window.location.href = '/iniciosesion/';
+                    });
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Error en el registro: ' + (error.detail || 'Revisa los campos.'));
+                    mostrarModal('Hubo un problema al procesar tu solicitud. Revisa los campos e inténtalo de nuevo.', 'errorModal');
                 });
         });
     }
@@ -79,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (loginForm) {
             loginForm.addEventListener('submit', function(event) {
                 event.preventDefault();
+
                 console.log('Formulario de login enviado');
     
                 const correo = document.getElementById('correo').value;
@@ -106,13 +109,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (data.redirigir_a_cambiar_contrasena && data.id_sustentante) {
                         window.location.href = `/cambiarContrasena/${data.id_sustentante}/`;
                     } else {
-                        alert('Login exitoso');
-                        window.location.href = '/perfilUsuario/'; // Redirigir a la página principal o dashboard
-                    }
+                        mostrarModal('Inicio de sesión exitoso', 'successModal');
+                        esperarCierreModal('successModal').then(() => {
+                            window.location.href = '/perfilUsuario/'; // Redirigir a la página principal o dashboard
+                    });
+                }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Error en el inicio de sesión: ' + (error.detail || 'Credenciales incorrectas.'));
+                    mostrarModal('Correo o contraseña incorrectos', 'errorModal');
                 });
             });
         }
@@ -242,4 +247,32 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
     
-    
+    // Función para esperar a que el modal se cierre
+function esperarCierreModal(modalId) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById(modalId);
+        const closeBtn = modal.querySelector('.close');
+
+        // Resuelve la promesa cuando el modal se cierre
+        closeBtn.onclick = () => {
+            modal.style.display = 'none';
+            resolve();
+        };
+
+        // También resuelve la promesa si se hace clic fuera del modal
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                resolve();
+            }
+        };
+
+        // Resuelve la promesa si se presiona la tecla Escape
+        window.onkeydown = (event) => {
+            if (event.key === 'Escape') {
+                modal.style.display = 'none';
+                resolve();
+            }
+        };
+    });
+}

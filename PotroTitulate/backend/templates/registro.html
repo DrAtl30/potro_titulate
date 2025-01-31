@@ -82,6 +82,47 @@
         section {
             background-image: url('{% static "imagen/fondo.jpeg" %}');
         }
+
+        .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);  /* Fondo semitransparente */
+        display: none;  /* El modal no se ve hasta que se activa */
+        justify-content: center;  /* Centrado en el eje horizontal */
+        align-items: center;  /* Centrado en el eje vertical */
+        z-index: 1000;  /* Asegura que el modal esté por encima de otros elementos */
+    }
+
+    /* Contenedor del contenido del modal */
+    .modalContent {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        min-width: 300px; /* Tamaño mínimo para el contenido */
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        position:relative;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        position:absolute;
+        right: 10px;
+        top: 10px;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
     </style>
 </head>
 <body>
@@ -120,6 +161,18 @@
             </div>
             <button type="submit" class="btn btn-primary">Registrarse</button>
         </form>
+        <div class="modal" id="errorModal">
+            <div class="modalContent">
+                <span class="close">&times;</span>
+                <p class="modalMessage"></p>
+            </div>
+        </div>
+        <div class="modal" id="successModal">
+            <div class="modalContent">
+                <span class="close">&times;</span>
+                <p class="modalMessage"></p>
+            </div>
+        </div>
     </div>
     <footer>
         <div class="footer-overlay">
