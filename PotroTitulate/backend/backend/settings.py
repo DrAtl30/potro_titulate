@@ -170,3 +170,8 @@ REST_FRAMEWORK = {
     )
 }
 
+# Tiempo de vida de la sesión (en segundos)
+SESSION_COOKIE_AGE = 3600 * 24 * 1  # 1 dia
+
+# La sesión expira cuando el usuario cierra el navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False

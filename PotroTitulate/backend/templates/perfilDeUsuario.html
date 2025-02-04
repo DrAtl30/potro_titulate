@@ -16,7 +16,7 @@
         <img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}" alt="Escudo UAEM" style="max-height: 120px;">
     </div>
     <div style="text-align: left; padding: 10px 20px; font-size: 18px; font-weight: bold;">
-        Bienvenido: Alumno X
+        Bienvenido: {{ nombre_sustentante }}
     </div>
     <div style="padding: 0 20px;">
         <div class="dropdown">
@@ -94,5 +94,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Enlace a scripts.js -->
     <script src="{%static 'js/scripts2.js' %} ?v={{timestamp}}"></script>
+    <!-- Token CSRF -->
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 </body>
 </html>

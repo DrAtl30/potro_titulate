@@ -11,7 +11,7 @@ from datetime import datetime
 from django.core.mail import send_mail, BadHeaderError
 from django.shortcuts import render, redirect
 from django.utils.crypto import get_random_string
-from .models import Sustentante
+from .models import Sustentante, Documentos
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 
@@ -33,9 +33,54 @@ def administrador(request):
     return render(request, 'administrador.html', {'timestamp': timestamp})
 
 def perfilUsuario(request):
+    # Obtén el ID del Sustentante desde la sesión
+    sustentante_id = request.session.get('sustentante_id')
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
-    return render(request, 'perfilDeUsuario.html', {'timestamp': timestamp})
 
+    if not sustentante_id:
+        # Si no hay un Sustentante autenticado, redirige al login
+        return redirect('login')
+
+    try:
+        sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+        documentos = Documentos.objects.filter(id_sustentante=sustentante)
+        return render(request, 'perfilDeUsuario.html', {
+            'timestamp': timestamp,
+            'nombre_sustentante': sustentante.nombre,
+            'documentos': documentos
+        })
+    except Sustentante.DoesNotExist:
+        return redirect('login')
+    
+
+#class PerfilUsuarioView(APIView):
+    def get(self, request):
+        # Obtén el ID del Sustentante desde la sesión
+        sustentante_id = request.session.get('sustentante_id')
+
+        if not sustentante_id:
+            # Si no hay un Sustentante autenticado, devuelve un error 401 (No autorizado)
+            return Response(
+                {'mensaje': 'No autenticado'}, 
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        try:
+            # Obtén el objeto Sustentante
+            sustentante = Sustentante.objects.get(id=sustentante_id)
+            # Devuelve los datos del Sustentante en formato JSON
+            return Response({
+                'id_sustentante': sustentante.id_sustentante,
+                'nombre': sustentante.nombre,
+                'correo_electronico': sustentante.correo_electronico
+            }, status=status.HTTP_200_OK)
+        except Sustentante.DoesNotExist:
+            # Si el Sustentante no existe, devuelve un error 404 (No encontrado)
+            return Response(
+                {'mensaje': 'Sustentante no encontrado'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
 def recuperarContrasena(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'recuperarContrasena.html', {'timestamp': timestamp})
@@ -67,6 +112,9 @@ class LoginView(APIView):
         if serializer.is_valid():
             data = serializer.validated_data
             print('Datos validos:', data)
+            
+            # Guardar el ID del Sustentante en la sesión
+            request.session['sustentante_id'] = data['id_sustentante']
 
             if data['contrasena_temporal']:
                 return Response({
@@ -75,8 +123,43 @@ class LoginView(APIView):
                     'id_sustentante': data['id_sustentante']
                 }, status=status.HTTP_200_OK)
             else:
-                return Response(data, status=status.HTTP_200_OK)
+                return Response({
+                    'mensaje': 'Inicio de sesión exitoso.',
+                    'redirigir_a_cambiar_contrasena': False,
+                    'id_sustentante': data['id_sustentante'],
+                    'nombre': data['nombre'],
+                    'correo_electronico': data['correo_electronico']
+                }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class PerfilUsuarioView(APIView):
+   def get(self, request):
+        # Obtén el ID del Sustentante desde la sesión
+        sustentante_id = request.session.get('sustentante_id')
+
+        if not sustentante_id:
+            return Response({'mensaje': 'No autenticado'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            # Obtén el objeto Sustentante
+            sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+            return Response({
+                'id_sustentante': sustentante.id_sustentante,
+                'nombre': sustentante.nombre,
+                'correo_electronico': sustentante.correo_electronico
+            }, status=status.HTTP_200_OK)
+        except Sustentante.DoesNotExist:
+            return Response({'mensaje': 'Sustentante no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        
+class LogoutView(APIView):
+    def get(self, request):
+        return redirect('login')
+    
+    def post(self, request):
+        if 'sustentante_id' in request.session:
+            del request.session['sustentante_id']
+        #return Response({'mensaje': 'Sesión cerrada correctamente'}, status=status.HTTP_200_OK)
+        return redirect('login')
     
 class AdministradorLoginView(APIView):
     
@@ -147,3 +230,30 @@ class CambiarContrasenaView(APIView):
 
         #return Response({'mensaje': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
         return JsonResponse({'redirect': '/iniciosesion'}, status=status.HTTP_200_OK)
+    
+def subir_documento(request):
+    if request.method == 'POST':
+        sustentante_id = request.session.get('sustentante_id')
+        if not sustentante_id:
+            return redirect('login')
+        
+        try:
+            sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+            documento = request.FILES['documento']
+            nombre_documento = request.POST['nombre_documento']
+            tipo_documento = request.POST['tipo_documento'] 
+
+            # Guardar el documento en la base de datos
+            Documentos.objects.create(
+                id_sustentante=sustentante,
+                nombre_documento=nombre_documento,
+                tipo_documento=tipo_documento,
+                fecha_subida=datetime.now().date(),
+                estado_validacion='pendiente',
+            )
+            return redirect('perfilUsuario')
+        except Sustentante.DoesNotExist:
+            return redirect('login')
+        
+    return render(request, 'subir_documento.html') #Queda por ajustar la plantilla
+

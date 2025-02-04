@@ -152,6 +152,26 @@ function updateEstado(requisito, nuevoEstado) {
         updateProgressStep();
     }
 }
+
+/*function cerrarSesion() {
+    window.location.href ='/logout'; 
+}*/
+
 function cerrarSesion() {
-    window.location.href ='/index/'; 
+    // Crea un formulario
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/logout/'; // Asegúrate de que la URL sea correcta
+
+    // Añade un token CSRF al formulario
+    var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    var csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+
+    // Añade el formulario al body y envíalo
+    document.body.appendChild(form);
+    form.submit();
 }
