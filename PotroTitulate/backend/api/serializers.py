@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
-from .models import Sustentante
+from .models import Sustentante, Administrativos
 import re
 
 class SustentanteRegistroSerializer(serializers.ModelSerializer):
@@ -58,4 +58,25 @@ class SustentanteLoginSerializer(serializers.Serializer):
             'nombre': sustentante.nombre,
             'correo_electronico': sustentante.correo_electronico,
             'contrasena_temporal': data['contrasena_temporal']  # Agregar si la contraseña es temporal
+        }
+
+class AdministradorLoginSerializer(serializers.Serializer):
+    correo_electronico = serializers.EmailField()
+    contrasena = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        try:
+            administrador = Administrativos.objects.get(correo_electronico=data['correo_electronico'])
+        except Administrativos.DoesNotExist:
+            raise serializers.ValidationError("Correo electrónico o contraseña incorrectos.")
+        
+        # Verifica si la contraseña es correcta
+        if not check_password(data['contrasena'], administrador.contrasena):
+            raise serializers.ValidationError("Correo electrónico o contraseña incorrectos.")
+        
+        # Devuelve datos del administrador, pero sin la contraseña
+        return {
+            'id_administrador': administrador.id,
+            'nombre': administrador.nombre,
+            'correo_electronico': administrador.correo_electronico
         }

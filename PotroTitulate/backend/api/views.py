@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from rest_framework import status
 from .serializers import SustentanteRegistroSerializer
 from .serializers import SustentanteLoginSerializer
+from .serializers import *;
 from django.shortcuts import redirect
 from django.shortcuts import render
 from datetime import datetime
@@ -75,6 +76,14 @@ class LoginView(APIView):
                 }, status=status.HTTP_200_OK)
             else:
                 return Response(data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class AdministradorLoginView(APIView):
+    
+    def post(self, request):
+        serializer = AdministradorLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RecuperarContraseñaView(APIView):
