@@ -145,4 +145,5 @@ class CambiarContrasenaView(APIView):
 
         sustentante.save()
 
-        return Response({'mensaje': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
+        #return Response({'mensaje': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
+        return JsonResponse({'redirect': '/iniciosesion'}, status=status.HTTP_200_OK)
