@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             if (data.id_administrador) {
                 alert("Inicio de sesión exitoso");
-                window.location.href = "/admin/dashboard/";  // Redirigir tras éxito
+                window.location.href = "/administrador";  // Redirigir tras éxito
             } else {
                 document.getElementById("mensaje").innerText = "Credenciales incorrectas";
             }

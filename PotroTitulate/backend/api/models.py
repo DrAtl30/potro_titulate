@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password
 
 
 class Administrativos(models.Model):
@@ -6,12 +7,12 @@ class Administrativos(models.Model):
     nombre = models.CharField(max_length=100)
     correo_electronico = models.CharField(unique=True, max_length=100)
     contrasena = models.CharField(max_length=100)
-    rol = models.CharField(max_length=50)
+   # rol = models.CharField(max_length=50)
 
     class Meta:
         managed = False
         db_table = 'administrativos'
-
+    
 
 class Documentos(models.Model):
     id_documento = models.AutoField(primary_key=True)

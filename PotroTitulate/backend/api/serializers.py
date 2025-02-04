@@ -76,7 +76,7 @@ class AdministradorLoginSerializer(serializers.Serializer):
         
         # Devuelve datos del administrador, pero sin la contraseña
         return {
-            'id_administrador': administrador.id,
+            'id_administrador': administrador.id_administrativo,
             'nombre': administrador.nombre,
             'correo_electronico': administrador.correo_electronico
         }
