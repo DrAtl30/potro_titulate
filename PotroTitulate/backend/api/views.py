@@ -153,13 +153,13 @@ class PerfilUsuarioView(APIView):
         
 class LogoutView(APIView):
     def get(self, request):
-        return redirect('login')
+        return redirect('/iniciosesion/')
     
     def post(self, request):
         if 'sustentante_id' in request.session:
             del request.session['sustentante_id']
         #return Response({'mensaje': 'Sesión cerrada correctamente'}, status=status.HTTP_200_OK)
-        return redirect('login')
+        return redirect('/iniciosesion/')
     
 class AdministradorLoginView(APIView):
     
