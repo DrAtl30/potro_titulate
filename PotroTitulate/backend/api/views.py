@@ -32,6 +32,7 @@ def administrador(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'administrador.html', {'timestamp': timestamp})
 
+
 def perfilUsuario(request):
     # Obtén el ID del Sustentante desde la sesión
     sustentante_id = request.session.get('sustentante_id')
@@ -160,6 +161,10 @@ class LogoutView(APIView):
             del request.session['sustentante_id']
         #return Response({'mensaje': 'Sesión cerrada correctamente'}, status=status.HTTP_200_OK)
         return redirect('/iniciosesion/')
+
+def checkSession(request):
+    is_authenticated = 'sustentante_id' in request.session
+    return JsonResponse({'is_authenticated': is_authenticated})
     
 class AdministradorLoginView(APIView):
     

@@ -276,3 +276,30 @@ function esperarCierreModal(modalId) {
         };
     });
 }
+
+/*
+ // Función para verificar la sesión
+ function checkSession() {
+    fetch('/checkSession/')  // Endpoint para verificar la sesión
+        .then(response => response.json())
+        .then(data => {
+            if (!data.is_authenticated) {
+                // Redirige al login si no está autenticado
+                window.location.href = '/iniciosesion/';
+            }
+        })
+        .catch(error => {
+            console.error('Error al verificar la sesión:', error);
+        });
+}
+
+// Verifica la sesión cuando la página se carga
+window.onload = checkSession;
+
+// Verifica la sesión cuando el usuario navega hacia atrás
+window.onpageshow = function(event) {
+    if (event.persisted) {
+        checkSession();
+    }
+};
+*/
