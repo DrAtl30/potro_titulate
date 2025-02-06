@@ -98,7 +98,7 @@ class Sustentante(models.Model):
 class Tramites(models.Model):
     id_tramite = models.AutoField(primary_key=True)
     id_sustentante = models.ForeignKey(Sustentante, models.DO_NOTHING, db_column='id_sustentante')
-    ruta_titulacion = models.TextField()
+    id_opcion = models.ForeignKey(OpcionTitulacion, on_delete=models.CASCADE, db_column='id_opcion', null=True)  # Relaciona con OpciónTitulación
     estado_actual = models.CharField(max_length=50)
     fecha_inicio = models.DateField()
     fecha_actualizacion = models.DateField()

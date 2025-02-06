@@ -11,11 +11,12 @@ from datetime import datetime
 from django.core.mail import send_mail, BadHeaderError
 from django.shortcuts import render, redirect
 from django.utils.crypto import get_random_string
-from .models import Sustentante, Documentos
+from .models import Sustentante, Documentos, Tramites, OpcionTitulacion
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+import json
 
 
 
@@ -36,21 +37,25 @@ def administrador(request):
 
 
 def perfilUsuario(request):
-    # Obtén el ID del Sustentante desde la sesión
     sustentante_id = request.session.get('sustentante_id')
-    timestamp = datetime.now().timestamp() # Genera una marca de tiempo
+    timestamp = datetime.now().timestamp()
 
     if not sustentante_id:
-        # Si no hay un Sustentante autenticado, redirige al login
         return redirect('login')
 
     try:
         sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+        tramite = Tramites.objects.filter(id_sustentante=sustentante).first()
+        opcion_titulacion = tramite.id_opcion.nombre_opcion if tramite and tramite.id_opcion else None
         documentos = Documentos.objects.filter(id_sustentante=sustentante)
+        opciones_titulacion = OpcionTitulacion.objects.all()
+
         return render(request, 'perfilDeUsuario.html', {
             'timestamp': timestamp,
             'nombre_sustentante': sustentante.nombre,
-            'documentos': documentos
+            'documentos': documentos,
+            'opcion_titulacion': opcion_titulacion,
+            'opciones_titulacion': opciones_titulacion
         })
     except Sustentante.DoesNotExist:
         return redirect('login')
@@ -264,3 +269,39 @@ def uploadDocument(request):
         except Exception as e:
             return JsonResponse({'success' : False, 'error': str(e)})
     return JsonResponse({'success' : False, 'error' : 'Metodo no permitido'})
+
+@csrf_exempt
+def seleccionar_opcion_titulacion(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        opcion_id = data.get('opcion_id')
+        sustentante_id = request.session.get('sustentante_id')
+
+        if not sustentante_id:
+            return JsonResponse({'success': False, 'error': 'No autenticado'})
+
+        try:
+            sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+            opcion_titulacion = OpcionTitulacion.objects.get(id_opcion=opcion_id)
+
+            # Crear o actualizar el trámite
+            tramite, created = Tramites.objects.get_or_create(
+                id_sustentante=sustentante,
+                defaults={
+                    'id_opcion': opcion_titulacion,
+                    'estado_actual': 'pendiente',
+                    'fecha_inicio': timezone.now().date(),
+                    'fecha_actualizacion': timezone.now().date()
+                }
+            )
+
+            if not created:
+                tramite.id_opcion = opcion_titulacion
+                tramite.estado_actual = 'pendiente'
+                tramite.fecha_actualizacion = timezone.now().date()
+                tramite.save()
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})

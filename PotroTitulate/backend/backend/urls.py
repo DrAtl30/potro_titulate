@@ -39,6 +39,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('checkSession/', checkSession, name='checkSession'),
     path('uploadDocument/', uploadDocument, name='subirDocumento'),
+    path('seleccionarOpcionTitulacion/', seleccionar_opcion_titulacion, name='SeleccionarOpcionTitulacion'),
 
     # Ruta para la API de registro
     path('api/registro/', RegistroView.as_view(), name='api_registro'),  # API para registro

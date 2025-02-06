@@ -59,18 +59,31 @@
         Bienvenido: {{ nombre_sustentante }}
     </div>
     <div style="padding: 0 20px;">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                Modo de titulación
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Trabajo escrito')">Trabajo escrito</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Aprovechamiento académico')">Aprovechamiento académico</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Creditos en estudios avanzados')">Creditos en estudios avanzados</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Examen General para el egreso de la Licenciatura EGEL')">Examen General para el egreso de la Licenciatura EGEL</a></li>
-            </ul>
-        </div>
+        {% if not opcion_titulacion %}
+            <form id="seleccionOpcionForm">
+                <label for="opcion_titulacion">Selecciona una opción de titulación:</label>
+                <select id="opcion_titulacion" name="opcion_titulacion">
+                    {% for opcion in opciones_titulacion %}
+                        <option value="{{ opcion.id_opcion }}">{{ opcion.nombre_opcion }}</option>
+                    {% endfor %}
+                </select>
+                <button type="button" onclick="enviarOpcionTitulacion()">Enviar</button>
+            </form>
+        {% else %}
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    Modo de titulación: {{ opcion_titulacion }}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Trabajo escrito')">Trabajo escrito</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Aprovechamiento académico')">Aprovechamiento académico</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Creditos en estudios avanzados')">Creditos en estudios avanzados</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Examen General para el egreso de la Licenciatura EGEL')">Examen General para el egreso de la Licenciatura EGEL</a></li>
+                </ul>
+            </div>
+        {% endif %}
     </div>
+   
     <!-- Barra de navegación -->
     <header>
         <nav>
@@ -111,6 +124,17 @@
     </header>
     <!-- Contenedor para mostrar requisitos -->
     <div id="requisitosContainer" style="margin-top: 20px;"></div>
+
+     <!-- Mostrar documentos subidos -->
+     <div id="documentosSubidos">
+        <h3>Documentos Subidos:</h3>
+        <u1>
+            {% for documento in documentos %}
+                <li>{{ documento.nombre_documento }} - {{ documento.estado_validacion }}   
+                </li>
+            {% endfor %}
+        </u1>
+    </div>
 
     <!-- Modales -->
     <div id="errorModal" class="modal">

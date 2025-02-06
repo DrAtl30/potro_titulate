@@ -3,6 +3,12 @@ const progressBar = document.querySelector('.progress-bar');
 let totalSteps = 0;
 
 function showRequirements(option) {
+    const opcionTitulacion ="{{ opcion_titulacion }}";
+    if (option !== opcionTitulacion) {
+        mostrarModal(`Solo puedes subir documentos para la opción de titulación: ${opcionTitulacion}`, 'errorModal');
+        return;
+    }
+
     const requisitosContainer = document.getElementById('requisitosContainer');
     requisitosContainer.innerHTML = '';
 
@@ -114,10 +120,12 @@ function showRequirements(option) {
 }
 
 function updateProgressBar() {
-    const progressPercentage = (progress / totalSteps) * 100;
+    const totalSteps = document.querySelectorAll('.requisito-item').length;
+    const approvedSteps = document.querySelectorAll('.estado.aprobado[style*="opacity: 1"]').length;
+    const progressPercentage = (approvedSteps / totalSteps) * 100;
     progressBar.style.width = `${progressPercentage}%`;
     progressBar.setAttribute('aria-valuenow', progressPercentage);
-    progressBar.textContent = `Paso ${progress} de ${totalSteps}`;
+    progressBar.textContent = `Paso ${approvedSteps} de ${totalSteps}`;
 }
 
 function updateProgressStep() {
@@ -266,5 +274,30 @@ function mostrarModal(mensaje, modalId) {
                 resolve();
             }
         };
+    });
+}
+
+function enviarOpcionTitulacion() {
+    const opcionId = document.getElementById('opcion_titulacion').value;
+
+    fetch('/seleccionar_opcion_titulacion/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+        },
+        body: JSON.stringify({ opcion_id : opcionId})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload(); // Recargar la página para actualizar la información
+        } else {
+            mostrarModal(`Error al seleccionar la opción de titulación: ${data.error}`, 'errorModal');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarModal('Error al enviar la opción de titulación', 'errorModal');
     });
 }
