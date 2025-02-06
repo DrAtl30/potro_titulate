@@ -38,6 +38,7 @@ urlpatterns = [
     #path('perfilUsuario/', PerfilUsuarioView.as_view(), name='perfilUsuario'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('checkSession/', checkSession, name='checkSession'),
+    path('uploadDocument/', uploadDocument, name='subirDocumento'),
 
     # Ruta para la API de registro
     path('api/registro/', RegistroView.as_view(), name='api_registro'),  # API para registro

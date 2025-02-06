@@ -269,37 +269,14 @@ function esperarCierreModal(modalId) {
 
         // Resuelve la promesa si se presiona la tecla Escape
         window.onkeydown = (event) => {
-            if (event.key === 'Escape') {
+            const escapeKeys = ['Escape', 'Esc'];
+            const escapeKeyCodes = [27];
+            const escapeKeyCodesDeprecated = [1, '1']; // Algunos teclados pueden enviar un código de tecla de escape diferente
+        
+            if (escapeKeys.includes(event.key) || escapeKeyCodes.includes(event.keyCode) || escapeKeyCodesDeprecated.includes(event.keyCode)) {
                 modal.style.display = 'none';
                 resolve();
             }
         };
     });
 }
-
-/*
- // Función para verificar la sesión
- function checkSession() {
-    fetch('/checkSession/')  // Endpoint para verificar la sesión
-        .then(response => response.json())
-        .then(data => {
-            if (!data.is_authenticated) {
-                // Redirige al login si no está autenticado
-                window.location.href = '/iniciosesion/';
-            }
-        })
-        .catch(error => {
-            console.error('Error al verificar la sesión:', error);
-        });
-}
-
-// Verifica la sesión cuando la página se carga
-window.onload = checkSession;
-
-// Verifica la sesión cuando el usuario navega hacia atrás
-window.onpageshow = function(event) {
-    if (event.persisted) {
-        checkSession();
-    }
-};
-*/

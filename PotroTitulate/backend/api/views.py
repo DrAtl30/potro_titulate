@@ -14,6 +14,8 @@ from django.utils.crypto import get_random_string
 from .models import Sustentante, Documentos
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
+from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
 
 
@@ -236,29 +238,29 @@ class CambiarContrasenaView(APIView):
         #return Response({'mensaje': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
         return JsonResponse({'redirect': '/iniciosesion'}, status=status.HTTP_200_OK)
     
-def subir_documento(request):
+
+@csrf_exempt
+def uploadDocument(request):
     if request.method == 'POST':
         sustentante_id = request.session.get('sustentante_id')
         if not sustentante_id:
-            return redirect('login')
-        
+            return JsonResponse({'succes': False, 'error':'No autenticado'})
+    
         try:
             sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
-            documento = request.FILES['documento']
-            nombre_documento = request.POST['nombre_documento']
-            tipo_documento = request.POST['tipo_documento'] 
+            file = request.FILES['file']
+            requisito = request.POST.get('requisito')
 
-            # Guardar el documento en la base de datos
+            #Guardar el documento en la base de datos
             Documentos.objects.create(
                 id_sustentante=sustentante,
-                nombre_documento=nombre_documento,
-                tipo_documento=tipo_documento,
-                fecha_subida=datetime.now().date(),
-                estado_validacion='pendiente',
+                nombre_documento=requisito,
+                tipo_documento=file.content_type,
+                fecha_subida=timezone.now().date(),
+                estado_validacion='pendiente'
             )
-            return redirect('perfilUsuario')
-        except Sustentante.DoesNotExist:
-            return redirect('login')
-        
-    return render(request, 'subir_documento.html') #Queda por ajustar la plantilla
 
+            return JsonResponse({'success' : True})
+        except Exception as e:
+            return JsonResponse({'success' : False, 'error': str(e)})
+    return JsonResponse({'success' : False, 'error' : 'Metodo no permitido'})
