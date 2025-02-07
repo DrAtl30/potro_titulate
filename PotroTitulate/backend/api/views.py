@@ -301,6 +301,10 @@ def seleccionar_opcion_titulacion(request):
                 tramite.fecha_actualizacion = timezone.now().date()
                 tramite.save()
 
+            sustentante.id_opcion = opcion_titulacion
+            sustentante.save()
+
+
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})

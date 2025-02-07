@@ -280,7 +280,7 @@ function mostrarModal(mensaje, modalId) {
 function enviarOpcionTitulacion() {
     const opcionId = document.getElementById('opcion_titulacion').value;
 
-    fetch('/seleccionar_opcion_titulacion/', {
+    fetch('/seleccionarOpcionTitulacion/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
