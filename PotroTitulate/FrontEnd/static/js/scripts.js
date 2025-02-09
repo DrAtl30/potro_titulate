@@ -62,12 +62,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     return response.json();
                 })
                 .then(data => {
-                    alert('Registro exitoso');
-                    window.location.href = '/iniciosesion/';
+                    mostrarModal('Registro exitoso', 'successModal');
+                    esperarCierreModal('successModal').then(() => {
+                        window.location.href = '/iniciosesion/';
+                    });
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Error en el registro: ' + (error.detail || 'Revisa los campos.'));
+                    mostrarModal('Hubo un problema al procesar tu solicitud. Revisa los campos e inténtalo de nuevo.', 'errorModal');
                 });
         });
     }
@@ -79,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (loginForm) {
             loginForm.addEventListener('submit', function(event) {
                 event.preventDefault();
+
                 console.log('Formulario de login enviado');
     
                 const correo = document.getElementById('correo').value;
@@ -106,14 +109,174 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (data.redirigir_a_cambiar_contrasena && data.id_sustentante) {
                         window.location.href = `/cambiarContrasena/${data.id_sustentante}/`;
                     } else {
-                        alert('Login exitoso');
-                        window.location.href = '/perfilUsuario/'; // Redirigir a la página principal o dashboard
-                    }
+                        mostrarModal('Inicio de sesión exitoso', 'successModal');
+                        esperarCierreModal('successModal').then(() => {
+                            window.location.href = '/perfilUsuario/'; // Redirigir a la página principal o dashboard
+                    });
+                }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Error en el inicio de sesión: ' + (error.detail || 'Credenciales incorrectas.'));
+                    mostrarModal('Correo o contraseña incorrectos', 'errorModal');
                 });
             });
         }
     });
+
+    //Script para el Modal de recuperar contrasena
+    const recuperarForm = document.querySelector('.recuperarForm');
+    if(recuperarForm) {
+        recuperarForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            var email = document.getElementById('correo_electronico').value;
+        
+            fetch('/recuperarContrasena/recuperarContra', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ correo_electronico: email }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP Error ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.redirect) {
+                    window.location.href = data.redirect;  // Redirige si la respuesta tiene 'redirect'
+                } else if (data.error) {
+                    mostrarModal(data.error, 'errorModal');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarModal('Hubo un problema al procesar tu solicitud. Inténtalo de nuevo.', 'errorModal');
+            });
+
+        });
+        
+    }
+
+    //Script para el Modal de cambiar contrasena
+    const cambiarContrasenaForm = document.querySelector('.cambiarContrasenaForm');
+    const csrfTokeCambiarContrasena = document.querySelector('[name=csrfmiddlewaretoken]');
+    if (cambiarContrasenaForm) {
+        cambiarContrasenaForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Obtener los valores de los campos de contraseña
+            var nuevaContrasena = document.getElementById('nueva_contrasena').value;
+            var confirmarContrasena = document.getElementById('confirmar_contrasena').value;
+            
+            // Obtener el id_sustentante desde el formulario o desde algún otro lugar en la página
+            var idSustentante = document.getElementById('id_sustentante').value;
+    
+            // Realizar la solicitud fetch
+            fetch(`/cambiarContrasena/${idSustentante}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRFToken': csrfTokeCambiarContrasena ? csrfTokeCambiarContrasena.value : ''
+                },
+                body: JSON.stringify({ 
+                    nueva_contrasena: nuevaContrasena, 
+                    confirmar_contrasena: confirmarContrasena 
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP Error ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.redirect) {
+                    window.location.href = data.redirect;  // Redirige si la respuesta tiene 'redirect'
+                } else if (data.error) {
+                    mostrarModal(data.error, 'errorModal');
+                } else {
+                    mostrarModal('Contraseña actualizada correctamente', 'successModal');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarModal('Hubo un problema al procesar tu solicitud. Inténtalo de nuevo.', 'errorModal');
+            });
+        });
+    }
+
+    function mostrarModal(mensaje, modalId) {
+        var modal = document.getElementById(modalId);
+        if (!modal) {
+            console.error(`No se encontró el modal con ID ${modalId}`);
+            return;
+        }
+    
+        var modalMessage = modal.querySelector('.modalMessage');
+        if (modalMessage) {
+            modalMessage.textContent = mensaje;
+        } else {
+            console.warn(`No se encontró el elemento con clase 'modalMessage' dentro de ${modalId}`);
+        }
+    
+        modal.style.display = 'flex';
+    
+        var closeBtn = modal.querySelector('.close');
+        if (closeBtn) {
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+            };
+        } else {
+            console.warn(`No se encontró el botón de cierre en ${modalId}`);
+        }
+    
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+    
+        window.onkeydown = function(event) {
+            if (event.key === 'Escape') {
+                modal.style.display = 'none';
+            }
+        };
+    }
+    
+    // Función para esperar a que el modal se cierre
+function esperarCierreModal(modalId) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById(modalId);
+        const closeBtn = modal.querySelector('.close');
+
+        // Resuelve la promesa cuando el modal se cierre
+        closeBtn.onclick = () => {
+            modal.style.display = 'none';
+            resolve();
+        };
+
+        // También resuelve la promesa si se hace clic fuera del modal
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                resolve();
+            }
+        };
+
+        // Resuelve la promesa si se presiona la tecla Escape
+        window.onkeydown = (event) => {
+            const escapeKeys = ['Escape', 'Esc'];
+            const escapeKeyCodes = [27];
+            const escapeKeyCodesDeprecated = [1, '1']; // Algunos teclados pueden enviar un código de tecla de escape diferente
+        
+            if (escapeKeys.includes(event.key) || escapeKeyCodes.includes(event.keyCode) || escapeKeyCodesDeprecated.includes(event.keyCode)) {
+                modal.style.display = 'none';
+                resolve();
+            }
+        };
+    });
+}

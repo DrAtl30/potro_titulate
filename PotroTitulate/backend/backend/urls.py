@@ -33,11 +33,25 @@ urlpatterns = [
 
     path('recuperarContrasena/recuperarContra', RecuperarContraseñaView.as_view(), name='procesar_recuperacion'),
     path('cambiarContrasena/<int:id_sustentante>/', CambiarContrasenaView.as_view(), name='cambiar_contrasena'),  # Ruta para "cambiar contraseña"
+<<<<<<< HEAD
     path('administradorLogin/', AdministradorLoginView.as_view(), name='adminstradorLogin'),
+=======
+    path('recuperarContrasenaExito/', recuperarContrasenaExito, name='recuperarContrasenaExito'),  # Ruta para "recuperar contraseña exito"
+    path('administradorLogin/', AdministradorLoginView.as_view(), name='adminstradorLogin'),
+    #path('perfilUsuario/', PerfilUsuarioView.as_view(), name='perfilUsuario'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('checkSession/', checkSession, name='checkSession'),
+    path('uploadDocument/', uploadDocument, name='subirDocumento'),
+    path('seleccionarOpcionTitulacion/', seleccionar_opcion_titulacion, name='SeleccionarOpcionTitulacion'),
+>>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
 
     # Ruta para la API de registro
     path('api/registro/', RegistroView.as_view(), name='api_registro'),  # API para registro
     path('api/login/', LoginView.as_view(), name='login'),  # Ruta para login
+<<<<<<< HEAD
+=======
+    path('api/logout/', LogoutView.as_view(), name='logout'),  # Ruta para logout
+>>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
     path('api/login/administrador/', AdministradorLoginView.as_view(), name='login_administrador'),  # Ruta para login de administrador
 ]
 
