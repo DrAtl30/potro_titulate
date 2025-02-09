@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'backend.middleware.NoCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -163,3 +164,15 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'potrotitulate@gmail.com'  # dirección de correo
 EMAIL_HOST_PASSWORD = 'rissfdweuasuaxkb'  # Contraseña o App Password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',  # 👈 Solo JSON, nunca HTML
+    )
+}
+
+# Tiempo de vida de la sesión (en segundos)
+SESSION_COOKIE_AGE = 3600 * 24 * 1  # 1 dia
+
+# La sesión expira cuando el usuario cierra el navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False

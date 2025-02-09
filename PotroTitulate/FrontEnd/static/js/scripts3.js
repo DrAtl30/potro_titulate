@@ -19,7 +19,11 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             if (data.id_administrador) {
                 alert("Inicio de sesión exitoso");
+<<<<<<< HEAD
                 window.location.href = "/admin/dashboard/";  // Redirigir tras éxito
+=======
+                window.location.href = "/administrador";  // Redirigir tras éxito
+>>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
             } else {
                 document.getElementById("mensaje").innerText = "Credenciales incorrectas";
             }
@@ -41,4 +45,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         return cookieValue;
     }
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 091560d98b420a81ae219a43470c379fb9683b15

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password
 
 
 class Administrativos(models.Model):
@@ -6,12 +7,12 @@ class Administrativos(models.Model):
     nombre = models.CharField(max_length=100)
     correo_electronico = models.CharField(unique=True, max_length=100)
     contrasena = models.CharField(max_length=100)
-    rol = models.CharField(max_length=50)
+   # rol = models.CharField(max_length=50)
 
     class Meta:
         managed = False
         db_table = 'administrativos'
-
+    
 
 class Documentos(models.Model):
     id_documento = models.AutoField(primary_key=True)
@@ -97,7 +98,7 @@ class Sustentante(models.Model):
 class Tramites(models.Model):
     id_tramite = models.AutoField(primary_key=True)
     id_sustentante = models.ForeignKey(Sustentante, models.DO_NOTHING, db_column='id_sustentante')
-    ruta_titulacion = models.TextField()
+    id_opcion = models.ForeignKey(OpcionTitulacion, on_delete=models.CASCADE, db_column='id_opcion', null=True)  # Relaciona con OpciónTitulación
     estado_actual = models.CharField(max_length=50)
     fecha_inicio = models.DateField()
     fecha_actualizacion = models.DateField()
