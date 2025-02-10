@@ -71,17 +71,25 @@
                 <button type="button" class="btn btn-primary mt-2" onclick="enviarOpcionTitulacion()">Enviar</button>
             </form>
         {% else %}
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    Modo de titulación: {{ opcion_titulacion }}
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Trabajo escrito')">Trabajo escrito</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Aprovechamiento académico')">Aprovechamiento académico</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Creditos en estudios avanzados')">Creditos en estudios avanzados</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Examen General para el egreso de la Licenciatura EGEL')">Examen General para el egreso de la Licenciatura EGEL</a></li>
-                </ul>
-            </div>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Modo de titulación: {{ opcion_titulacion }}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Trabajo escrito')">Trabajo escrito</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Artículo Especializado para la Publicación en una Revista Indexada')">Artículo Especializado para la Publicación en una Revista Indexada</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Ensayo')">Ensayo</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Memoria de Experiencia Laboral')">Memoria de Experiencia Laboral</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Reporte de Aplicación de Conocimientos')">Reporte de Aplicación de Conocimientos</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Reporte de Autoempleo Profesional')">Reporte de Autoempleo Profesional</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Reporte de Residencia de Investigación')">Reporte de Residencia de Investigación</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Tesina')">Tesina</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Tesis')">Tesis</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Aprovechamiento académico')">Aprovechamiento académico</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Creditos en estudios avanzados')">Creditos en estudios avanzados</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showRequirements('Examen General para el egreso de la Licenciatura EGEL')">Examen General de Egresos (EGEL)</a></li>
+            </ul>
+        </div>
         {% endif %}
     </div>
    
