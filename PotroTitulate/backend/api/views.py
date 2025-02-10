@@ -247,12 +247,11 @@ class CambiarContrasenaView(APIView):
         sustentante.contrasena_temporal = False  # Marcar contraseña como no temporal
         sustentante.save()
 
-<<<<<<< HEAD
+
         # Aquí retornamos la respuesta correctamente
         return Response({'mensaje': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
-=======
-        #return Response({'mensaje': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
-        return JsonResponse({'redirect': '/iniciosesion'}, status=status.HTTP_200_OK)
+
+       
     
 
 @csrf_exempt
@@ -320,4 +319,4 @@ def seleccionar_opcion_titulacion(request):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
->>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
+
