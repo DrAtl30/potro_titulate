@@ -5,7 +5,7 @@ from rest_framework import status
 from .serializers import SustentanteRegistroSerializer
 from .serializers import SustentanteLoginSerializer
 from .serializers import *;
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 from datetime import datetime
 from django.core.mail import send_mail, BadHeaderError
@@ -309,3 +309,18 @@ def seleccionar_opcion_titulacion(request):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+def revisarOpcionesTitulacion(request):
+    if request.mehtod == 'POST':
+       tramite_id = request.POST.get('tramite_id')
+       estado = request.POST.get('estado') #aprobado o rechazado
+
+       tramite = get_object_or_404(Tramites, id_tramite=tramite_id)
+       tramite.estado_actual = estado
+       tramite.fecha_actualizacion = timezone.now().date()
+       tramite.save()
+
+       return JsonResponse({'success': True})
+    else:
+        tramites_pendientes = Tramites.objects.filter(estado_actual='pendiente')
+        return render(request, 'revisarOpcionesTitulacion.html', {'tramites_pendientes': tramites_pendientes})

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revisar Opciones de Titulación</title>
+</head>
+<body>
+    <h1>Revisar Opciones de Titulación</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Sustentante</th>
+                <th>Opción de Titulación</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tramite in tramites_pendientes %}
+                <tr>
+                    <td>{{ tramite.id_sustentante.nombre }}</td>
+                    <td>{{ tramite.id_opcion.nombre_opcion }}</td>
+                    <td>{{ tramite.estado_actual }}</td>
+                    <td>
+                        <button onclick="aprobarTramite({{ tramite.id_tramite }})">Aprobar</button>
+                        <button onclick="rechazarTramite({{ tramite.id_tramite }})">Rechazar</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script src="{% static 'js/scripts3.js' %} ?v={{ timestamp }}"></script>
+</body>
+</html>

@@ -58,16 +58,17 @@
     <div style="text-align: left; padding: 10px 20px; font-size: 18px; font-weight: bold;">
         Bienvenido: {{ nombre_sustentante }}
     </div>
+    <div id="opcionTitulacionData" data-opcion="{{ opcion_titulacion|escapejs }}"></div>
     <div style="padding: 0 20px;">
         {% if not opcion_titulacion %}
-            <form id="seleccionOpcionForm">
-                <label for="opcion_titulacion">Selecciona una opción de titulación:</label>
-                <select id="opcion_titulacion" name="opcion_titulacion">
+            <form id="seleccionOpcionForm" class="mb-3">
+                <label for="opcion_titulacion" class="form-label">Selecciona una opción de titulación:</label>
+                <select id="opcion_titulacion" name="opcion_titulacion" class="form-select">
                     {% for opcion in opciones_titulacion %}
                         <option value="{{ opcion.id_opcion }}">{{ opcion.nombre_opcion }}</option>
                     {% endfor %}
                 </select>
-                <button type="button" onclick="enviarOpcionTitulacion()">Enviar</button>
+                <button type="button" class="btn btn-primary mt-2" onclick="enviarOpcionTitulacion()">Enviar</button>
             </form>
         {% else %}
             <div class="dropdown">
@@ -128,12 +129,16 @@
      <!-- Mostrar documentos subidos -->
      <div id="documentosSubidos">
         <h3>Documentos Subidos:</h3>
-        <u1>
+        <ul class="list-group">
             {% for documento in documentos %}
-                <li>{{ documento.nombre_documento }} - {{ documento.estado_validacion }}   
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ documento.nombre_documento }}
+                    <span class="badge bg-{% if documento.estado_validacion == 'aprobado' %}success{% elif documento.estado_validacion == 'rechazado' %}danger{% else %}warning{% endif %}">
+                        {{ documento.estado_validacion }}
+                    </span>
                 </li>
             {% endfor %}
-        </u1>
+        </ul>
     </div>
 
     <!-- Modales -->
