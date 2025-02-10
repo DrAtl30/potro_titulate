@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from api.views import index, registro, inicio_sesion, RegistroView, LoginView, administrador, perfilUsuario
+from api.views import *;
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,9 +27,24 @@ urlpatterns = [
     path('iniciosesion/', inicio_sesion, name='inicio_sesion'),  # Ruta para "iniciar sesión"
     path('administrador/', administrador, name='administrador'),  # Ruta para "administrador"
     path('perfilUsuario/', perfilUsuario, name='perfilUsuario'),  # Ruta para "perfil de
+    path('recuperarContrasena/', recuperarContrasena, name='recuperarContrasena'),  # Ruta para "recuperar contraseña"
+    path('inicioSesionAdmin/', loginAdmin, name='inicioSesionAdmin'),  # Ruta para "loginAdmin"
+    path('cambiarContrasena/', cambiarContrasena, name='cambiarContrasena'),  # Ruta para "cambiar contraseña"
+
+    path('recuperarContrasena/recuperarContra', RecuperarContraseñaView.as_view(), name='procesar_recuperacion'),
+    path('cambiarContrasena/<int:id_sustentante>/', CambiarContrasenaView.as_view(), name='cambiar_contrasena'),  # Ruta para "cambiar contraseña"
+    path('recuperarContrasenaExito/', recuperarContrasenaExito, name='recuperarContrasenaExito'),  # Ruta para "recuperar contraseña exito"
+    path('administradorLogin/', AdministradorLoginView.as_view(), name='adminstradorLogin'),
+    #path('perfilUsuario/', PerfilUsuarioView.as_view(), name='perfilUsuario'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('checkSession/', checkSession, name='checkSession'),
+    path('uploadDocument/', uploadDocument, name='subirDocumento'),
+    path('seleccionarOpcionTitulacion/', seleccionar_opcion_titulacion, name='SeleccionarOpcionTitulacion'),
 
     # Ruta para la API de registro
     path('api/registro/', RegistroView.as_view(), name='api_registro'),  # API para registro
     path('api/login/', LoginView.as_view(), name='login'),  # Ruta para login
+    path('api/logout/', LogoutView.as_view(), name='logout'),  # Ruta para logout
+    path('api/login/administrador/', AdministradorLoginView.as_view(), name='login_administrador'),  # Ruta para login de administrador
 ]
 

@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'backend.middleware.NoCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -84,8 +85,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'potrotitulate',
-        'USER': 'admin',
-        'PASSWORD': 'adminPotro',
+        'USER': 'potroadmin',
+        'PASSWORD': 'admin',
         'HOST': '127.0.0.1',  # Conexión local mediante el túnel SSH
         'PORT': '5433',       # Puerto local redirigido
         'OPTIONS': {
@@ -155,3 +156,23 @@ CORS_ALLOWED_ORIGINS = [
 # Permitir todas las solicitudes de origen cruzado (CORS)
 CORS_ALLOW_ALL_ORIGINS = True
 
+# Configuración para el envío de correos electrónicos
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Cambia según el proveedor de correo
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'potrotitulate@gmail.com'  # dirección de correo
+EMAIL_HOST_PASSWORD = 'rissfdweuasuaxkb'  # Contraseña o App Password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',  # 👈 Solo JSON, nunca HTML
+    )
+}
+
+# Tiempo de vida de la sesión (en segundos)
+SESSION_COOKIE_AGE = 3600 * 24 * 1  # 1 dia
+
+# La sesión expira cuando el usuario cierra el navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
