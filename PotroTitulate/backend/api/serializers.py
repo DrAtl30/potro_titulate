@@ -1,14 +1,14 @@
-<<<<<<< HEAD
+
 from rest_framework import serializers 
 from django.contrib.auth.hashers import make_password 
 from django.contrib.auth.hashers import check_password 
 from .models import Administrativos, Sustentante
-=======
+
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 from .models import Sustentante, Administrativos
->>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
+
 import re
 
 class SustentanteRegistroSerializer(serializers.ModelSerializer):
@@ -66,10 +66,9 @@ class SustentanteLoginSerializer(serializers.Serializer):
             'correo_electronico': sustentante.correo_electronico,
             'contrasena_temporal': data['contrasena_temporal']  # Agregar si la contraseña es temporal
         }
-<<<<<<< HEAD
-=======
 
->>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
+
+
 class AdministradorLoginSerializer(serializers.Serializer):
     correo_electronico = serializers.EmailField()
     contrasena = serializers.CharField(write_only=True)
@@ -86,11 +85,11 @@ class AdministradorLoginSerializer(serializers.Serializer):
         
         # Devuelve datos del administrador, pero sin la contraseña
         return {
-<<<<<<< HEAD
+
             'id_administrador': administrador.id,
-=======
+
             'id_administrador': administrador.id_administrativo,
->>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
+            
             'nombre': administrador.nombre,
             'correo_electronico': administrador.correo_electronico
         }
