@@ -49,45 +49,20 @@ def perfilUsuario(request):
         opcion_titulacion = tramite.id_opcion.nombre_opcion if tramite and tramite.id_opcion else None
         documentos = Documentos.objects.filter(id_sustentante=sustentante)
         opciones_titulacion = OpcionTitulacion.objects.all()
+        progreso = tramite.progreso if tramite else 0
 
         return render(request, 'perfilDeUsuario.html', {
             'timestamp': timestamp,
             'nombre_sustentante': sustentante.nombre,
             'documentos': documentos,
             'opcion_titulacion': opcion_titulacion,
-            'opciones_titulacion': opciones_titulacion
+            'opciones_titulacion': opciones_titulacion,
+            'progreso': progreso,
+            'id_tramite': tramite.id_tramite if tramite else None  # Aquí pasamos el id_tramite
+
         })
     except Sustentante.DoesNotExist:
         return redirect('login')
-    
-
-#class PerfilUsuarioView(APIView):
-    def get(self, request):
-        # Obtén el ID del Sustentante desde la sesión
-        sustentante_id = request.session.get('sustentante_id')
-
-        if not sustentante_id:
-            # Si no hay un Sustentante autenticado, devuelve un error 401 (No autorizado)
-            return Response(
-                {'mensaje': 'No autenticado'}, 
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-
-        try:
-            # Obtén el objeto Sustentante
-            sustentante = Sustentante.objects.get(id=sustentante_id)
-            # Devuelve los datos del Sustentante en formato JSON
-            return Response({
-                'id_sustentante': sustentante.id_sustentante,
-                'nombre': sustentante.nombre,
-                'correo_electronico': sustentante.correo_electronico
-            }, status=status.HTTP_200_OK)
-        except Sustentante.DoesNotExist:
-            # Si el Sustentante no existe, devuelve un error 404 (No encontrado)
-            return Response(
-                {'mensaje': 'Sustentante no encontrado'}, 
-                status=status.HTTP_404_NOT_FOUND
-            )
         
 def recuperarContrasena(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
@@ -324,3 +299,33 @@ def revisarOpcionesTitulacion(request):
     else:
         tramites_pendientes = Tramites.objects.filter(estado_actual='pendiente')
         return render(request, 'revisarOpcionesTitulacion.html', {'tramites_pendientes': tramites_pendientes})
+
+def actualizarProgreso(request):
+    # Obtiene el id del trámite enviado desde el frontend
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        id_tramite = data.get('id_tramite')
+
+        # Obtiene el trámite
+        try:
+            tramite = Tramites.objects.get(id_tramite=id_tramite)
+
+            # Calcula el progreso basado en documentos aprobados
+            documentos_aprobados = Documentos.objects.filter(
+                id_sustentante=tramite.id_sustentante,
+                estado_validacion='aprobado'
+            ).count()
+            total_documentos = 17
+            progreso = int((documentos_aprobados / total_documentos) * 100)
+
+            # Actualiza el progreso del trámite en la base de datos
+            tramite.progreso = progreso
+            tramite.save()
+
+            # Retorna el nuevo progreso como respuesta JSON
+            return JsonResponse({'success': True, 'progreso': progreso})
+        
+        except Tramites.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Trámite no encontrado'})
+
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})

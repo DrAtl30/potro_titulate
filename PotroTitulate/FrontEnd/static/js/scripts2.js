@@ -1,9 +1,4 @@
-let progress = 0;
-const progressBar = document.querySelector('.progress-bar');
-let totalSteps = 0;
-
-document.addEventListener("DOMContentLoaded", function() {
-    // Obtener la opción de titulación desde el HTML
+document.addEventListener("DOMContentLoaded", function() {    // Obtener la opción de titulación desde el HTML
     const opcionTitulacion = document.getElementById("opcionTitulacionData").dataset.opcion;
 
     const requisitos = {
@@ -260,28 +255,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         requisitosContainer.appendChild(ul);
-        updateProgressBar();
     }
 
     window.showRequirements = showRequirements; // Hacer la función accesible globalmente
 });
 
-
-function updateProgressBar() {
-    const totalSteps = document.querySelectorAll('.requisito-item').length;
-    const approvedSteps = document.querySelectorAll('.estado.aprobado[style*="opacity: 1"]').length;
-    const progressPercentage = (approvedSteps / totalSteps) * 100;
-    progressBar.style.width = `${progressPercentage}%`;
-    progressBar.setAttribute('aria-valuenow', progressPercentage);
-    progressBar.textContent = `Paso ${approvedSteps} de ${totalSteps}`;
-}
-
-function updateProgressStep() {
-    if (progress < totalSteps) {
-        progress += 1;
-        updateProgressBar();
-    }
-}
 
 function uploadFile(requisito) {
     const fileInput = document.getElementById(`file-${requisito}`);
@@ -318,6 +296,12 @@ function handleFileChange(requisito) {
     }
 }
 
+function obtenerIdTramite() {
+    var idTramite = document.getElementById('idTramite').value;
+    return idTramite;
+}
+
+
 function updateEstado(requisito, nuevoEstado) {
     document.getElementById(`estado-${requisito}-espera`).style.opacity = '0.3';
     document.getElementById(`estado-${requisito}-revision`).style.opacity = '0.3';
@@ -326,7 +310,7 @@ function updateEstado(requisito, nuevoEstado) {
     document.getElementById(`estado-${requisito}-${nuevoEstado}`).style.opacity = '1';
 
     if (nuevoEstado === 'aprobado') {
-        updateProgressStep();
+        actualizarProgresoBackend();
     }
 }
 
@@ -447,5 +431,33 @@ function enviarOpcionTitulacion() {
     .catch(error => {
         console.error('Error:', error);
         mostrarModal('Error al enviar la opción de titulación', 'errorModal');
+    });
+}
+
+function actualizarProgresoBackend() {
+    // Aquí se hace una solicitud al backend para actualizar el progreso
+    fetch('/actualizarProgreso/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+        },
+        body: JSON.stringify({
+            id_tramite: obtenerIdTramite(), // Asegúrate de obtener correctamente el ID
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Actualiza la barra de progreso con el nuevo valor
+            document.querySelector('.progress-bar').style.width = `${data.progreso}%`;
+            document.querySelector('.progress-bar').setAttribute('aria-valuenow', data.progreso);
+            document.querySelector('.progress-bar').textContent = `${data.progreso}%`;
+        } else {
+            console.error('Error al actualizar el progreso:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error al actualizar el progreso:', error);
     });
 }
