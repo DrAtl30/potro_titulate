@@ -1,16 +1,5 @@
-let progress = 0;
-const progressBar = document.querySelector('.progress-bar');
-let totalSteps = 0;
-
-function showRequirements(option) {
-    const opcionTitulacion ="{{ opcion_titulacion }}";
-    if (option !== opcionTitulacion) {
-        mostrarModal(`Solo puedes subir documentos para la opción de titulación: ${opcionTitulacion}`, 'errorModal');
-        return;
-    }
-
-    const requisitosContainer = document.getElementById('requisitosContainer');
-    requisitosContainer.innerHTML = '';
+document.addEventListener("DOMContentLoaded", function() {    // Obtener la opción de titulación desde el HTML
+    const opcionTitulacion = document.getElementById("opcionTitulacionData").dataset.opcion;
 
     const requisitos = {
         'Trabajo escrito': [
@@ -35,9 +24,145 @@ function showRequirements(option) {
             'Evaluación Profesional: Formato 8.2',
             'Evaluación Profesional: Formato 8.4',
             'Evaluación Profesional: Formato 8.6',
-            'Evaluación Profesional: Formato 8.8'      
+            'Evaluación Profesional: Formato 8.8'
         ],
-
+        'Artículo Especializado para la Publicación en una Revista Indexada': [
+            'Formato 8.1 con sus firmas',
+            'Aviso Firmado de Privacidad de la UAEM',
+            'Certificado de 100% de plan de estudios',
+            'Certificado de Servicio Social',
+            'Certificado de Prácticas Profesionales',
+            'Acta de nacimiento',
+            'Artículo aceptado para publicación',
+            'Carta de aceptación de la revista indexada',
+            'Certificado de Bachillerato',
+            'Constancia de no adeudo a biblioteca',
+            'Constancia de no adeudo a Dirección de Control Escolar',
+            'Constancia de no adeudo a la UAEM-Contraloría',
+            'Comprobante/Baucher de Expedición de Titulo',
+            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+            'Formato de Llenado de Datos Personales',
+            'Formato 8.9'
+        ],
+        'Ensayo': [
+            'Formato 8.1 con sus firmas',
+            'Aviso Firmado de Privacidad de la UAEM',
+            'Certificado de 100% de plan de estudios',
+            'Certificado de Servicio Social',
+            'Certificado de Prácticas Profesionales',
+            'Acta de nacimiento',
+            'Ensayo aprobado por el comité',
+            'Certificado de Bachillerato',
+            'Constancia de no adeudo a biblioteca',
+            'Constancia de no adeudo a Dirección de Control Escolar',
+            'Constancia de no adeudo a la UAEM-Contraloría',
+            'Comprobante/Baucher de Expedición de Titulo',
+            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+            'Formato de Llenado de Datos Personales',
+            'Formato 8.9'
+        ],
+        'Memoria de Experiencia Laboral': [
+            'Formato 8.1 con sus firmas',
+            'Aviso Firmado de Privacidad de la UAEM',
+            'Certificado de 100% de plan de estudios',
+            'Certificado de Servicio Social',
+            'Certificado de Prácticas Profesionales',
+            'Acta de nacimiento',
+            'Memoria de experiencia laboral aprobada',
+            'Certificado de Bachillerato',
+            'Constancia de no adeudo a biblioteca',
+            'Constancia de no adeudo a Dirección de Control Escolar',
+            'Constancia de no adeudo a la UAEM-Contraloría',
+            'Comprobante/Baucher de Expedición de Titulo',
+            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+            'Formato de Llenado de Datos Personales',
+            'Formato 8.9'
+        ],
+        'Reporte de Aplicación de Conocimientos': [
+            'Formato 8.1 con sus firmas',
+            'Aviso Firmado de Privacidad de la UAEM',
+            'Certificado de 100% de plan de estudios',
+            'Certificado de Servicio Social',
+            'Certificado de Prácticas Profesionales',
+            'Acta de nacimiento',
+            'Reporte de aplicación de conocimientos aprobado',
+            'Certificado de Bachillerato',
+            'Constancia de no adeudo a biblioteca',
+            'Constancia de no adeudo a Dirección de Control Escolar',
+            'Constancia de no adeudo a la UAEM-Contraloría',
+            'Comprobante/Baucher de Expedición de Titulo',
+            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+            'Formato de Llenado de Datos Personales',
+            'Formato 8.9'
+        ],
+        'Reporte de Autoempleo Profesional': [
+            'Formato 8.1 con sus firmas',
+            'Aviso Firmado de Privacidad de la UAEM',
+            'Certificado de 100% de plan de estudios',
+            'Certificado de Servicio Social',
+            'Certificado de Prácticas Profesionales',
+            'Acta de nacimiento',
+            'Reporte de autoempleo profesional aprobado',
+            'Certificado de Bachillerato',
+            'Constancia de no adeudo a biblioteca',
+            'Constancia de no adeudo a Dirección de Control Escolar',
+            'Constancia de no adeudo a la UAEM-Contraloría',
+            'Comprobante/Baucher de Expedición de Titulo',
+            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+            'Formato de Llenado de Datos Personales',
+            'Formato 8.9'
+        ],
+        'Reporte de Residencia de Investigación': [
+            'Formato 8.1 con sus firmas',
+            'Aviso Firmado de Privacidad de la UAEM',
+            'Certificado de 100% de plan de estudios',
+            'Certificado de Servicio Social',
+            'Certificado de Prácticas Profesionales',
+            'Acta de nacimiento',
+            'Reporte de residencia de investigación aprobado',
+            'Certificado de Bachillerato',
+            'Constancia de no adeudo a biblioteca',
+            'Constancia de no adeudo a Dirección de Control Escolar',
+            'Constancia de no adeudo a la UAEM-Contraloría',
+            'Comprobante/Baucher de Expedición de Titulo',
+            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+            'Formato de Llenado de Datos Personales',
+            'Formato 8.9'
+        ],
+        'Tesina': [
+            'Formato 8.1 con sus firmas',
+            'Aviso Firmado de Privacidad de la UAEM',
+            'Certificado de 100% de plan de estudios',
+            'Certificado de Servicio Social',
+            'Certificado de Prácticas Profesionales',
+            'Acta de nacimiento',
+            'Tesina aprobada',
+            'Certificado de Bachillerato',
+            'Constancia de no adeudo a biblioteca',
+            'Constancia de no adeudo a Dirección de Control Escolar',
+            'Constancia de no adeudo a la UAEM-Contraloría',
+            'Comprobante/Baucher de Expedición de Titulo',
+            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+            'Formato de Llenado de Datos Personales',
+            'Formato 8.9'
+        ],
+        'Tesis': [
+            'Formato 8.1 con sus firmas',
+            'Aviso Firmado de Privacidad de la UAEM',
+            'Certificado de 100% de plan de estudios',
+            'Certificado de Servicio Social',
+            'Certificado de Prácticas Profesionales',
+            'Acta de nacimiento',
+            'Tesis aprobada',
+            'Certificado de Bachillerato',
+            'Constancia de no adeudo a biblioteca',
+            'Constancia de no adeudo a Dirección de Control Escolar',
+            'Constancia de no adeudo a la UAEM-Contraloría',
+            'Comprobante/Baucher de Expedición de Titulo',
+            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+            'Formato de Llenado de Datos Personales',
+            'Formato 8.9'
+        ],
         'Aprovechamiento académico': [
             'Formato 8.1 con sus firmas',
             'Certificado de 100% de plan de estudios',
@@ -57,7 +182,6 @@ function showRequirements(option) {
             'Formato de Llenado de Datos Personales',
             'Formato 8.9'
         ],
-
         'Creditos en estudios avanzados': [
             'Formato 8.1 con sus firmas',
             'Certificado de 100% de plan de estudios',
@@ -96,44 +220,46 @@ function showRequirements(option) {
         ]
     };
 
-    const ul = document.createElement('ul');
-    totalSteps = requisitos[option].length;
+    function showRequirements(option) {
+        if (option !== opcionTitulacion) {
+            mostrarModal(`Solo puedes subir documentos para la opción de titulación: ${opcionTitulacion}`, 'errorModal');
+            return;
+        }
 
-    requisitos[option].forEach(requisito => {
-        const li = document.createElement('li');
-        li.classList.add('requisito-item');
-        li.innerHTML = `
-            <span class="requisito-texto">${requisito}</span>
-            <button class="btn btn-link" onclick="uploadFile('${requisito}')">Subir</button>
-            <input type="file" id="file-${requisito}" style="display:none;" onchange="handleFileChange('${requisito}')">
-            <div class="semaforo">
-                <span class="estado espera" id="estado-${requisito}-espera"></span>
-                <span class="estado revision" id="estado-${requisito}-revision" style="opacity: 0.3;"></span>
-                <span class="estado aprobado" id="estado-${requisito}-aprobado" style="opacity: 0.3;"></span>
-            </div>
-        `;
-        ul.appendChild(li);
-    });
+        const requisitosContainer = document.getElementById('requisitosContainer');
+        requisitosContainer.innerHTML = '';
 
-    requisitosContainer.appendChild(ul);
-    updateProgressBar();
-}
+        if (!requisitos[option]) {
+            mostrarModal('No hay requisitos definidos para esta opción de titulación.', 'errorModal');
+            return;
+        }
 
-function updateProgressBar() {
-    const totalSteps = document.querySelectorAll('.requisito-item').length;
-    const approvedSteps = document.querySelectorAll('.estado.aprobado[style*="opacity: 1"]').length;
-    const progressPercentage = (approvedSteps / totalSteps) * 100;
-    progressBar.style.width = `${progressPercentage}%`;
-    progressBar.setAttribute('aria-valuenow', progressPercentage);
-    progressBar.textContent = `Paso ${approvedSteps} de ${totalSteps}`;
-}
+        
+        const ul = document.createElement('ul');
+        totalSteps = requisitos[option].length;
 
-function updateProgressStep() {
-    if (progress < totalSteps) {
-        progress += 1;
-        updateProgressBar();
+        requisitos[option].forEach(requisito => {
+            const li = document.createElement('li');
+            li.classList.add('requisito-item');
+            li.innerHTML = `
+                <span class="requisito-texto">${requisito}</span>
+                <button class="btn btn-link" onclick="uploadFile('${requisito}')">Subir</button>
+                <input type="file" id="file-${requisito}" style="display:none;" onchange="handleFileChange('${requisito}')">
+                <div class="semaforo">
+                    <span class="estado espera" id="estado-${requisito}-espera"></span>
+                    <span class="estado revision" id="estado-${requisito}-revision" style="opacity: 0.3;"></span>
+                    <span class="estado aprobado" id="estado-${requisito}-aprobado" style="opacity: 0.3;"></span>
+                </div>
+            `;
+            ul.appendChild(li);
+        });
+
+        requisitosContainer.appendChild(ul);
     }
-}
+
+    window.showRequirements = showRequirements; // Hacer la función accesible globalmente
+});
+
 
 function uploadFile(requisito) {
     const fileInput = document.getElementById(`file-${requisito}`);
@@ -170,6 +296,12 @@ function handleFileChange(requisito) {
     }
 }
 
+function obtenerIdTramite() {
+    var idTramite = document.getElementById('idTramite').value;
+    return idTramite;
+}
+
+
 function updateEstado(requisito, nuevoEstado) {
     document.getElementById(`estado-${requisito}-espera`).style.opacity = '0.3';
     document.getElementById(`estado-${requisito}-revision`).style.opacity = '0.3';
@@ -178,7 +310,7 @@ function updateEstado(requisito, nuevoEstado) {
     document.getElementById(`estado-${requisito}-${nuevoEstado}`).style.opacity = '1';
 
     if (nuevoEstado === 'aprobado') {
-        updateProgressStep();
+        actualizarProgresoBackend();
     }
 }
 
@@ -299,5 +431,33 @@ function enviarOpcionTitulacion() {
     .catch(error => {
         console.error('Error:', error);
         mostrarModal('Error al enviar la opción de titulación', 'errorModal');
+    });
+}
+
+function actualizarProgresoBackend() {
+    // Aquí se hace una solicitud al backend para actualizar el progreso
+    fetch('/actualizarProgreso/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+        },
+        body: JSON.stringify({
+            id_tramite: obtenerIdTramite(), // Asegúrate de obtener correctamente el ID
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Actualiza la barra de progreso con el nuevo valor
+            document.querySelector('.progress-bar').style.width = `${data.progreso}%`;
+            document.querySelector('.progress-bar').setAttribute('aria-valuenow', data.progreso);
+            document.querySelector('.progress-bar').textContent = `${data.progreso}%`;
+        } else {
+            console.error('Error al actualizar el progreso:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error al actualizar el progreso:', error);
     });
 }

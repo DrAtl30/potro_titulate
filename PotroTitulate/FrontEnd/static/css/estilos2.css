@@ -52,8 +52,14 @@ header nav a:hover {
 }
 
 .progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #0ddd44;
+    height: 100%;
+    transition: width 0.5s ease-in-out;
 }
+
 
 .estado {
     display: inline-block;
