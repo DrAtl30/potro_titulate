@@ -38,11 +38,9 @@ function showRequirements(option) {
             'Evaluación Profesional: Formato 8.8'      
         ],
 
-<<<<<<< HEAD
-        'Aprovechamiento academico': [
-=======
+
+
         'Aprovechamiento académico': [
->>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
             'Formato 8.1 con sus firmas',
             'Certificado de 100% de plan de estudios',
             'Certificado de Servicio Social',
@@ -148,10 +146,41 @@ function handleFileChange(requisito) {
     const fileInput = document.getElementById(`file-${requisito}`);
     const file = fileInput.files[0];
     if (file) {
+
+        document.getElementById('progressContainer').style.display = 'block';
+
         const formData = new FormData();
         formData.append('file', file);
         formData.append('requisito', requisito);
         formData.append('csrfmiddlewaretoken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+
+const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/uploadDocument/', true); // Cambia la url
+
+        xhr.upload.addEventListener('progress', function(e) {
+            if (e.lengthComputable) {
+                const percent = (e.loaded / e.total) * 100;
+                progressBar.style.width = `${percent}%`;
+                progressBar.setAttribute('aria-valuenow', percent);
+                progressBar.textContent = `${Math.round(percent)}%`;
+            }
+        });
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Oculta la barra de progreso una vez que se complete la carga
+                document.getElementById('progressContainer').style.display = 'none'; 
+                mostrarModal(`Archivo subido correctamente para ${requisito}`, 'successModal');
+                updateEstado(requisito, 'aprobado');
+            } else {
+                alert('Error al subir el archivo');
+                document.getElementById('progressContainer').style.display = 'none'; // Ocultar la barra si hay error
+            }
+        };
+
+        xhr.send(formData);
+    }
+}
 
         fetch('/uploadDocument/', {
             method: 'POST',
@@ -171,9 +200,7 @@ function handleFileChange(requisito) {
             console.error('Error:', error);
             alert('Error al subir el archivo');
         });
-    }
-}
-
+  
 function updateEstado(requisito, nuevoEstado) {
     document.getElementById(`estado-${requisito}-espera`).style.opacity = '0.3';
     document.getElementById(`estado-${requisito}-revision`).style.opacity = '0.3';
