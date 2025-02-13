@@ -221,42 +221,44 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
     };
 
     function showRequirements(option) {
-        if (option !== opcionTitulacion) {
-            mostrarModal(`Solo puedes subir documentos para la opción de titulación: ${opcionTitulacion}`, 'errorModal');
-            return;
-        }
-
         const requisitosContainer = document.getElementById('requisitosContainer');
         requisitosContainer.innerHTML = '';
-
+    
         if (!requisitos[option]) {
             mostrarModal('No hay requisitos definidos para esta opción de titulación.', 'errorModal');
             return;
         }
-
-        
+    
         const ul = document.createElement('ul');
         totalSteps = requisitos[option].length;
-
+    
         requisitos[option].forEach(requisito => {
             const li = document.createElement('li');
             li.classList.add('requisito-item');
-            li.innerHTML = `
+    
+            let contenido = `
                 <span class="requisito-texto">${requisito}</span>
-                <button class="btn btn-link" onclick="uploadFile('${requisito}')">Subir</button>
-                <input type="file" id="file-${requisito}" style="display:none;" onchange="handleFileChange('${requisito}')">
                 <div class="semaforo">
                     <span class="estado espera" id="estado-${requisito}-espera"></span>
                     <span class="estado revision" id="estado-${requisito}-revision" style="opacity: 0.3;"></span>
                     <span class="estado aprobado" id="estado-${requisito}-aprobado" style="opacity: 0.3;"></span>
                 </div>
             `;
+    
+            // Solo agregar el botón de subir archivos si la opción coincide con la del usuario
+            if (option === opcionTitulacion) {
+                contenido += `
+                    <button class="btn btn-link" onclick="uploadFile('${requisito}')">Subir</button>
+                    <input type="file" id="file-${requisito}" style="display:none;" onchange="handleFileChange('${requisito}')">
+                `;
+            }
+    
+            li.innerHTML = contenido;
             ul.appendChild(li);
         });
-
+    
         requisitosContainer.appendChild(ul);
-    }
-
+    }    
     window.showRequirements = showRequirements; // Hacer la función accesible globalmente
 });
 
