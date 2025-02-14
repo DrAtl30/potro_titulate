@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
             'Formato de Llenado de Datos Personales',
             'Formato 8.9'
         ],
-        'Creditos en estudios avanzados': [
+        'Creditos de estudios avanzados': [
             'Formato 8.1 con sus firmas',
             'Certificado de 100% de plan de estudios',
             'Certificado de Servicio Social',
@@ -221,11 +221,6 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
     };
 
     function showRequirements(option) {
-        if (option !== opcionTitulacion) {
-            mostrarModal(`Solo puedes subir documentos para la opción de titulación: ${opcionTitulacion}`, 'errorModal');
-            return;
-        }
-    
         const requisitosContainer = document.getElementById('requisitosContainer');
         requisitosContainer.innerHTML = '';
     
@@ -240,10 +235,9 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
         requisitos[option].forEach(requisito => {
             const li = document.createElement('li');
             li.classList.add('requisito-item');
-            li.innerHTML = `
+    
+            let contenido = `
                 <span class="requisito-texto">${requisito}</span>
-                <button class="btn btn-link" onclick="uploadFile('${requisito}')">Subir</button>
-                <input type="file" id="file-${requisito}" style="display:none;" onchange="handleFileChange('${requisito}')">
                 <div class="semaforo">
                     <span class="estado no-entregado" id="estado-${requisito}-no-entregado"></span>
                     <span class="estado pendiente" id="estado-${requisito}-pendiente" style="opacity: 0.3;"></span>
@@ -251,15 +245,74 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
                     <span class="estado rechazado" id="estado-${requisito}-rechazado" style="opacity: 0.3;"></span>
                 </div>
             `;
+    
+            // Solo agregar el botón de subir archivos si la opción coincide con la del usuario
+            if (option === opcionTitulacion) {
+                contenido += `
+                    <button class="btn btn-link" onclick="uploadFile('${requisito}')">Subir</button>
+                    <input type="file" id="file-${requisito}" style="display:none;" onchange="handleFileChange('${requisito}')">
+                `;
+            }
+    
+            li.innerHTML = contenido;
             ul.appendChild(li);
         });
     
         requisitosContainer.appendChild(ul);
-    }
-
+    }    
     window.showRequirements = showRequirements; // Hacer la función accesible globalmente
 });
 
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    inicializarEstados();
+});
+
+function inicializarEstados() {
+    const idTramite = obtenerIdTramite();
+    fetch(`/obtenerEstados/${idTramite}/`)
+        .then(response => response.json())
+        .then(data => {
+            const estados = data.estados;
+            document.querySelectorAll("[data-requisito").forEach(requisito => {
+                const id = requisito.dataset.requisito;
+                const estadoGuardado = estados[id]  || 'no-entregado';
+                updateEstado(id, estadoGuardado);
+            })
+        })
+        .catch(error => console.error("Error al obtener estados:", error)); 
+}
+
+function updateEstado(requisito, nuevoEstado) {
+    const estados = ['no-entregado', 'pendiente', 'aceptado', 'rechazado'];
+
+    estados.forEach(estado => {
+        const elemento = document.getElementById(`estado-${requisito}-${estado}`);
+        if (elemento) {
+            elemento.style.opacity = '0.3';
+        }
+    });
+
+    const estadoActivo = document.getElementById(`estado-${requisito}-${nuevoEstado}`);
+    if (estadoActivo) {
+        estadoActivo.style.opacity = '1';
+    }
+
+    if (nuevoEstado === 'aceptado') {
+        actualizarProgresoBackend();
+    }
+
+    guardarEstado(requisito, nuevoEstado);
+}
+
+function guardarEstado(requisito, estado) {
+    localStorage.setItem(`estado-${requisito}`, estado);
+}
+
+function obtenerEstadoGuardado(requisito) {
+    return localStorage.getItem(`estado-${requisito}`);
+}
 
 function uploadFile(requisito) {
     const fileInput = document.getElementById(`file-${requisito}`);
@@ -269,6 +322,7 @@ function uploadFile(requisito) {
 function handleFileChange(requisito) {
     const fileInput = document.getElementById(`file-${requisito}`);
     const file = fileInput.files[0];
+
     if (file) {
         const formData = new FormData();
         formData.append('file', file);
@@ -281,10 +335,10 @@ function handleFileChange(requisito) {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Respuesta del servidor:', data);
             if (data.success) {
                 mostrarModal(`Archivo subido correctamente para ${requisito}`, 'successModal');
-                updateEstado(requisito, 'aprobado');
+                updateEstado(requisito, 'pendiente'); // Cambia el estado a "pendiente"
+                document.querySelector(`button[onclick="uploadFile('${requisito}')"]`).disabled = true; // Desactiva el botón de subir
             } else {
                 mostrarModal(`Error al subir el archivo: ${data.error}`, 'errorModal');
             }
@@ -296,38 +350,7 @@ function handleFileChange(requisito) {
     }
 }
 
-function obtenerIdTramite() {
-    var idTramite = document.getElementById('idTramite').value;
-    return idTramite;
-}
 
-
-function updateEstado(requisito, nuevoEstado) {
-    const estados = ['no-entregado', 'pendiente', 'aceptado', 'rechazado'];
-    
-    // Reinicia la opacidad de todos los estados
-    estados.forEach(estado => {
-        const elemento = document.getElementById(`estado-${requisito}-${estado}`);
-        if (elemento) {
-            elemento.style.opacity = '0.3'; // Opacidad baja para estados no activos
-        }
-    });
-
-    // Activa el estado correspondiente
-    const estadoActivo = document.getElementById(`estado-${requisito}-${nuevoEstado}`);
-    if (estadoActivo) {
-        estadoActivo.style.opacity = '1'; // Opacidad alta para el estado activo
-    }
-
-    // Actualiza el progreso si el estado es "aceptado"
-    if (nuevoEstado === 'aceptado') {
-        actualizarProgresoBackend();
-    }
-}
-
-/*function cerrarSesion() {
-    window.location.href ='/logout'; 
-}*/
 
 function cerrarSesion() {
     // Crea un formulario
