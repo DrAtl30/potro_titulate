@@ -225,19 +225,18 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
             mostrarModal(`Solo puedes subir documentos para la opción de titulación: ${opcionTitulacion}`, 'errorModal');
             return;
         }
-
+    
         const requisitosContainer = document.getElementById('requisitosContainer');
         requisitosContainer.innerHTML = '';
-
+    
         if (!requisitos[option]) {
             mostrarModal('No hay requisitos definidos para esta opción de titulación.', 'errorModal');
             return;
         }
-
-        
+    
         const ul = document.createElement('ul');
         totalSteps = requisitos[option].length;
-
+    
         requisitos[option].forEach(requisito => {
             const li = document.createElement('li');
             li.classList.add('requisito-item');
@@ -246,14 +245,15 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
                 <button class="btn btn-link" onclick="uploadFile('${requisito}')">Subir</button>
                 <input type="file" id="file-${requisito}" style="display:none;" onchange="handleFileChange('${requisito}')">
                 <div class="semaforo">
-                    <span class="estado espera" id="estado-${requisito}-espera"></span>
-                    <span class="estado revision" id="estado-${requisito}-revision" style="opacity: 0.3;"></span>
-                    <span class="estado aprobado" id="estado-${requisito}-aprobado" style="opacity: 0.3;"></span>
+                    <span class="estado no-entregado" id="estado-${requisito}-no-entregado"></span>
+                    <span class="estado pendiente" id="estado-${requisito}-pendiente" style="opacity: 0.3;"></span>
+                    <span class="estado aceptado" id="estado-${requisito}-aceptado" style="opacity: 0.3;"></span>
+                    <span class="estado rechazado" id="estado-${requisito}-rechazado" style="opacity: 0.3;"></span>
                 </div>
             `;
             ul.appendChild(li);
         });
-
+    
         requisitosContainer.appendChild(ul);
     }
 
@@ -303,13 +303,24 @@ function obtenerIdTramite() {
 
 
 function updateEstado(requisito, nuevoEstado) {
-    document.getElementById(`estado-${requisito}-espera`).style.opacity = '0.3';
-    document.getElementById(`estado-${requisito}-revision`).style.opacity = '0.3';
-    document.getElementById(`estado-${requisito}-aprobado`).style.opacity = '0.3';
+    const estados = ['no-entregado', 'pendiente', 'aceptado', 'rechazado'];
+    
+    // Reinicia la opacidad de todos los estados
+    estados.forEach(estado => {
+        const elemento = document.getElementById(`estado-${requisito}-${estado}`);
+        if (elemento) {
+            elemento.style.opacity = '0.3'; // Opacidad baja para estados no activos
+        }
+    });
 
-    document.getElementById(`estado-${requisito}-${nuevoEstado}`).style.opacity = '1';
+    // Activa el estado correspondiente
+    const estadoActivo = document.getElementById(`estado-${requisito}-${nuevoEstado}`);
+    if (estadoActivo) {
+        estadoActivo.style.opacity = '1'; // Opacidad alta para el estado activo
+    }
 
-    if (nuevoEstado === 'aprobado') {
+    // Actualiza el progreso si el estado es "aceptado"
+    if (nuevoEstado === 'aceptado') {
         actualizarProgresoBackend();
     }
 }

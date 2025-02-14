@@ -141,7 +141,7 @@
             {% for documento in documentos %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{ documento.nombre_documento }}
-                    <span class="badge bg-{% if documento.estado_validacion == 'aprobado' %}success{% elif documento.estado_validacion == 'rechazado' %}danger{% else %}warning{% endif %}">
+                    <span class="badge bg-{% if documento.estado_validacion == 'aceptado' %}success{% elif documento.estado_validacion == 'rechazado' %}danger{% elif documento.estado_validacion == 'pendiente' %}warning{% else %}secondary{% endif %}">
                         {{ documento.estado_validacion }}
                     </span>
                 </li>
