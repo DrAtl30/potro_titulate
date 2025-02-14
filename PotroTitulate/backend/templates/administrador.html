@@ -60,28 +60,46 @@
             </table>
             <button id="btnRevisarRequisitos" class="btn btn-primary mb-3">Revisión de Requisitos</button>
             <ul id="listaRequisitos" class="list-group" style="display: none;">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center" id="requisitoA">
                     Requisito A
                     <div class="semaforo-container">
-                        <span class="semaforo espera"></span>
+                        <span class="semaforo no-entregado activo"></span> <!-- Estado por defecto -->
+                        <span class="semaforo pendiente"></span>
                         <span class="semaforo revision"></span>
-                        <span class="semaforo aprobado"></span>
+                        <span class="semaforo aceptado"></span>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="cambiarEstado('requisitoA', 'pendiente')">Pendiente</button>
+                        <button class="btn btn-sm btn-outline-success" onclick="cambiarEstado('requisitoA', 'aceptado')">Aceptado</button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="cambiarEstado('requisitoA', 'rechazado')">Rechazado</button>
                     </div>
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center" id="requisitoB">
                     Requisito B
                     <div class="semaforo-container">
-                        <span class="semaforo espera"></span>
+                        <span class="semaforo no-entregado activo"></span> <!-- Estado por defecto -->
+                        <span class="semaforo pendiente"></span>
                         <span class="semaforo revision"></span>
-                        <span class="semaforo aprobado"></span>
+                        <span class="semaforo aceptado"></span>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="cambiarEstado('requisitoB', 'pendiente')">Pendiente</button>
+                        <button class="btn btn-sm btn-outline-success" onclick="cambiarEstado('requisitoB', 'aceptado')">Aceptado</button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="cambiarEstado('requisitoB', 'rechazado')">Rechazado</button>
                     </div>
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center" id="requisitoC">
                     Requisito C
                     <div class="semaforo-container">
-                        <span class="semaforo espera"></span>
+                        <span class="semaforo no-entregado activo"></span> <!-- Estado por defecto -->
+                        <span class="semaforo pendiente"></span>
                         <span class="semaforo revision"></span>
-                        <span class="semaforo aprobado"></span>
+                        <span class="semaforo aceptado"></span>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="cambiarEstado('requisitoC', 'pendiente')">Pendiente</button>
+                        <button class="btn btn-sm btn-outline-success" onclick="cambiarEstado('requisitoC', 'aceptado')">Aceptado</button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="cambiarEstado('requisitoC', 'rechazado')">Rechazado</button>
                     </div>
                 </li>
             </ul>

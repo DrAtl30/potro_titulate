@@ -140,6 +140,7 @@ footer img {
 .list-group-item:hover {
     background-color: #f0f0f0;
 }
+
 .semaforo-container {
     display: flex;
     gap: 10px;
@@ -150,16 +151,29 @@ footer img {
     width: 20px;
     height: 20px;
     border-radius: 50%;
+    opacity: 0.3; 
 }
 
-.semaforo.espera {
+.semaforo.activo {
+    opacity: 1; 
+}
+
+.semaforo.no-entregado {
+    background-color: gray; 
+}
+
+.semaforo.pendiente {
     background-color: yellow;
 }
 
 .semaforo.revision {
-    background-color: orange;
+    background-color: orange; 
 }
 
-.semaforo.aprobado {
+.semaforo.aceptado {
     background-color: green;
+}
+
+.semaforo.rechazado {
+    background-color: red; 
 }
