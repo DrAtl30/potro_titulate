@@ -67,7 +67,45 @@ header nav a:hover {
     height: 15px;
     border-radius: 50%;
 }
+.estado.no-entregado {
+    background-color: #6c757d;
+    color: white;
+}
 
+.estado.pendiente {
+    background-color: #ffc107; 
+    color: black;
+}
+
+.estado.aceptado {
+    background-color: #28a745; 
+    color: white;
+}
+
+.estado.rechazado {
+    background-color: #dc3545; 
+    color: white;
+}
+
+.badge.bg-secondary {
+    background-color: #6c757d; 
+    color: white;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107;
+    color: black;
+}
+
+.badge.bg-success {
+    background-color: #28a745; 
+    color: white;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545;
+    color: white;
+}
 .requisito-item {
     display: flex;
     align-items: center;
@@ -80,7 +118,6 @@ header nav a:hover {
 .ms-auto {
     margin-left: auto;  /* Esto mueve el botón de cerrar sesión hacia la derecha */
 }
-
 
 
 
