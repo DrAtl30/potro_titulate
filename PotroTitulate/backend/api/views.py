@@ -236,9 +236,14 @@ def uploadDocument(request):
     try:
         sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
 
+        # Obtener el trámite actual del sustentante
+        tramite = Tramites.objects.filter(id_sustentante=sustentante).order_by('-fecha_inicio').first()
+        if not tramite:
+            return JsonResponse({'success': False, 'error': 'No se encontró un trámite para el sustentante'}, status=404)   
         # Guardar el documento en la base de datos
         documento = Documentos.objects.create(
             id_sustentante=sustentante,
+            id_tramite=tramite,
             nombre_documento=requisito,
             tipo_documento=file.content_type,
             fecha_subida=timezone.now().date(),
@@ -246,7 +251,7 @@ def uploadDocument(request):
             archivo=file  # Asegúrate de que en tu modelo `Documentos` tengas un campo `FileField`
         )
 
-        return JsonResponse({'success': True, 'documento_id': documento.id})
+        return JsonResponse({'success': True, 'documento_id': documento.id_documento})
     except Sustentante.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Sustentante no encontrado'}, status=404)
     except Exception as e:
@@ -339,6 +344,10 @@ def actualizarProgreso(request):
 
 #EndPoint para recuperar el estado de los documentos
 def estadoDocumento(request, tramite_id):
-    documentos = Documentos.objects.filter(id_tramite=tramite_id)
-    estados = {doc.requisito: doc.estado_validacion for doc in documentos}
-    return JsonResponse({"estados": estados})
+    try:
+        documentos = Documentos.objects.filter(id_tramite=tramite_id)
+        estados = {doc.nombre_documento: doc.estado_validacion for doc in documentos}
+
+        return JsonResponse({'success': True, 'estados': estados})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)

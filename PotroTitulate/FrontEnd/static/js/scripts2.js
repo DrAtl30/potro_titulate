@@ -253,36 +253,66 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
                     <input type="file" id="file-${requisito}" style="display:none;" onchange="handleFileChange('${requisito}')">
                 `;
             }
-    
+            
             li.innerHTML = contenido;
             ul.appendChild(li);
         });
     
         requisitosContainer.appendChild(ul);
+
+         // Llamar a cargarEstados después de crear los botones
+         const tramite_id = obtenerTramiteSeleccionado();
+         if (tramite_id) {
+             cargarEstados(tramite_id);
+         }
     }    
     window.showRequirements = showRequirements; // Hacer la función accesible globalmente
 });
 
 
+function obtenerIdTramite() {
+    const idTramiteElement = document.getElementById('idTramite');
+    if (idTramiteElement) {
+        return idTramiteElement.value;
+    } else {
+        console.error('No se encontró el elemento con ID "idTramite"');
+        return null;
+    }
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-    inicializarEstados();
-});
+// Función para obtener el ID del trámite
+function obtenerTramiteSeleccionado() {
+    const idTramiteElement = document.getElementById('idTramite');
+    if (idTramiteElement) {
+        return idTramiteElement.value;
+    } else {
+        console.error('No se encontró el elemento con ID "idTramite"');
+        return null;
+    }
+}
 
-function inicializarEstados() {
-    const idTramite = obtenerIdTramite();
-    fetch(`/obtenerEstados/${idTramite}/`)
+// Función para cargar los estados de los requisitos
+function cargarEstados(tramite_id) {
+    fetch(`/obtenerEstados/${tramite_id}/`)
         .then(response => response.json())
         .then(data => {
-            const estados = data.estados;
-            document.querySelectorAll("[data-requisito").forEach(requisito => {
-                const id = requisito.dataset.requisito;
-                const estadoGuardado = estados[id]  || 'no-entregado';
-                updateEstado(id, estadoGuardado);
-            })
+            if (data.success) {
+                Object.entries(data.estados).forEach(([requisito, estado]) => {
+                    updateEstado(requisito, estado); // Actualiza el semáforo con el estado correcto
+                    if (estado === 'pendiente' || estado === 'aceptado') {
+                        const boton = document.querySelector(`button[onclick="uploadFile('${requisito}')"]`);
+                        if (boton) {
+                            boton.disabled = true;
+                        } else {
+                            console.warn(`No se encontró el botón para el requisito: ${requisito}`);
+                        }
+                    }
+                });
+            }
         })
-        .catch(error => console.error("Error al obtener estados:", error)); 
+        .catch(error => console.error('Error al obtener estados:', error));
 }
+
 
 function updateEstado(requisito, nuevoEstado) {
     const estados = ['no-entregado', 'pendiente', 'aceptado', 'rechazado'];

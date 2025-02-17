@@ -17,6 +17,7 @@ class Administrativos(models.Model):
 class Documentos(models.Model):
     id_documento = models.AutoField(primary_key=True)
     id_sustentante = models.ForeignKey('Sustentante', models.DO_NOTHING, db_column='id_sustentante')
+    id_tramite = models.ForeignKey('Tramites', models.DO_NOTHING, db_column='id_tramite', null=True, blank=True)
     nombre_documento = models.CharField(max_length=100)
     tipo_documento = models.CharField(max_length=50)
     fecha_subida = models.DateField()
@@ -26,7 +27,7 @@ class Documentos(models.Model):
 
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'documentos'
 
 
