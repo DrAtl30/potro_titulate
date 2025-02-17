@@ -219,31 +219,38 @@ class CambiarContrasenaView(APIView):
         return JsonResponse({'redirect': '/iniciosesion'}, status=status.HTTP_200_OK)
     
 
-@csrf_exempt
 def uploadDocument(request):
-    if request.method == 'POST':
-        sustentante_id = request.session.get('sustentante_id')
-        if not sustentante_id:
-            return JsonResponse({'succes': False, 'error':'No autenticado'})
-    
-        try:
-            sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
-            file = request.FILES['file']
-            requisito = request.POST.get('requisito')
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
-            #Guardar el documento en la base de datos
-            Documentos.objects.create(
-                id_sustentante=sustentante,
-                nombre_documento=requisito,
-                tipo_documento=file.content_type,
-                fecha_subida=timezone.now().date(),
-                estado_validacion='pendiente'
-            )
+    sustentante_id = request.session.get('sustentante_id')
+    if not sustentante_id:
+        return JsonResponse({'success': False, 'error': 'No autenticado'}, status=401)
 
-            return JsonResponse({'success' : True})
-        except Exception as e:
-            return JsonResponse({'success' : False, 'error': str(e)})
-    return JsonResponse({'success' : False, 'error' : 'Metodo no permitido'})
+    file = request.FILES.get('file')
+    requisito = request.POST.get('requisito')
+
+    if not file or not requisito:
+        return JsonResponse({'success': False, 'error': 'Archivo o requisito faltante'}, status=400)
+
+    try:
+        sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+
+        # Guardar el documento en la base de datos
+        documento = Documentos.objects.create(
+            id_sustentante=sustentante,
+            nombre_documento=requisito,
+            tipo_documento=file.content_type,
+            fecha_subida=timezone.now().date(),
+            estado_validacion='pendiente',
+            archivo=file  # Asegúrate de que en tu modelo `Documentos` tengas un campo `FileField`
+        )
+
+        return JsonResponse({'success': True, 'documento_id': documento.id})
+    except Sustentante.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Sustentante no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 @csrf_exempt
 def seleccionar_opcion_titulacion(request):
@@ -329,3 +336,9 @@ def actualizarProgreso(request):
             return JsonResponse({'success': False, 'error': 'Trámite no encontrado'})
 
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+#EndPoint para recuperar el estado de los documentos
+def estadoDocumento(request, tramite_id):
+    documentos = Documentos.objects.filter(id_tramite=tramite_id)
+    estados = {doc.requisito: doc.estado_validacion for doc in documentos}
+    return JsonResponse({"estados": estados})

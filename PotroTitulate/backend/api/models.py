@@ -22,9 +22,11 @@ class Documentos(models.Model):
     fecha_subida = models.DateField()
     estado_validacion = models.CharField(max_length=50)
     comentarios_validacion = models.TextField(blank=True, null=True)
+    archivo = models.FileField(upload_to='documentos/', null=True, blank=True)
+
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'documentos'
 
 
