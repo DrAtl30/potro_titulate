@@ -174,6 +174,8 @@
     <!-- Campo oculto para almacenar el id_tramite -->
     <input type="hidden" id="idTramite" value="{{ id_tramite }}">
 
+    <!-- Campo oculto para almacenar el id_sustentante -->
+    <input type="hidden" id="idSustentante" value="{{ id_sustentante }}">
 
     <!-- Enlace a Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -207,6 +209,39 @@
             checkSession();
         }
     };
+
+    document.addEventListener("DOMContentLoaded", function(){
+        //Obtener el ID del usuario
+        const usuarioId = document.getElementById("idSustentante").value;
+
+        fetch(`/verficiarTramiteEnProgreso/${usuarioId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.tramiteEnProgreso) {
+                    if (data.estado === 'pendiente') {
+                        mostrarMensajeAprobacionPendiente;
+                    } else if (data.estado === 'aprobado') {
+                        cargarPerfilUsuario();
+                    }
+                } else {
+                    //Si no hay un tramite en progreso, redirigir a la página de opciones de titulacion
+                    window.location.href = '/opcionesTitulacion/';
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener el trámite:', error);
+            });
+
+            function mostrarMensajeAprobacionPendiente() {
+                const mensaje = document.createElement('div');
+                mensaje.textContent = 'Aprobación pendiente. Por favor, espere a que el administrativo apruebe su trámite.';
+                document.body.appendChild(mensaje);
+            }
+
+            function cargarPerfilUsuario(){
+                //Lógica para cargar el perfil normalmente
+            }
+    })
 </script>
 
 </body>
