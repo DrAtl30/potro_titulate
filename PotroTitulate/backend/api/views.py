@@ -82,8 +82,26 @@ def recuperarContrasenaExito(request):
     return render(request, 'recuperarContrasenaExito.html', {'timestamp': timestamp})
 
 def opcionesTitulacion(request):
+    sustentante_id = request.session.get('sustentante_id')
     timestamp = datetime.now().timestamp()
-    return render(request, 'opcionesTitulacion.html', {'timestamp': timestamp})
+    if not sustentante_id:
+        return redirect('login')
+    try:
+        sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+
+        context = {
+            'timestamp': timestamp,
+            'sustentante': {
+                'id_sustentante': sustentante.id_sustentante,
+                'nombre': sustentante.nombre,
+                'apellido': sustentante.apellido,
+                'id_opcion': sustentante.id_opcion.id_opcion if sustentante.id_opcion else None
+            }
+        }
+        return render(request, 'opcionesTitulacion.html', context)
+    
+    except Sustentante.DoesNotExist:
+        return redirect('login')
 
 #Vista para verificar si hay un trámite en progreso
 def verificar_tramite_en_progreso(request, id_sustentante):
