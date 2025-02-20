@@ -58,7 +58,8 @@ def perfilUsuario(request):
             'opcion_titulacion': opcion_titulacion,
             'opciones_titulacion': opciones_titulacion,
             'progreso': progreso,
-            'id_tramite': tramite.id_tramite if tramite else None  # Aquí pasamos el id_tramite
+            'id_tramite': tramite.id_tramite if tramite else None, # Aquí pasamos el id_tramite
+            'id_sustentante': sustentante_id 
 
         })
     except Sustentante.DoesNotExist:
@@ -79,6 +80,21 @@ def loginAdmin(request):
 def recuperarContrasenaExito(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'recuperarContrasenaExito.html', {'timestamp': timestamp})
+
+def opcionesTitulacion(request):
+    timestamp = datetime.now().timestamp()
+    return render(request, 'opcionesTitulacion.html', {'timestamp': timestamp})
+
+#Vista para verificar si hay un trámite en progreso
+def verificar_tramite_en_progreso(request, id_sustentante):
+    # Verificar si el sustentante tiene un trámite en progreso
+    tramite = Tramites.objects.filter(id_sustentante=id_sustentante).exists()  # Utilizamos exists() para solo verificar la existencia
+    
+    if tramite:
+        return JsonResponse({'tramiteEnProgreso': True})
+    else:
+        return JsonResponse({'tramiteEnProgreso': False})
+
 
 
 class RegistroView(APIView):
