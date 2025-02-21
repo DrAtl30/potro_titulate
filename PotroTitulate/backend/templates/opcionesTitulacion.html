@@ -202,7 +202,7 @@
         </div>
 
     <!-- Campo oculto para almacenar el id_sustentante -->
-    <input type="hidden" id="idSustentante" value="{{ id_sustentante }}">
+    <input type="hidden" id="idSustentante" value = "{{ sustentante.id_sustentante }}"> 
 
     <!-- Enlace a Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -411,60 +411,98 @@
             const lista = document.getElementById('trabajoEscritoLista');
             lista.style.display = lista.style.display === 'none' ? 'block' : 'none';
         }
-    
-        // Función para mostrar los requisitos en el contenedor
-        function showRequirementsOP(opcion) {
-            document.getElementById('opcionSeleccionada').textContent = `Opción seleccionada: ${opcion}`;
-            const requisitosContainer = document.getElementById("requisitosContainer");
-            const listaRequisitos = document.getElementById("listaRequisitos");
-    
-            // Limpiar la lista de requisitos previos
-            listaRequisitos.innerHTML = "";
-    
-            // Obtener los requisitos para la opción seleccionada
-            const requisitos = requisitosPorOpcion[opcion] || ["No hay requisitos definidos para esta opción."];
-    
-            // Llenar la lista con los requisitos
-            requisitos.forEach(requisito => {
-                const li = document.createElement('li');
-                li.textContent = requisito;
-                listaRequisitos.appendChild(li);
-            });
-    
-            // Mostrar el contenedor de requisitos
-            requisitosContainer.style.display = "block";
+
+        const opcionesConId = {
+            "Artículo Especializado para la Publicación en una Revista Indexada": 1,
+            "Ensayo": 2,
+            "Memoria de Experiencia Laboral": 3,
+            "Reporte de Aplicación de Conocimientos": 4,
+            "Reporte de Autoempleo Profesional": 5,
+            "Reporte de Residencia de Investigación": 6,
+            "Tesina": 7,
+            "Tesis": 8,
+            "Aprovechamiento Académico": 9,
+            "Créditos en Estudios Avanzados": 10,
+            "Examen General para el Egreso de la Licenciatura EGEL": 11
+        };
+
+        let opcionSeleccionadaGlobal = null;
+
+function showRequirementsOP(opcion) {
+    opcionSeleccionadaGlobal = opcion; // Almacenar la opción seleccionada
+    document.getElementById('opcionSeleccionada').textContent = `Opción seleccionada: ${opcion}`;
+    const requisitosContainer = document.getElementById("requisitosContainer");
+    const listaRequisitos = document.getElementById("listaRequisitos");
+
+    // Limpiar la lista de requisitos previos
+    listaRequisitos.innerHTML = "";
+
+    // Obtener los requisitos para la opción seleccionada
+    const requisitos = requisitosPorOpcion[opcion] || ["No hay requisitos definidos para esta opción."];
+
+    // Llenar la lista con los requisitos
+    requisitos.forEach(requisito => {
+        const li = document.createElement('li');
+        li.textContent = requisito;
+        listaRequisitos.appendChild(li);
+    });
+
+    // Mostrar el contenedor de requisitos
+    requisitosContainer.style.display = "block";
+}
+
+function obtenerIdOpcionSeleccionada() {
+    if (opcionSeleccionadaGlobal) {
+        const idOpcion = opcionesConId[opcionSeleccionadaGlobal];
+        if (idOpcion) {
+            return idOpcion;
+        } else {
+            console.log("Opción no válida");
+            return null;
         }
-    
-        // Función para enviar la solicitud (puedes personalizarla según tu lógica backend)
-        function enviarSolicitud() {
-            const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-            const idSustentante = document.getElementById("idSustentante").value;
-            const opcionSeleccionada = document.querySelector("#listaRequisitos").previousSibling.textContent.trim();
-    
-            // Enviar la solicitud al backend
-            fetch('/enviarSolicitud/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
-                body: JSON.stringify({
-                    id_sustentante: idSustentante,
-                    opcion_titulacion: opcionSeleccionada
-                })
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Solicitud enviada con éxito.');
-                    window.location.href = '/perfilUsuario/';
-                } else {
-                    alert('Error al enviar la solicitud.');
-                }
-            })
-            .catch(error => {
-                console.error('Error al enviar la solicitud:', error);
-            });
+    } else {
+        console.log("No se ha seleccionado ninguna opción.");
+        return null;
+    }
+}
+
+function enviarSolicitud() {
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    const idSustentanteInput = document.getElementById("idSustentante");
+    const idOpcion = obtenerIdOpcionSeleccionada(); // Obtener el ID de la opción seleccionada
+
+    if (!idOpcion) {
+        alert('Selecciona una opción de titulación válida.');
+        return;
+    }
+
+    const idSustentante = idSustentanteInput ? idSustentanteInput.value : "";
+
+    fetch('/enviarSolicitud/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({
+            id_sustentante: idSustentante,
+            id_opcion: idOpcion  // Agregamos id_opcion al cuerpo de la solicitud
+        })
+    })
+    .then(response => {
+        console.log("Estado de la respuesta:", response.status);
+        if (response.ok) {
+            alert('Solicitud enviada con éxito.');
+            window.location.href = '/perfilUsuario/';
+        } else {
+            alert('Error al enviar la solicitud.');
         }
+    })
+    .catch(error => {
+        console.error('Error al enviar la solicitud:', error);
+    });
+}
+
 
     // Función para verificar la sesión
     function checkSession() {

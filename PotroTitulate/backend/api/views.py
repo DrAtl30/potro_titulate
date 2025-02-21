@@ -113,7 +113,56 @@ def verificar_tramite_en_progreso(request, id_sustentante):
     else:
         return JsonResponse({'tramiteEnProgreso': False})
 
+@csrf_exempt
+def enviar_solicitud(request):
+    if request.method == 'POST':
+        try:
+            # Print raw request body for debugging
+            print("Raw Body:", request.body)
+            
+            # Parse JSON data from the request body
+            data = json.loads(request.body)
+            print("Parsed Data:", data)
 
+            # Extract id_sustentante and id_opcion from the request data
+            id_sustentante = data.get('id_sustentante')
+            id_opcion = data.get('id_opcion')
+
+            # Validate that both fields are present
+            if not id_sustentante or not id_opcion:
+                return JsonResponse({'error': 'Datos incompletos'}, status=400)
+
+            # Fetch the Sustentante and OpcionTitulacion objects
+            print(f"Buscando Sustentante con ID: {id_sustentante}")
+            print(f"Buscando Opción de Titulación con ID: {id_opcion}")
+
+            sustentante = get_object_or_404(Sustentante, id_sustentante=id_sustentante)
+            opcion_titulacion = get_object_or_404(OpcionTitulacion, id_opcion=id_opcion)
+
+            # Create a new Tramites record
+            print("Creando trámite...")
+            Tramites.objects.create(
+                id_sustentante=sustentante,
+                id_opcion=opcion_titulacion,
+                estado_actual='Pendiente',
+                fecha_inicio=timezone.now(),
+                fecha_actualizacion=timezone.now(),
+                progreso=0
+            )
+
+            # Return success response
+            return JsonResponse({'message': 'Solicitud enviada con éxito'}, status=200)
+
+        except json.JSONDecodeError as e:
+            print("Error de JSON:", e)
+            return JsonResponse({'error': 'Solicitud inválida'}, status=400)
+        except Exception as e:
+            print("Error inesperado:", e)
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    # Return error for non-POST requests
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+            
 
 class RegistroView(APIView):
     def post(self, request, *args, **kwargs):
@@ -282,7 +331,7 @@ def uploadDocument(request):
             tipo_documento=file.content_type,
             fecha_subida=timezone.now().date(),
             estado_validacion='pendiente',
-            archivo=file  # Asegúrate de que en tu modelo `Documentos` tengas un campo `FileField`
+            archivo=file  
         )
 
         return JsonResponse({'success': True, 'documento_id': documento.id_documento})
@@ -385,3 +434,5 @@ def estadoDocumento(request, tramite_id):
         return JsonResponse({'success': True, 'estados': estados})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    
+

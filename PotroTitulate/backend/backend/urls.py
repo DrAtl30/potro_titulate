@@ -45,6 +45,7 @@ urlpatterns = [
     path('obtenerEstados/<int:tramite_id>/', estadoDocumento, name='obtenerEstados'),
     path('opcionesTitulacion/', opcionesTitulacion, name='opcionesTitulacion'),
     path('verificarTramiteEnProgreso/<int:id_sustentante>/', verificar_tramite_en_progreso, name='verificarTramiteEnProgreso'),
+    path('enviarSolicitud/', enviar_solicitud, name='enviarSolicitud'),
 
     # Ruta para la API de registro
     path('api/registro/', RegistroView.as_view(), name='api_registro'),  # API para registro
