@@ -58,7 +58,8 @@ def perfilUsuario(request):
             'opcion_titulacion': opcion_titulacion,
             'opciones_titulacion': opciones_titulacion,
             'progreso': progreso,
-            'id_tramite': tramite.id_tramite if tramite else None  # Aquí pasamos el id_tramite
+            'id_tramite': tramite.id_tramite if tramite else None, # Aquí pasamos el id_tramite
+            'id_sustentante': sustentante_id 
 
         })
     except Sustentante.DoesNotExist:
@@ -80,6 +81,88 @@ def recuperarContrasenaExito(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'recuperarContrasenaExito.html', {'timestamp': timestamp})
 
+def opcionesTitulacion(request):
+    sustentante_id = request.session.get('sustentante_id')
+    timestamp = datetime.now().timestamp()
+    if not sustentante_id:
+        return redirect('login')
+    try:
+        sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+
+        context = {
+            'timestamp': timestamp,
+            'sustentante': {
+                'id_sustentante': sustentante.id_sustentante,
+                'nombre': sustentante.nombre,
+                'apellido': sustentante.apellido,
+                'id_opcion': sustentante.id_opcion.id_opcion if sustentante.id_opcion else None
+            }
+        }
+        return render(request, 'opcionesTitulacion.html', context)
+    
+    except Sustentante.DoesNotExist:
+        return redirect('login')
+
+#Vista para verificar si hay un trámite en progreso
+def verificar_tramite_en_progreso(request, id_sustentante):
+    # Verificar si el sustentante tiene un trámite en progreso
+    tramite = Tramites.objects.filter(id_sustentante=id_sustentante).exists()  # Utilizamos exists() para solo verificar la existencia
+    
+    if tramite:
+        return JsonResponse({'tramiteEnProgreso': True})
+    else:
+        return JsonResponse({'tramiteEnProgreso': False})
+
+@csrf_exempt
+def enviar_solicitud(request):
+    if request.method == 'POST':
+        try:
+            # Print raw request body for debugging
+            print("Raw Body:", request.body)
+            
+            # Parse JSON data from the request body
+            data = json.loads(request.body)
+            print("Parsed Data:", data)
+
+            # Extract id_sustentante and id_opcion from the request data
+            id_sustentante = data.get('id_sustentante')
+            id_opcion = data.get('id_opcion')
+
+            # Validate that both fields are present
+            if not id_sustentante or not id_opcion:
+                return JsonResponse({'error': 'Datos incompletos'}, status=400)
+
+            # Fetch the Sustentante and OpcionTitulacion objects
+            print(f"Buscando Sustentante con ID: {id_sustentante}")
+            print(f"Buscando Opción de Titulación con ID: {id_opcion}")
+
+            sustentante = get_object_or_404(Sustentante, id_sustentante=id_sustentante)
+            opcion_titulacion = get_object_or_404(OpcionTitulacion, id_opcion=id_opcion)
+
+            # Create a new Tramites record
+            print("Creando trámite...")
+            Tramites.objects.create(
+                id_sustentante=sustentante,
+                id_opcion=opcion_titulacion,
+                estado_actual='Pendiente',
+                fecha_inicio=timezone.now(),
+                fecha_actualizacion=timezone.now(),
+                progreso=0
+            )
+
+            # Return success response
+            return JsonResponse({'message': 'Solicitud enviada con éxito'}, status=200)
+
+        except json.JSONDecodeError as e:
+            print("Error de JSON:", e)
+            return JsonResponse({'error': 'Solicitud inválida'}, status=400)
+        except Exception as e:
+            print("Error inesperado:", e)
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    # Return error for non-POST requests
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+            
 
 class RegistroView(APIView):
     def post(self, request, *args, **kwargs):
@@ -248,7 +331,7 @@ def uploadDocument(request):
             tipo_documento=file.content_type,
             fecha_subida=timezone.now().date(),
             estado_validacion='pendiente',
-            archivo=file  # Asegúrate de que en tu modelo `Documentos` tengas un campo `FileField`
+            archivo=file  
         )
 
         return JsonResponse({'success': True, 'documento_id': documento.id_documento})
@@ -351,3 +434,5 @@ def estadoDocumento(request, tramite_id):
         return JsonResponse({'success': True, 'estados': estados})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    
+

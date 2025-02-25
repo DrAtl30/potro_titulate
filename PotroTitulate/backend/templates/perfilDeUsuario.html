@@ -58,41 +58,7 @@
     <div style="text-align: left; padding: 10px 20px; font-size: 18px; font-weight: bold;">
         Bienvenido: {{ nombre_sustentante }}
     </div>
-    <div id="opcionTitulacionData" data-opcion="{{ opcion_titulacion|escapejs }}"></div>
-    <div style="padding: 0 20px;">
-        {% if not opcion_titulacion %}
-            <form id="seleccionOpcionForm" class="mb-3">
-                <label for="opcion_titulacion" class="form-label">Selecciona una opción de titulación:</label>
-                <select id="opcion_titulacion" name="opcion_titulacion" class="form-select">
-                    {% for opcion in opciones_titulacion %}
-                        <option value="{{ opcion.id_opcion }}">{{ opcion.nombre_opcion }}</option>
-                    {% endfor %}
-                </select>
-                <button type="button" class="btn btn-primary mt-2" onclick="enviarOpcionTitulacion()">Enviar</button>
-            </form>
-        {% else %}
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                Modo de titulación: {{ opcion_titulacion }}
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Trabajo escrito')">Trabajo escrito</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Artículo Especializado para la Publicación en una Revista Indexada')">Artículo Especializado para la Publicación en una Revista Indexada</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Ensayo')">Ensayo</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Memoria de Experiencia Laboral')">Memoria de Experiencia Laboral</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Reporte de Aplicación de Conocimientos')">Reporte de Aplicación de Conocimientos</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Reporte de Autoempleo Profesional')">Reporte de Autoempleo Profesional</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Reporte de Residencia de Investigación')">Reporte de Residencia de Investigación</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Tesina')">Tesina</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Tesis')">Tesis</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Aprovechamiento académico')">Aprovechamiento académico</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Creditos de estudios avanzados')">Creditos de estudios avanzados</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showRequirements('Examen General para el egreso de la Licenciatura EGEL')">Examen General de Egresos (EGEL)</a></li>
-            </ul>
-        </div>
-        {% endif %}
-    </div>
-   
+
     <!-- Barra de navegación -->
     <header>
         <nav>
@@ -131,11 +97,12 @@
             <button class="btn btn-link text-white ms-auto" style="text-decoration: none;" onclick="cerrarSesion()">Cerrar sesión</button>
         </nav>
     </header>
+
     <!-- Contenedor para mostrar requisitos -->
     <div id="requisitosContainer" style="margin-top: 20px;"></div>
 
-     <!-- Mostrar documentos subidos -->
-     <div id="documentosSubidos">
+    <!-- Mostrar documentos subidos -->
+    <div id="documentosSubidos">
         <h3>Documentos Subidos:</h3>
         <ul class="list-group">
             {% for documento in documentos %}
@@ -210,38 +177,43 @@
         }
     };
 
-    document.addEventListener("DOMContentLoaded", function(){
-        //Obtener el ID del usuario
-        const usuarioId = document.getElementById("idSustentante").value;
+    document.addEventListener("DOMContentLoaded", function() {
+    // Obtener el ID del sustentante
+    const idSustentante = document.getElementById("idSustentante").value;
 
-        fetch(`/verficiarTramiteEnProgreso/${usuarioId}/`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.tramiteEnProgreso) {
-                    if (data.estado === 'pendiente') {
-                        mostrarMensajeAprobacionPendiente;
-                    } else if (data.estado === 'aprobado') {
-                        cargarPerfilUsuario();
-                    }
-                } else {
-                    //Si no hay un tramite en progreso, redirigir a la página de opciones de titulacion
-                    window.location.href = '/opcionesTitulacion/';
-                }
-            })
-            .catch(error => {
-                console.error('Error al obtener el trámite:', error);
-            });
+    // Validar si se obtuvo un ID válido
+    if (!idSustentante) {
+        console.error('ID del sustentante no encontrado.');
+        return;
+    }
 
-            function mostrarMensajeAprobacionPendiente() {
-                const mensaje = document.createElement('div');
-                mensaje.textContent = 'Aprobación pendiente. Por favor, espere a que el administrativo apruebe su trámite.';
-                document.body.appendChild(mensaje);
+    // Realizar la solicitud para verificar si existe un trámite en progreso
+    fetch(`/verificarTramiteEnProgreso/${idSustentante}/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-
-            function cargarPerfilUsuario(){
-                //Lógica para cargar el perfil normalmente
+            return response.json();
+        })
+        .then(data => {
+            if (data.tramiteEnProgreso) {
+                // Si existe un trámite en progreso
+                mostrarMensajeTramiteEnProceso(); // Muestra el mensaje de trámite en proceso
+            } else {
+                // Si no existe un trámite, redirigir a la página para escoger un trámite
+                window.location.href = '/opcionesTitulacion/';
             }
-    })
+        })
+        .catch(error => {
+            console.error('Error al obtener el trámite:', error);
+        });
+
+    function mostrarMensajeTramiteEnProceso() {
+        const mensaje = document.createElement('div');
+        mensaje.textContent = 'Ya tienes un trámite en proceso. Por favor, espera a que se complete.';
+        document.body.appendChild(mensaje);
+    }
+});
 </script>
 
 </body>
