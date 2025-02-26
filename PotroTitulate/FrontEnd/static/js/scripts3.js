@@ -46,7 +46,49 @@ document.addEventListener("DOMContentLoaded", function() {
         return cookieValue;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 });
 =======
 });
 >>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
+=======
+});
+
+function aprobarTramite(tramiteId) {
+     fetch('/revisarOpcionesTitulacion/', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}'
+            },
+        body: `tramite_id=${tramiteId}&estado=aprobado`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error al aprobar el trámite');
+                }
+            });
+        }
+
+function rechazarTramite(tramiteId) {
+            fetch('/revisarOpcionesTitulacion/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: `tramite_id=${tramiteId}&estado=rechazado`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error al rechazar el trámite');
+                }
+            });
+        }
+>>>>>>> 31a642157222985aab74a9a828d3bb0ff27c922c

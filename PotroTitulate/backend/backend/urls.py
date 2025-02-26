@@ -43,6 +43,12 @@ urlpatterns = [
     path('checkSession/', checkSession, name='checkSession'),
     path('uploadDocument/', uploadDocument, name='subirDocumento'),
     path('seleccionarOpcionTitulacion/', seleccionar_opcion_titulacion, name='SeleccionarOpcionTitulacion'),
+    path('revisarOpcionesTitulacion/', revisarOpcionesTitulacion, name='RevisarOpcionesTitulacion'),
+    path('actualizarProgreso/', actualizarProgreso, name='actualizarProgreso'),
+    path('obtenerEstados/<int:tramite_id>/', estadoDocumento, name='obtenerEstados'),
+    path('opcionesTitulacion/', opcionesTitulacion, name='opcionesTitulacion'),
+    path('verificarTramiteEnProgreso/<int:id_sustentante>/', verificar_tramite_en_progreso, name='verificarTramiteEnProgreso'),
+    path('enviarSolicitud/', enviar_solicitud, name='enviarSolicitud'),
 
 
     # Ruta para la API de registro

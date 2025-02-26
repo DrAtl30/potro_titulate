@@ -137,7 +137,7 @@ STATIC_URL = '/static/'
 
 # Definir el directorio para los archivos estáticos (como los de frontend)
 STATICFILES_DIRS = [
-    BASE_DIR.parent / 'frontend' / 'static',  # Subir 1 nivel desde BASE_DIR y acceder a 'frontend'
+    BASE_DIR.parent / 'FrontEnd' / 'static',  # Subir 1 nivel desde BASE_DIR y acceder a 'frontend'
 ]
 
 
