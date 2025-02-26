@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {    // Obtener la opción de titulación desde el HTML
     const opcionTitulacion = document.getElementById("opcionTitulacionData").dataset.opcion;
+    const idSustentante = document.getElementById("idSustentante")?.value;
+    const idTramite = document.getElementById("idTramite")?.value;
 
     const requisitos = {
         'Trabajo escrito': [
@@ -220,6 +222,34 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
         ]
     };
 
+    if (!idSustentante) {
+        console.error('ID del sustentante no encontrado.');
+        return;
+    }
+
+    fetch(`/verificarTramiteEnProgreso/${idSustentante}/`)
+    .then(response => response.ok ? response.json() : Promise.reject(response))
+    .then(data => {
+        if (data.tramiteEnProgreso) {
+            aprobado = data.aprobado; // Set the aprobado variable
+            opcionTitulacion = data.opcionTitulacion; // Set the opcionTitulacion variable
+            mostrarMensajeTramiteEnProceso();
+            showRequirements(opcionTitulacion); // Show the requisitos for the selected option
+        } else {
+            window.location.href = '/opcionesTitulacion/';
+        }
+    })
+    .catch(error => console.error('Error al obtener el trámite:', error));
+
+    function mostrarMensajeTramiteEnProceso() {
+        const mensaje = document.createElement('div');
+        mensaje.className = 'mensaje-tramite-proceso';
+        mensaje.textContent = 'Ya tienes un trámite en proceso. Por favor, espera a que sea aprobado por un admin.';
+        document.body.appendChild(mensaje);
+    }
+    });
+
+
     function showRequirements(option) {
         const requisitosContainer = document.getElementById('requisitosContainer');
         requisitosContainer.innerHTML = '';
@@ -246,28 +276,29 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
                 </div>
             `;
     
-            // Solo agregar el botón de subir archivos si la opción coincide con la del usuario
-            if (option === opcionTitulacion) {
+            // Check if the trámite is approved and the option matches
+            if (option === opcionTitulacion && aprobado) {
                 contenido += `
                     <button class="btn btn-link" onclick="uploadFile('${requisito}')">Subir</button>
                     <input type="file" id="file-${requisito}" style="display:none;" onchange="handleFileChange('${requisito}')">
                 `;
+            } else if (!aprobado) {
+                contenido += `<span class="label label-warning">Trámite no aprobado</span>`;
             }
-            
+    
             li.innerHTML = contenido;
             ul.appendChild(li);
         });
     
         requisitosContainer.appendChild(ul);
-
-         // Llamar a cargarEstados después de crear los botones
-         const tramite_id = obtenerTramiteSeleccionado();
-         if (tramite_id) {
-             cargarEstados(tramite_id);
-         }
-    }    
-    window.showRequirements = showRequirements; // Hacer la función accesible globalmente
-});
+    
+        // Load the states of the requisitos if there is a selected trámite
+        const tramite_id = obtenerTramiteSeleccionado();
+        if (tramite_id) {
+            cargarEstados(tramite_id);
+        }
+    }
+    
 
 
 function obtenerIdTramite() {
@@ -298,11 +329,11 @@ function cargarEstados(tramite_id) {
         .then(data => {
             if (data.success) {
                 Object.entries(data.estados).forEach(([requisito, estado]) => {
-                    updateEstado(requisito, estado); // Actualiza el semáforo con el estado correcto
-                    if (estado === 'pendiente' || estado === 'aceptado') {
+                    updateEstado(requisito, estado); // Update the semáforo with the correct state
+                    if (estado === 'pendiente' || estado === 'aceptado' || !aprobado) {
                         const boton = document.querySelector(`button[onclick="uploadFile('${requisito}')"]`);
                         if (boton) {
-                            boton.disabled = true;
+                            boton.disabled = true; // Disable the upload button
                         } else {
                             console.warn(`No se encontró el botón para el requisito: ${requisito}`);
                         }
@@ -345,6 +376,10 @@ function obtenerEstadoGuardado(requisito) {
 }
 
 function uploadFile(requisito) {
+    if (!aprobado) {
+        mostrarModal('El trámite aún no está aprobado. No puedes subir archivos.', 'errorModal');
+        return;
+    }
     const fileInput = document.getElementById(`file-${requisito}`);
     fileInput.click();
 }
@@ -367,8 +402,8 @@ function handleFileChange(requisito) {
         .then(data => {
             if (data.success) {
                 mostrarModal(`Archivo subido correctamente para ${requisito}`, 'successModal');
-                updateEstado(requisito, 'pendiente'); // Cambia el estado a "pendiente"
-                document.querySelector(`button[onclick="uploadFile('${requisito}')"]`).disabled = true; // Desactiva el botón de subir
+                updateEstado(requisito, 'pendiente'); // Change the state to "pendiente"
+                document.querySelector(`button[onclick="uploadFile('${requisito}')"]`).disabled = true; // Disable the upload button
             } else {
                 mostrarModal(`Error al subir el archivo: ${data.error}`, 'errorModal');
             }
@@ -379,6 +414,8 @@ function handleFileChange(requisito) {
         });
     }
 }
+
+
 
 
 

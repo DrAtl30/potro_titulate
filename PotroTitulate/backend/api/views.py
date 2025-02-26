@@ -50,6 +50,7 @@ def perfilUsuario(request):
         documentos = Documentos.objects.filter(id_sustentante=sustentante)
         opciones_titulacion = OpcionTitulacion.objects.all()
         progreso = tramite.progreso if tramite else 0
+        aprobado = tramite.aprobado if tramite else False
 
         return render(request, 'perfilDeUsuario.html', {
             'timestamp': timestamp,
@@ -59,7 +60,8 @@ def perfilUsuario(request):
             'opciones_titulacion': opciones_titulacion,
             'progreso': progreso,
             'id_tramite': tramite.id_tramite if tramite else None, # Aquí pasamos el id_tramite
-            'id_sustentante': sustentante_id 
+            'id_sustentante': sustentante_id, 
+            'aprobado' : aprobado
 
         })
     except Sustentante.DoesNotExist:

@@ -152,6 +152,7 @@
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
     <script>
+    
     // Función para verificar la sesión
     function checkSession() {
         fetch('/checkSession/')  // Endpoint para verificar la sesión
@@ -177,43 +178,7 @@
         }
     };
 
-    document.addEventListener("DOMContentLoaded", function() {
-    // Obtener el ID del sustentante
-    const idSustentante = document.getElementById("idSustentante").value;
-
-    // Validar si se obtuvo un ID válido
-    if (!idSustentante) {
-        console.error('ID del sustentante no encontrado.');
-        return;
-    }
-
-    // Realizar la solicitud para verificar si existe un trámite en progreso
-    fetch(`/verificarTramiteEnProgreso/${idSustentante}/`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.tramiteEnProgreso) {
-                // Si existe un trámite en progreso
-                mostrarMensajeTramiteEnProceso(); // Muestra el mensaje de trámite en proceso
-            } else {
-                // Si no existe un trámite, redirigir a la página para escoger un trámite
-                window.location.href = '/opcionesTitulacion/';
-            }
-        })
-        .catch(error => {
-            console.error('Error al obtener el trámite:', error);
-        });
-
-    function mostrarMensajeTramiteEnProceso() {
-        const mensaje = document.createElement('div');
-        mensaje.textContent = 'Ya tienes un trámite en proceso. Por favor, espera a que se complete.';
-        document.body.appendChild(mensaje);
-    }
-});
+   
 </script>
 
 </body>

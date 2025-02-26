@@ -106,6 +106,7 @@ class Tramites(models.Model):
     fecha_inicio = models.DateField()
     fecha_actualizacion = models.DateField()
     progreso = models.IntegerField()
+    aprobado = models.BooleanField(default=False)
 
     class Meta:
         managed = False
