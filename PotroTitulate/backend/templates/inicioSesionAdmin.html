@@ -110,13 +110,23 @@
             <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
         </form>        
     </div>
-    <footer>
-        <div class="Administración UAEM">
-            <div class="footer-text">
-                <p>Administración UAEM</p>
+    <footer class = footer-admin>
+        <div class="footer-content">
+            <div class="footer-contact">
+                <h6>Contacto</h6>
+                <ul>
+                    <li><strong>Teléfono:</strong> +52 777 123 4567</li>
+                    <li><strong>Email:</strong> contacto@uaem.mx</li>
+                    <li><strong>Dirección:</strong> Av. Universidad 1001, Col. Chamilpa, Cuernavaca, Morelos</li>
+                </ul>
+            </div>
+            <div class="footer-center">
+                <p>Administración UAEMex</p>
+            </div>
+            <div class="footer-image">
+                <img src="{% static 'img/escudo negativo color vertical 2 líneas' %}" alt="Imagen de footer">
             </div>
         </div>
-        <img src="{% static 'img/footer-image.jpeg' %}">
     </footer>
     <script src="{% static 'js/scripts3.js' %}?v={{ timestamp }}"></script>
 

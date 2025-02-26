@@ -285,3 +285,66 @@ nav .dropdown-menu a:hover {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* Estilos para el footer de inicioSesionAdmin.html (footer-admin) */
+.footer-admin {
+    background-color: #6e7b68;
+    padding: 40px;
+    color: white;
+    font-size: 15px; 
+}
+
+.footer-admin .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+    flex-wrap: nowrap; 
+}
+
+.footer-admin .footer-contact,
+.footer-admin .footer-center,
+.footer-admin .footer-image {
+    flex: 1;
+    min-width: 200px; 
+    margin: 5px; 
+}
+
+.footer-admin .footer-center {
+    text-align: center;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+}
+
+.footer-admin .footer-contact ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-admin .footer-contact ul li {
+    margin-bottom: 2px;
+    font-size: 9px; 
+}
+
+.footer-admin .footer-contact ul li strong {
+    font-weight: bold;
+}
+
+.footer-admin .footer-image {
+    flex: 1;
+    min-width: 200px; 
+    margin: 5px; 
+    text-align: right;
+}
+
+.footer-admin .footer-image img {
+    max-width: 80%; 
+    height: auto;
+    border-radius: 8px;
+    display: block; 
+    margin-left: auto; 
+}
