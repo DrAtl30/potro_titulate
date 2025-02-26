@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,8 +8,6 @@
     <!-- Enlace a Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Enlace a estilos.css -->
-
-    <link rel="stylesheet" href="../../FrontEnd/static/css/estilos2.css">
     <link rel="stylesheet" href="{% static 'css/estilos2.css' %}">
     <style>
         /* Estilos para el modal */
@@ -50,63 +49,16 @@
             text-decoration: none;
         }
     </style>
-
 </head>
 <body>
     <!-- Escudo -->
     <div class="header-left" style="display: flex; justify-content: center; flex: 1;">
-        <img src="../../FrontEnd/static/img/escudo positivo color vertical 2 líneas.png" alt="Escudo UAEM" style="max-height: 120px;">
+        <img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}" alt="Escudo UAEM" style="max-height: 120px;">
     </div>
     <div style="text-align: left; padding: 10px 20px; font-size: 18px; font-weight: bold;">
         Bienvenido: {{ nombre_sustentante }}
     </div>
-    <div style="padding: 0 20px;">
 
-        <div class="dropdown">
-            <div style="padding: 0 20px;">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        Modo de titulación
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="#" onclick="showRequirements('Trabajo escrito')">Trabajo escrito</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="showRequirements('Aprovechamiento academico')">Aprovechamiento academico</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="showRequirements('Creditos en estudios avanzados')">Creditos en estudios avanzados</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="showRequirements('Examen General para el egreso de la Licenciatura EGEL')">Examen General para el egreso de la Licenciatura EGEL</a></li>
-                    </ul>    
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="#">Opción 1</a></li>
-                <li><a class="dropdown-item" href="#">Opción 2</a></li>
-                <li><a class="dropdown-item" href="#">opcion3</a></li>
-            </ul>
-        </div>
-
-        {% if not opcion_titulacion %}
-            <form id="seleccionOpcionForm">
-                <label for="opcion_titulacion">Selecciona una opción de titulación:</label>
-                <select id="opcion_titulacion" name="opcion_titulacion">
-                    {% for opcion in opciones_titulacion %}
-                        <option value="{{ opcion.id_opcion }}">{{ opcion.nombre_opcion }}</option>
-                    {% endfor %}
-                </select>
-                <button type="button" onclick="enviarOpcionTitulacion()">Enviar</button>
-            </form>
-        {% else %}
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    Modo de titulación: {{ opcion_titulacion }}
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Trabajo escrito')">Trabajo escrito</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Aprovechamiento académico')">Aprovechamiento académico</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Creditos en estudios avanzados')">Creditos en estudios avanzados</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="showRequirements('Examen General para el egreso de la Licenciatura EGEL')">Examen General para el egreso de la Licenciatura EGEL</a></li>
-                </ul>
-            </div>
-        {% endif %} 
-    </div>
-   
     <!-- Barra de navegación -->
     <header>
         <nav>
@@ -145,26 +97,24 @@
             <button class="btn btn-link text-white ms-auto" style="text-decoration: none;" onclick="cerrarSesion()">Cerrar sesión</button>
         </nav>
     </header>
+
     <!-- Contenedor para mostrar requisitos -->
     <div id="requisitosContainer" style="margin-top: 20px;"></div>
 
-     <!-- Mostrar documentos subidos -->
-     <div id="documentosSubidos">
+    <!-- Mostrar documentos subidos -->
+    <div id="documentosSubidos">
         <h3>Documentos Subidos:</h3>
-        <u1>
+        <ul class="list-group">
             {% for documento in documentos %}
-                <li>{{ documento.nombre_documento }} - {{ documento.estado_validacion }}   
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ documento.nombre_documento }}
+                    <span class="badge bg-{% if documento.estado_validacion == 'aceptado' %}success{% elif documento.estado_validacion == 'rechazado' %}danger{% elif documento.estado_validacion == 'pendiente' %}warning{% else %}secondary{% endif %}">
+                        {{ documento.estado_validacion }}
+                    </span>
                 </li>
             {% endfor %}
-        </u1>
+        </ul>
     </div>
-
-<!-- Formulario de subida de archivos -->
-<form id="uploadForm" enctype="multipart/form-data">
-    <label for="fileInput">Selecciona un archivo:</label>
-    <input type="file" name="file" id="fileInput" required>
-    <button type="submit">Subir archivo</button>
-</form>
 
     <!-- Modales -->
     <div id="errorModal" class="modal">
@@ -181,27 +131,18 @@
         </div>
     </div>
 
-   <!-- Barra de progreso -->
-<div id="progressContainer" style="display:none;">
+    <!-- Barra de progreso -->
     <div class="progress" style="height: 20px; margin-top: 20px; width: 90%; margin-left: auto; margin-right: auto;">
-        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        <div class="progress-bar" role="progressbar" style="width: {{ progreso|default:0 }}%;" aria-valuenow="{{ progreso }}" aria-valuemin="0" aria-valuemax="100">
+            {{ progreso }}%
+        </div>
     </div>
-</div>
 
+    <!-- Campo oculto para almacenar el id_tramite -->
+    <input type="hidden" id="idTramite" value="{{ id_tramite }}">
 
-
-    <div class="progress" style="height: 20px; margin-top: 20px; width: 90%; margin-left: auto; margin-right: auto;">
-        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Paso 0 de 0</div>
-    </div>
-    <!-- la barra de progreso, va avanzar cada que un requisito sea aprobado -->
- 
-    <!-- Enlace a Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Enlace a scripts.js -->
-    <script src="../../FrontEnd/static/js/scripts2.js"></script>
-    <div class="banner">
-        <img src="../../FrontEnd/static/img/pleca con hexágonos LARGA.jpg" alt="Banner" class="img-fluid"
-    </div>
+    <!-- Campo oculto para almacenar el id_sustentante -->
+    <input type="hidden" id="idSustentante" value="{{ id_sustentante }}">
 
     <!-- Enlace a Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -235,6 +176,45 @@
             checkSession();
         }
     };
+
+    document.addEventListener("DOMContentLoaded", function() {
+    // Obtener el ID del sustentante
+    const idSustentante = document.getElementById("idSustentante").value;
+
+    // Validar si se obtuvo un ID válido
+    if (!idSustentante) {
+        console.error('ID del sustentante no encontrado.');
+        return;
+    }
+
+    // Realizar la solicitud para verificar si existe un trámite en progreso
+    fetch(`/verificarTramiteEnProgreso/${idSustentante}/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.tramiteEnProgreso) {
+                // Si existe un trámite en progreso
+                mostrarMensajeTramiteEnProceso(); // Muestra el mensaje de trámite en proceso
+            } else {
+                // Si no existe un trámite, redirigir a la página para escoger un trámite
+                window.location.href = '/opcionesTitulacion/';
+            }
+        })
+        .catch(error => {
+            console.error('Error al obtener el trámite:', error);
+        });
+
+    function mostrarMensajeTramiteEnProceso() {
+        const mensaje = document.createElement('div');
+        mensaje.textContent = 'Ya tienes un trámite en proceso. Por favor, espera a que se complete.';
+        document.body.appendChild(mensaje);
+    }
+});
 </script>
+
 </body>
 </html>

@@ -28,19 +28,11 @@
             max-width: 100px;
             margin-bottom: 10px;
         }
-<<<<<<< HEAD
-        .recuperar-form .form-control {
-            border-radius: 50px;
-            border: 1px solid #5a7561;
-        }
-        .recuperar-form button {
-=======
         .recuperarForm .form-control {
             border-radius: 50px;
             border: 1px solid #5a7561;
         }
         .recuperarForm button {
->>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
             width: 100%;
             background-color: #5a7561;
             color: white;
@@ -103,8 +95,6 @@
             font-size: 1rem;
             margin: 0;
         }
-<<<<<<< HEAD
-=======
 
         .modal {
     position: fixed;
@@ -145,17 +135,12 @@
 }
 
 
->>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
     </style>
 </head>
 <body>
     <a href="{% url 'index' %}" class="back-arrow">&larr;</a>
     <div class="header-left">
-<<<<<<< HEAD
-        <img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}" alt="Escudo UAEM">
-=======
         <!--<img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}" alt="Escudo UAEM">-->
->>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
     </div>
     <div class="title"></div>
     <div class="recuperar-container">
@@ -166,16 +151,6 @@
         {% if error %}
         <div class="alert alert-danger">{{ error }}</div>
         {% endif %}
-<<<<<<< HEAD
-        <form class="recuperar-form" action="recuperarContra" method="POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="correoInstitucional" class="form-label">Correo Institucional</label>
-                <input type="email" class="form-control" id="correoInstitucional" name="correoInstitucional" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Recuperar Contraseña</button>
-        </form>
-=======
         <form class="recuperarForm" action="recuperarContra" method="POST">
             {% csrf_token %}
             <div class="mb-3">
@@ -197,7 +172,6 @@
                 <p class="modalMessage"></p>
             </div>
         </div>        
->>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
     </div>
     <footer>
         <div class="footer-overlay">
@@ -208,9 +182,6 @@
         <img src="{% static 'img/pleca con hexágonos LARGA.jpg' %}" alt="Imagen del pie de página">
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<<<<<<< HEAD
-=======
-    <script src="{% static 'js/scripts.js' %} ?v={{ timestamp }}"></script>
->>>>>>> 091560d98b420a81ae219a43470c379fb9683b15
+    <script src="{% static 'js/scripts.js' %}?v={{ timestamp }}"></script>
 </body>
 </html>

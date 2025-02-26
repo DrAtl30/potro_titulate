@@ -5,7 +5,7 @@ from rest_framework import status
 from .serializers import SustentanteRegistroSerializer
 from .serializers import SustentanteLoginSerializer
 from .serializers import *;
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 from datetime import datetime
 from django.core.mail import send_mail, BadHeaderError
@@ -49,45 +49,21 @@ def perfilUsuario(request):
         opcion_titulacion = tramite.id_opcion.nombre_opcion if tramite and tramite.id_opcion else None
         documentos = Documentos.objects.filter(id_sustentante=sustentante)
         opciones_titulacion = OpcionTitulacion.objects.all()
+        progreso = tramite.progreso if tramite else 0
 
         return render(request, 'perfilDeUsuario.html', {
             'timestamp': timestamp,
             'nombre_sustentante': sustentante.nombre,
             'documentos': documentos,
             'opcion_titulacion': opcion_titulacion,
-            'opciones_titulacion': opciones_titulacion
+            'opciones_titulacion': opciones_titulacion,
+            'progreso': progreso,
+            'id_tramite': tramite.id_tramite if tramite else None, # Aquí pasamos el id_tramite
+            'id_sustentante': sustentante_id 
+
         })
     except Sustentante.DoesNotExist:
         return redirect('login')
-    
-
-#class PerfilUsuarioView(APIView):
-    def get(self, request):
-        # Obtén el ID del Sustentante desde la sesión
-        sustentante_id = request.session.get('sustentante_id')
-
-        if not sustentante_id:
-            # Si no hay un Sustentante autenticado, devuelve un error 401 (No autorizado)
-            return Response(
-                {'mensaje': 'No autenticado'}, 
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-
-        try:
-            # Obtén el objeto Sustentante
-            sustentante = Sustentante.objects.get(id=sustentante_id)
-            # Devuelve los datos del Sustentante en formato JSON
-            return Response({
-                'id_sustentante': sustentante.id_sustentante,
-                'nombre': sustentante.nombre,
-                'correo_electronico': sustentante.correo_electronico
-            }, status=status.HTTP_200_OK)
-        except Sustentante.DoesNotExist:
-            # Si el Sustentante no existe, devuelve un error 404 (No encontrado)
-            return Response(
-                {'mensaje': 'Sustentante no encontrado'}, 
-                status=status.HTTP_404_NOT_FOUND
-            )
         
 def recuperarContrasena(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
@@ -105,6 +81,88 @@ def recuperarContrasenaExito(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'recuperarContrasenaExito.html', {'timestamp': timestamp})
 
+def opcionesTitulacion(request):
+    sustentante_id = request.session.get('sustentante_id')
+    timestamp = datetime.now().timestamp()
+    if not sustentante_id:
+        return redirect('login')
+    try:
+        sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+
+        context = {
+            'timestamp': timestamp,
+            'sustentante': {
+                'id_sustentante': sustentante.id_sustentante,
+                'nombre': sustentante.nombre,
+                'apellido': sustentante.apellido,
+                'id_opcion': sustentante.id_opcion.id_opcion if sustentante.id_opcion else None
+            }
+        }
+        return render(request, 'opcionesTitulacion.html', context)
+    
+    except Sustentante.DoesNotExist:
+        return redirect('login')
+
+#Vista para verificar si hay un trámite en progreso
+def verificar_tramite_en_progreso(request, id_sustentante):
+    # Verificar si el sustentante tiene un trámite en progreso
+    tramite = Tramites.objects.filter(id_sustentante=id_sustentante).exists()  # Utilizamos exists() para solo verificar la existencia
+    
+    if tramite:
+        return JsonResponse({'tramiteEnProgreso': True})
+    else:
+        return JsonResponse({'tramiteEnProgreso': False})
+
+@csrf_exempt
+def enviar_solicitud(request):
+    if request.method == 'POST':
+        try:
+            # Print raw request body for debugging
+            print("Raw Body:", request.body)
+            
+            # Parse JSON data from the request body
+            data = json.loads(request.body)
+            print("Parsed Data:", data)
+
+            # Extract id_sustentante and id_opcion from the request data
+            id_sustentante = data.get('id_sustentante')
+            id_opcion = data.get('id_opcion')
+
+            # Validate that both fields are present
+            if not id_sustentante or not id_opcion:
+                return JsonResponse({'error': 'Datos incompletos'}, status=400)
+
+            # Fetch the Sustentante and OpcionTitulacion objects
+            print(f"Buscando Sustentante con ID: {id_sustentante}")
+            print(f"Buscando Opción de Titulación con ID: {id_opcion}")
+
+            sustentante = get_object_or_404(Sustentante, id_sustentante=id_sustentante)
+            opcion_titulacion = get_object_or_404(OpcionTitulacion, id_opcion=id_opcion)
+
+            # Create a new Tramites record
+            print("Creando trámite...")
+            Tramites.objects.create(
+                id_sustentante=sustentante,
+                id_opcion=opcion_titulacion,
+                estado_actual='Pendiente',
+                fecha_inicio=timezone.now(),
+                fecha_actualizacion=timezone.now(),
+                progreso=0
+            )
+
+            # Return success response
+            return JsonResponse({'message': 'Solicitud enviada con éxito'}, status=200)
+
+        except json.JSONDecodeError as e:
+            print("Error de JSON:", e)
+            return JsonResponse({'error': 'Solicitud inválida'}, status=400)
+        except Exception as e:
+            print("Error inesperado:", e)
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    # Return error for non-POST requests
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+            
 
 class RegistroView(APIView):
     def post(self, request, *args, **kwargs):
@@ -244,31 +302,43 @@ class CambiarContrasenaView(APIView):
         return JsonResponse({'redirect': '/iniciosesion'}, status=status.HTTP_200_OK)
     
 
-@csrf_exempt
 def uploadDocument(request):
-    if request.method == 'POST':
-        sustentante_id = request.session.get('sustentante_id')
-        if not sustentante_id:
-            return JsonResponse({'succes': False, 'error':'No autenticado'})
-    
-        try:
-            sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
-            file = request.FILES['file']
-            requisito = request.POST.get('requisito')
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
-            #Guardar el documento en la base de datos
-            Documentos.objects.create(
-                id_sustentante=sustentante,
-                nombre_documento=requisito,
-                tipo_documento=file.content_type,
-                fecha_subida=timezone.now().date(),
-                estado_validacion='pendiente'
-            )
+    sustentante_id = request.session.get('sustentante_id')
+    if not sustentante_id:
+        return JsonResponse({'success': False, 'error': 'No autenticado'}, status=401)
 
-            return JsonResponse({'success' : True})
-        except Exception as e:
-            return JsonResponse({'success' : False, 'error': str(e)})
-    return JsonResponse({'success' : False, 'error' : 'Metodo no permitido'})
+    file = request.FILES.get('file')
+    requisito = request.POST.get('requisito')
+
+    if not file or not requisito:
+        return JsonResponse({'success': False, 'error': 'Archivo o requisito faltante'}, status=400)
+
+    try:
+        sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+
+        # Obtener el trámite actual del sustentante
+        tramite = Tramites.objects.filter(id_sustentante=sustentante).order_by('-fecha_inicio').first()
+        if not tramite:
+            return JsonResponse({'success': False, 'error': 'No se encontró un trámite para el sustentante'}, status=404)   
+        # Guardar el documento en la base de datos
+        documento = Documentos.objects.create(
+            id_sustentante=sustentante,
+            id_tramite=tramite,
+            nombre_documento=requisito,
+            tipo_documento=file.content_type,
+            fecha_subida=timezone.now().date(),
+            estado_validacion='pendiente',
+            archivo=file  
+        )
+
+        return JsonResponse({'success': True, 'documento_id': documento.id_documento})
+    except Sustentante.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Sustentante no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 @csrf_exempt
 def seleccionar_opcion_titulacion(request):
@@ -309,3 +379,60 @@ def seleccionar_opcion_titulacion(request):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+def revisarOpcionesTitulacion(request):
+    if request.mehtod == 'POST':
+       tramite_id = request.POST.get('tramite_id')
+       estado = request.POST.get('estado') #aprobado o rechazado
+
+       tramite = get_object_or_404(Tramites, id_tramite=tramite_id)
+       tramite.estado_actual = estado
+       tramite.fecha_actualizacion = timezone.now().date()
+       tramite.save()
+
+       return JsonResponse({'success': True})
+    else:
+        tramites_pendientes = Tramites.objects.filter(estado_actual='pendiente')
+        return render(request, 'revisarOpcionesTitulacion.html', {'tramites_pendientes': tramites_pendientes})
+
+def actualizarProgreso(request):
+    # Obtiene el id del trámite enviado desde el frontend
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        id_tramite = data.get('id_tramite')
+
+        # Obtiene el trámite
+        try:
+            tramite = Tramites.objects.get(id_tramite=id_tramite)
+
+            # Calcula el progreso basado en documentos aprobados
+            documentos_aprobados = Documentos.objects.filter(
+                id_sustentante=tramite.id_sustentante,
+                estado_validacion='aprobado'
+            ).count()
+            total_documentos = 17
+            progreso = int((documentos_aprobados / total_documentos) * 100)
+
+            # Actualiza el progreso del trámite en la base de datos
+            tramite.progreso = progreso
+            tramite.save()
+
+            # Retorna el nuevo progreso como respuesta JSON
+            return JsonResponse({'success': True, 'progreso': progreso})
+        
+        except Tramites.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Trámite no encontrado'})
+
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+#EndPoint para recuperar el estado de los documentos
+def estadoDocumento(request, tramite_id):
+    try:
+        documentos = Documentos.objects.filter(id_tramite=tramite_id)
+        estados = {doc.nombre_documento: doc.estado_validacion for doc in documentos}
+
+        return JsonResponse({'success': True, 'estados': estados})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    
+

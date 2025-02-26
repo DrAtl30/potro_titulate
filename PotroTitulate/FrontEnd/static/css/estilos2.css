@@ -4,8 +4,6 @@ body, html {
     padding: 0;
     background-color: #f4f4f4;
     height: 100%;
-    display: flex;
-    flex-direction: column; 
 }
 
 header {
@@ -41,6 +39,7 @@ header nav a {
     padding: 5px 8px;
 }
 
+
 header nav a:hover {
     text-decoration: underline;
 }
@@ -53,8 +52,14 @@ header nav a:hover {
 }
 
 .progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #0ddd44;
+    height: 100%;
+    transition: width 0.5s ease-in-out;
 }
+
 
 .estado {
     display: inline-block;
@@ -62,7 +67,45 @@ header nav a:hover {
     height: 15px;
     border-radius: 50%;
 }
+.estado.no-entregado {
+    background-color: #6c757d;
+    color: white;
+}
 
+.estado.pendiente {
+    background-color: #ffc107; 
+    color: black;
+}
+
+.estado.aceptado {
+    background-color: #28a745; 
+    color: white;
+}
+
+.estado.rechazado {
+    background-color: #dc3545; 
+    color: white;
+}
+
+.badge.bg-secondary {
+    background-color: #6c757d; 
+    color: white;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107;
+    color: black;
+}
+
+.badge.bg-success {
+    background-color: #28a745; 
+    color: white;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545;
+    color: white;
+}
 .requisito-item {
     display: flex;
     align-items: center;
@@ -72,28 +115,9 @@ header nav a:hover {
 .requisito-texto {
     flex: 1;
 }
-
 .ms-auto {
-    margin-left: auto; 
+    margin-left: auto;  /* Esto mueve el botón de cerrar sesión hacia la derecha */
 }
 
-.banner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background-color: #5a7561;
-    z-index: 10; 
-}
 
-.banner img {
-    width: 100%; 
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
 
-main {
-    flex: 1;
-}
