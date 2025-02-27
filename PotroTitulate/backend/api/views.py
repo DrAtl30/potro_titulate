@@ -108,10 +108,24 @@ def opcionesTitulacion(request):
 #Vista para verificar si hay un trámite en progreso
 def verificar_tramite_en_progreso(request, id_sustentante):
     # Verificar si el sustentante tiene un trámite en progreso
-    tramite = Tramites.objects.filter(id_sustentante=id_sustentante).exists()  # Utilizamos exists() para solo verificar la existencia
-    
+    tramite = Tramites.objects.filter(id_sustentante=id_sustentante).first()  # Obtener el primer trámite si existe
+
     if tramite:
-        return JsonResponse({'tramiteEnProgreso': True})
+        # Obtener el ID de la opción de titulación
+        id_opcion = tramite.id_opcion.id_opcion if tramite.id_opcion else None
+        
+        # Buscar la opción de titulación con el ID obtenido
+        opcion_titulacion = OpcionTitulacion.objects.filter(id_opcion=id_opcion).first()
+        nombre_opcion = opcion_titulacion.nombre_opcion if opcion_titulacion else None
+
+        # Obtener el estado de 'aprobado' directamente desde el trámite
+        aprobado = tramite.aprobado
+        
+        return JsonResponse({
+            'tramiteEnProgreso': True,
+            'aprobado': aprobado,  # Pasamos el estado de aprobado
+            'opcionTitulacion': nombre_opcion  # Pasamos el nombre de la opción de titulación
+        })
     else:
         return JsonResponse({'tramiteEnProgreso': False})
 
@@ -151,6 +165,9 @@ def enviar_solicitud(request):
                 fecha_actualizacion=timezone.now(),
                 progreso=0
             )
+
+            sustentante.id_opcion = opcion_titulacion
+            sustentante.save()
 
             # Return success response
             return JsonResponse({'message': 'Solicitud enviada con éxito'}, status=200)
