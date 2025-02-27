@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {    // Obtener la opción de titulación desde el HTML
-    const opcionTitulacion = document.getElementById("opcionTitulacionData").dataset.opcion;
+   // const opcionTitulacion = document.getElementById("opcionTitulacionData").dataset.opcion;
     const idSustentante = document.getElementById("idSustentante")?.value;
     const idTramite = document.getElementById("idTramite")?.value;
 
