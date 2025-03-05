@@ -16,6 +16,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.template.loader import render_to_string
+from django.urls import reverse
+import jwt
+from django.conf import settings
 import json
 
 
@@ -190,6 +197,26 @@ class RegistroView(APIView):
             serializer.save()
             return Response({'mensaje': 'Registro exitoso'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def generarTokenVerificacion(sustentante):
+        payload = {
+            'id' : sustentante.id_sustentante,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24),
+            'iat': datetime.datetime.utcnow()
+        }
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+        return token
+    
+def enviarCorreoConfirmacion(sustentante):
+    token = default_token_generator.make_token(sustentante)
+    uid = urlsafe_base64_encode(force_bytes(sustentante.id_sustentante))
+    url_confirmacion = f"http://127.0.0.1:8000/api/confirmar-cuenta/{uid}/{token}/"
+    
+    asunto = "Confirma tu cuenta"
+    mensaje = render_to_string('confirmacion_correo.html', {'url_confirmacion': url_confirmacion})
+    
+    send_mail(asunto, mensaje, settings.EMAIL_HOST_USER, [sustentante.correo_electronico], fail_silently=False)
+
 
 class LoginView(APIView):
     def post(self, request):

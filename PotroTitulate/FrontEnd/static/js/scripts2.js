@@ -179,7 +179,7 @@ const requisitos = {
         'Formato de Llenado de Datos Personales',
         'Formato 8.9'
     ],
-    'Creditos de estudios avanzados': [
+    'Créditos de Estudios Avanzados': [
         'Formato 8.1 con sus firmas',
         'Certificado de 100% de plan de estudios',
         'Certificado de Servicio Social',
