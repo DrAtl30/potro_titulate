@@ -144,16 +144,17 @@ main {
 footer {
     position: relative;
     background-color: #6e7b68;
-    padding: 80px 20px;
-    text-align: center;
+    padding: 20px; /* Ajusta el padding para que el contenido esté bien posicionado */
+    text-align: left; /* Asegura que el texto esté alineado a la izquierda */
     margin-top: auto;
-    height: auto;
+    height: auto; /* Asegura que la altura se ajuste al contenido */
+    min-height: 200px; /* Ajusta la altura mínima para asegurar que todo el contenido sea visible */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start; /* Alinea el contenido a la izquierda */
+    justify-content: flex-start; /* Alinea el contenido a la izquierda */
     color: white;
-    overflow: hidden; /* Evita que el contenido se desborde */
+    overflow: visible; /* Cambia a visible para asegurar que todo el contenido se muestre */
     width: 100%; /* Asegura que el footer ocupe todo el ancho */
 }
 
@@ -173,41 +174,49 @@ footer img {
     z-index: 2; 
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start; /* Alinea todo el contenido hacia la izquierda */
-    align-items: flex-start; /* Alinea los elementos al inicio de cada fila */
+    justify-content: flex-start; /* Alinea el contenido a la izquierda */
+    align-items: flex-start; /* Alinea el contenido a la izquierda */
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px; 
+    margin: 0; /* Elimina el margen automático para evitar centrado */
+    padding: 0; /* Elimina el padding para evitar que se mueva hacia abajo */
 }
 
+.footer-text,
 .footer-contact,
 .footer-social {
-    margin-left: 0; /* Elimina cualquier margen izquierdo */
+    flex: 1;
+    margin: 10px;
     text-align: left; /* Asegura que el texto esté alineado a la izquierda */
+    max-width: 300px;
+}
+
+.footer-text p {
+    margin: 0;
+    font-size: 16px;
 }
 
 .footer-contact h4,
 .footer-social h4 {
-    margin-left: 0; /* Elimina cualquier margen izquierdo de los encabezados */
+    margin-bottom: 15px;
     font-size: 18px;
     font-weight: bold;
 }
 
 .footer-contact ul,
 .footer-social ul {
-    padding-left: 0; /* Elimina el padding de la lista */
-    list-style: none; /* Elimina los puntos de la lista */
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .footer-contact ul li,
 .footer-social ul li {
-    margin-left: 0; /* Elimina el margen izquierdo de los elementos de la lista */
+    margin-bottom: 10px;
     font-size: 14px;
 }
 
-.footer-contact ul li strong,
-.footer-social ul li a {
+.footer-contact ul li strong {
     font-weight: bold;
 }
 
