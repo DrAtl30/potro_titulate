@@ -11,6 +11,8 @@ urlpatterns = [
     path('api/login/administrador/', AdministradorLoginView.as_view(), name='login_administrador'),
     
     path('api/logout/', LogoutView.as_view(), name='logout'),
+    path('descargar/<int:documento_id>/', descargar_documento, name='descargar_documento'),
+
 
 
 ]

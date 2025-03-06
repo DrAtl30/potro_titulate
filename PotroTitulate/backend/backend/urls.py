@@ -49,10 +49,14 @@ urlpatterns = [
     path('opcionesTitulacion/', opcionesTitulacion, name='opcionesTitulacion'),
     path('verificarTramiteEnProgreso/<int:id_sustentante>/', verificar_tramite_en_progreso, name='verificarTramiteEnProgreso'),
     path('enviarSolicitud/', enviar_solicitud, name='enviarSolicitud'),
+<<<<<<< HEAD
     # mensajeria 
     path('obtenerMensajes/<int:sustentante_id>/', obtener_mensajes, name='obtenerMensajes'),
     path('enviarMensajeAdmin/', enviar_mensaje_admin, name='enviarMensajeAdmin'),
     path('enviarMensajeSustentante/', enviar_mensaje_sustentante, name='enviarMensajeSustentante'),
+=======
+    path('confirmar-cuenta/<str:uidb64>/<str:token>/', ConfirmarCuentaView.as_view(), name='confirmar-cuenta'),
+>>>>>>> 9dec96ead72940752d24b2306fe41ebcf65aa3cd
 
     # Ruta para la API de registro
     path('api/registro/', RegistroView.as_view(), name='api_registro'),  # API para registro

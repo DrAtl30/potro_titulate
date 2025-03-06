@@ -108,6 +108,9 @@
                 <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña" required>
             </div>
             <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+            <div class="forgot-password">
+                <a href="{% url 'recuperarContrasena' %}">¿Olvidaste tu contraseña?</a>
+            </div>
         </form>        
     </div>
     <footer>

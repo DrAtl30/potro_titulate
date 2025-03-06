@@ -16,7 +16,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.template.loader import render_to_string
+from django.urls import reverse
+import jwt
+from django.conf import settings
 import json
+import os
 
 
 
@@ -108,10 +116,24 @@ def opcionesTitulacion(request):
 #Vista para verificar si hay un trámite en progreso
 def verificar_tramite_en_progreso(request, id_sustentante):
     # Verificar si el sustentante tiene un trámite en progreso
-    tramite = Tramites.objects.filter(id_sustentante=id_sustentante).exists()  # Utilizamos exists() para solo verificar la existencia
-    
+    tramite = Tramites.objects.filter(id_sustentante=id_sustentante).first()  # Obtener el primer trámite si existe
+
     if tramite:
-        return JsonResponse({'tramiteEnProgreso': True})
+        # Obtener el ID de la opción de titulación
+        id_opcion = tramite.id_opcion.id_opcion if tramite.id_opcion else None
+        
+        # Buscar la opción de titulación con el ID obtenido
+        opcion_titulacion = OpcionTitulacion.objects.filter(id_opcion=id_opcion).first()
+        nombre_opcion = opcion_titulacion.nombre_opcion if opcion_titulacion else None
+
+        # Obtener el estado de 'aprobado' directamente desde el trámite
+        aprobado = tramite.aprobado
+        
+        return JsonResponse({
+            'tramiteEnProgreso': True,
+            'aprobado': aprobado,  # Pasamos el estado de aprobado
+            'opcionTitulacion': nombre_opcion  # Pasamos el nombre de la opción de titulación
+        })
     else:
         return JsonResponse({'tramiteEnProgreso': False})
 
@@ -152,6 +174,9 @@ def enviar_solicitud(request):
                 progreso=0
             )
 
+            sustentante.id_opcion = opcion_titulacion
+            sustentante.save()
+
             # Return success response
             return JsonResponse({'message': 'Solicitud enviada con éxito'}, status=200)
 
@@ -174,31 +199,43 @@ class RegistroView(APIView):
             return Response({'mensaje': 'Registro exitoso'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class LoginView(APIView):
     def post(self, request):
         serializer = SustentanteLoginSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
-            print('Datos validos:', data)
-            
-            # Guardar el ID del Sustentante en la sesión
-            request.session['sustentante_id'] = data['id_sustentante']
+            print('Datos válidos:', data)
 
-            if data['contrasena_temporal']:
+            # Verificar si la cuenta ya fue confirmada
+            if not data.get('confirmado', False):  
+                return Response({
+                    'mensaje': 'Debes confirmar tu cuenta antes de iniciar sesión.',
+                    'confirmacion_pendiente': True
+                }, status=status.HTTP_403_FORBIDDEN)
+
+            # Guardar el ID del Sustentante en la sesión
+            request.session['sustentante_id'] = data.get('id_sustentante')
+
+            if data.get('contrasena_temporal'):
                 return Response({
                     'mensaje': 'Debes cambiar tu contraseña temporal.',
                     'redirigir_a_cambiar_contrasena': True,
-                    'id_sustentante': data['id_sustentante']
+                    'id_sustentante': data.get('id_sustentante')
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({
                     'mensaje': 'Inicio de sesión exitoso.',
                     'redirigir_a_cambiar_contrasena': False,
-                    'id_sustentante': data['id_sustentante'],
-                    'nombre': data['nombre'],
-                    'correo_electronico': data['correo_electronico']
+                    'id_sustentante': data.get('id_sustentante'),
+                    'nombre': data.get('nombre'),
+                    'correo_electronico': data.get('correo_electronico')
                 }, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Agregar detalles de error para depuración
+        return Response({'mensaje': 'Error en los datos', 'errores': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
     
 class PerfilUsuarioView(APIView):
    def get(self, request):
@@ -447,6 +484,31 @@ def estadoDocumento(request, tramite_id):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
     
+class ConfirmarCuentaView(APIView):
+    def get(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            sustentante = get_object_or_404(Sustentante, id_sustentante=uid)
+
+            if default_token_generator.check_token(sustentante, token):
+                sustentante.confirmado = True
+                sustentante.save()
+                return Response({'mensaje': 'Cuenta confirmada correctamente'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Enlace inválido o expirado'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response({'error': 'Enlace inválido'}, status=status.HTTP_400_BAD_REQUEST)
+        
+def descargar_documento(request, documento_id):
+    documento = get_object_or_404(Documentos, id_documento=documento_id)
+    file_path = os.path.join(settings.MEDIA_ROOT, documento.archivo.name)
+    
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as file:
+            response = HttpResponse(file.read(), content_type='application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename="{os.path.basename(file_path)}"'
+            return response
+    raise Http404("El archivo no existe")
 
 @csrf_exempt
 def obtener_mensajes(request, sustentante_id):

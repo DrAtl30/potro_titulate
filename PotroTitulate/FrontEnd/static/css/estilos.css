@@ -1,4 +1,3 @@
-
 /* Estilos generales */
 body, html {
     font-family: Arial, sans-serif;
@@ -145,16 +144,17 @@ main {
 footer {
     position: relative;
     background-color: #6e7b68;
-    padding: 80px 20px;
-    text-align: center;
+    padding: 20px; /* Ajusta el padding para que el contenido esté bien posicionado */
+    text-align: left; /* Asegura que el texto esté alineado a la izquierda */
     margin-top: auto;
-    height: auto;
+    height: auto; /* Asegura que la altura se ajuste al contenido */
+    min-height: 200px; /* Ajusta la altura mínima para asegurar que todo el contenido sea visible */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start; /* Alinea el contenido a la izquierda */
+    justify-content: flex-start; /* Alinea el contenido a la izquierda */
     color: white;
-    overflow: hidden; /* Evita que el contenido se desborde */
+    overflow: visible; /* Cambia a visible para asegurar que todo el contenido se muestre */
     width: 100%; /* Asegura que el footer ocupe todo el ancho */
 }
 
@@ -174,12 +174,12 @@ footer img {
     z-index: 2; 
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: flex-start; /* Alinea el contenido a la izquierda */
+    align-items: flex-start; /* Alinea el contenido a la izquierda */
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px; 
+    margin: 0; /* Elimina el margen automático para evitar centrado */
+    padding: 0; /* Elimina el padding para evitar que se mueva hacia abajo */
 }
 
 .footer-text,
@@ -187,7 +187,7 @@ footer img {
 .footer-social {
     flex: 1;
     margin: 10px;
-    text-align: left;
+    text-align: left; /* Asegura que el texto esté alineado a la izquierda */
     max-width: 300px;
 }
 
@@ -227,61 +227,4 @@ footer img {
 
 .footer-social ul li a:hover {
     text-decoration: underline;
-}
-nav .dropdown-menu {
-    display: none;
-    position: absolute;
-    background-color: #fff;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-}
-nav .dropdown:hover .dropdown-menu {
-    display: block;
-}
-nav .dropdown-menu a {
-    color: #333;
-    padding: 8px 16px;
-    text-decoration: none;
-    display: block;
-}
-nav .dropdown-menu a:hover {
-    background-color: #f1f1f1;
-}
-
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);  
-    display: none;  
-    justify-content: center;  
-    align-items: center;  
-    z-index: 1000;  
-}
-
-.modalContent {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    min-width: 300px; /* Tamaño mínimo para el contenido */
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
 }

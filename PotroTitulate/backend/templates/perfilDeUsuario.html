@@ -10,6 +10,17 @@
     <!-- Enlace a estilos.css -->
     <link rel="stylesheet" href="{% static 'css/estilos2.css' %}">
     <style>
+        .back-arrow {
+            font-size: 24px;
+            color: #5a7561;
+            text-decoration: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        .back-arrow:hover {
+            text-decoration: underline;
+        }
         /* Estilos para el modal */
         .modal {
             position: fixed;
@@ -51,6 +62,7 @@
     </style>
 </head>
 <body>
+    <a href="{% url 'index' %}" class="back-arrow">&larr;</a>
     <!-- Escudo -->
     <div class="header-left" style="display: flex; justify-content: center; flex: 1;">
         <img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}" alt="Escudo UAEM" style="max-height: 120px;">
@@ -128,13 +140,6 @@
         <div class="modalContent">
             <span class="close">&times;</span>
             <p class="modalMessage"></p>
-        </div>
-    </div>
-
-    <!-- Barra de progreso -->
-    <div class="progress" style="height: 20px; margin-top: 20px; width: 90%; margin-left: auto; margin-right: auto;">
-        <div class="progress-bar" role="progressbar" style="width: {{ progreso|default:0 }}%;" aria-valuenow="{{ progreso }}" aria-valuemin="0" aria-valuemax="100">
-            {{ progreso }}%
         </div>
     </div>
 
