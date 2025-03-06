@@ -1,226 +1,228 @@
+const requisitos = {
+    'Trabajo escrito': [
+        'Formato 8.1 con sus firmas',
+        'Aviso Firmado de Privacidad de la UAEM',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Formato 8.3',
+        'Formato 8.5',
+        'Nuevo: Reporte de porcentaje de similitud',
+        'Formato 8.11',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante/Baucher de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9',
+        'Evaluación Profesional: Formato 8.2',
+        'Evaluación Profesional: Formato 8.4',
+        'Evaluación Profesional: Formato 8.6',
+        'Evaluación Profesional: Formato 8.8'
+    ],
+    'Artículo Especializado para la Publicación en una Revista Indexada': [
+        'Formato 8.1 con sus firmas',
+        'Aviso Firmado de Privacidad de la UAEM',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Artículo aceptado para publicación',
+        'Carta de aceptación de la revista indexada',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante/Baucher de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9'
+    ],
+    'Ensayo': [
+        'Formato 8.1 con sus firmas',
+        'Aviso Firmado de Privacidad de la UAEM',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Ensayo aprobado por el comité',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante/Baucher de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9'
+    ],
+    'Memoria de Experiencia Laboral': [
+        'Formato 8.1 con sus firmas',
+        'Aviso Firmado de Privacidad de la UAEM',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Memoria de experiencia laboral aprobada',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante/Baucher de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9'
+    ],
+    'Reporte de Aplicación de Conocimientos': [
+        'Formato 8.1 con sus firmas',
+        'Aviso Firmado de Privacidad de la UAEM',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Reporte de aplicación de conocimientos aprobado',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante/Baucher de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9'
+    ],
+    'Reporte de Autoempleo Profesional': [
+        'Formato 8.1 con sus firmas',
+        'Aviso Firmado de Privacidad de la UAEM',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Reporte de autoempleo profesional aprobado',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante/Baucher de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9'
+    ],
+    'Reporte de Residencia de Investigación': [
+        'Formato 8.1 con sus firmas',
+        'Aviso Firmado de Privacidad de la UAEM',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Reporte de residencia de investigación aprobado',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante/Baucher de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9'
+    ],
+    'Tesina': [
+        'Formato 8.1 con sus firmas',
+        'Aviso Firmado de Privacidad de la UAEM',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Tesina aprobada',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante/Baucher de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9'
+    ],
+    'Tesis': [
+        'Formato 8.1 con sus firmas',
+        'Aviso Firmado de Privacidad de la UAEM',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Tesis aprobada',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante/Baucher de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9'
+    ],
+    'Aprovechamiento académico': [
+        'Formato 8.1 con sus firmas',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Aviso Firmado de Privacidad de la UAEM',
+        '*Oficio de solicitud',
+        'Constancia de no haber cometido Falta a la Comunidad Universitaria',
+        'Historial Académico/Trayectoria Académica',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9'
+    ],
+    'Créditos de Estudios Avanzados': [
+        'Formato 8.1 con sus firmas',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Certificado de Bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Aviso Firmado de Privacidad de la UAEM',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9',
+        '*Oficio de solicitud',
+        'Certificado de Diplomado Superior'
+    ],
+    'Examen General para el egreso de la Licenciatura EGEL': [
+        'Formato 8.1 con sus firmas',
+        'Certificado de 100% de plan de estudios',
+        'Certificado de Servicio Social',
+        'Certificado de Prácticas Profesionales',
+        'Acta de nacimiento',
+        'Aviso firmado de privacidad de la UAEM',
+        'Oficio de solicitud',
+        'Certificado de bachillerato',
+        'Constancia de no adeudo a biblioteca',
+        'Constancia de no adeudo a Dirección de Control Escolar',
+        'Constancia de no adeudo a la UAEM-Contraloría',
+        'Comprobante de Expedición de Titulo',
+        'Comprobante-Baucher pago a derecho a Evaluación Profesional',
+        'Formato de Llenado de Datos Personales',
+        'Formato 8.9',
+        'Testimonio que les manda SENEVAL a su correo'
+    ]
+};
+
 document.addEventListener("DOMContentLoaded", function() {    // Obtener la opción de titulación desde el HTML
-    const opcionTitulacion = document.getElementById("opcionTitulacionData").dataset.opcion;
     const idSustentante = document.getElementById("idSustentante")?.value;
     const idTramite = document.getElementById("idTramite")?.value;
+    //const opcionTitulacion = document.getElementById("opcionTitulacionData").dataset.opcion;
 
-    const requisitos = {
-        'Trabajo escrito': [
-            'Formato 8.1 con sus firmas',
-            'Aviso Firmado de Privacidad de la UAEM',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Formato 8.3',
-            'Formato 8.5',
-            'Nuevo: Reporte de porcentaje de similitud',
-            'Formato 8.11',
-            'Certificado de Bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante/Baucher de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9',
-            'Evaluación Profesional: Formato 8.2',
-            'Evaluación Profesional: Formato 8.4',
-            'Evaluación Profesional: Formato 8.6',
-            'Evaluación Profesional: Formato 8.8'
-        ],
-        'Artículo Especializado para la Publicación en una Revista Indexada': [
-            'Formato 8.1 con sus firmas',
-            'Aviso Firmado de Privacidad de la UAEM',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Artículo aceptado para publicación',
-            'Carta de aceptación de la revista indexada',
-            'Certificado de Bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante/Baucher de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9'
-        ],
-        'Ensayo': [
-            'Formato 8.1 con sus firmas',
-            'Aviso Firmado de Privacidad de la UAEM',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Ensayo aprobado por el comité',
-            'Certificado de Bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante/Baucher de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9'
-        ],
-        'Memoria de Experiencia Laboral': [
-            'Formato 8.1 con sus firmas',
-            'Aviso Firmado de Privacidad de la UAEM',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Memoria de experiencia laboral aprobada',
-            'Certificado de Bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante/Baucher de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9'
-        ],
-        'Reporte de Aplicación de Conocimientos': [
-            'Formato 8.1 con sus firmas',
-            'Aviso Firmado de Privacidad de la UAEM',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Reporte de aplicación de conocimientos aprobado',
-            'Certificado de Bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante/Baucher de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9'
-        ],
-        'Reporte de Autoempleo Profesional': [
-            'Formato 8.1 con sus firmas',
-            'Aviso Firmado de Privacidad de la UAEM',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Reporte de autoempleo profesional aprobado',
-            'Certificado de Bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante/Baucher de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9'
-        ],
-        'Reporte de Residencia de Investigación': [
-            'Formato 8.1 con sus firmas',
-            'Aviso Firmado de Privacidad de la UAEM',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Reporte de residencia de investigación aprobado',
-            'Certificado de Bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante/Baucher de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9'
-        ],
-        'Tesina': [
-            'Formato 8.1 con sus firmas',
-            'Aviso Firmado de Privacidad de la UAEM',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Tesina aprobada',
-            'Certificado de Bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante/Baucher de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9'
-        ],
-        'Tesis': [
-            'Formato 8.1 con sus firmas',
-            'Aviso Firmado de Privacidad de la UAEM',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Tesis aprobada',
-            'Certificado de Bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante/Baucher de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9'
-        ],
-        'Aprovechamiento académico': [
-            'Formato 8.1 con sus firmas',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Aviso Firmado de Privacidad de la UAEM',
-            '*Oficio de solicitud',
-            'Constancia de no haber cometido Falta a la Comunidad Universitaria',
-            'Historial Académico/Trayectoria Académica',
-            'Certificado de Bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9'
-        ],
-        'Creditos de estudios avanzados': [
-            'Formato 8.1 con sus firmas',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Certificado de Bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Aviso Firmado de Privacidad de la UAEM',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9',
-            '*Oficio de solicitud',
-            'Certificado de Diplomado Superior'
-        ],
-        'Examen General para el egreso de la Licenciatura EGEL': [
-            'Formato 8.1 con sus firmas',
-            'Certificado de 100% de plan de estudios',
-            'Certificado de Servicio Social',
-            'Certificado de Prácticas Profesionales',
-            'Acta de nacimiento',
-            'Aviso firmado de privacidad de la UAEM',
-            'Oficio de solicitud',
-            'Certificado de bachillerato',
-            'Constancia de no adeudo a biblioteca',
-            'Constancia de no adeudo a Dirección de Control Escolar',
-            'Constancia de no adeudo a la UAEM-Contraloría',
-            'Comprobante de Expedición de Titulo',
-            'Comprobante-Baucher pago a derecho a Evaluación Profesional',
-            'Formato de Llenado de Datos Personales',
-            'Formato 8.9',
-            'Testimonio que les manda SENEVAL a su correo'
-        ]
-    };
+    
 
     if (!idSustentante) {
         console.error('ID del sustentante no encontrado.');
@@ -233,7 +235,10 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
         if (data.tramiteEnProgreso) {
             aprobado = data.aprobado; // Set the aprobado variable
             opcionTitulacion = data.opcionTitulacion; // Set the opcionTitulacion variable
-            mostrarMensajeTramiteEnProceso();
+            console.log("Opcion de titulacion", opcionTitulacion)
+            if (!aprobado) {
+                mostrarMensajeTramiteEnProceso();
+            }
             showRequirements(opcionTitulacion); // Show the requisitos for the selected option
         } else {
             window.location.href = '/opcionesTitulacion/';
@@ -389,6 +394,21 @@ function handleFileChange(requisito) {
     const file = fileInput.files[0];
 
     if (file) {
+        const allowedExtensions = ['.pdf', '.docx', '.odt'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        if (!allowedExtensions.includes(`.${fileExtension}`)) {
+            mostrarModal(`Formato no permitido. Solo se aceptan archivos: ${allowedExtensions.join(', ')}`, 'errorModal');
+            fileInput.value = ''; // Limpiar el input para evitar que se suba un archivo no válido
+            return;
+        }
+
+        // Mostrar mensaje de confirmación antes de subir el archivo
+        const confirmacion = confirm(`¿Estás seguro de que deseas subir el archivo "${file.name}"?`);
+        if (!confirmacion) {
+            return; // Si el usuario cancela, no se sube el archivo
+        }
+
         const formData = new FormData();
         formData.append('file', file);
         formData.append('requisito', requisito);
@@ -401,9 +421,9 @@ function handleFileChange(requisito) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                mostrarModal(`Archivo subido correctamente para ${requisito}`, 'successModal');
-                updateEstado(requisito, 'pendiente'); // Change the state to "pendiente"
-                document.querySelector(`button[onclick="uploadFile('${requisito}')"]`).disabled = true; // Disable the upload button
+                mostrarModal(`Archivo "${file.name}" subido correctamente para ${requisito}`, 'successModal');
+                updateEstado(requisito, 'pendiente'); // Cambia el estado a "pendiente"
+                document.querySelector(`button[onclick="uploadFile('${requisito}')"]`).disabled = true; // Deshabilita el botón de carga
             } else {
                 mostrarModal(`Error al subir el archivo: ${data.error}`, 'errorModal');
             }
@@ -414,10 +434,6 @@ function handleFileChange(requisito) {
         });
     }
 }
-
-
-
-
 
 function cerrarSesion() {
     // Crea un formulario
