@@ -11,7 +11,7 @@ from datetime import datetime
 from django.core.mail import send_mail, BadHeaderError
 from django.shortcuts import render, redirect
 from django.utils.crypto import get_random_string
-from .models import Sustentante, Documentos, Tramites, OpcionTitulacion
+from .models import Notificaciones, Sustentante, Documentos, Tramites, OpcionTitulacion
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
@@ -392,8 +392,6 @@ def seleccionar_opcion_titulacion(request):
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
-<<<<<<< HEAD
-=======
 def revisarOpcionesTitulacion(request):
     if request.mehtod == 'POST':
        tramite_id = request.POST.get('tramite_id')
@@ -450,4 +448,91 @@ def estadoDocumento(request, tramite_id):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
     
 
->>>>>>> 31a642157222985aab74a9a828d3bb0ff27c922c
+@csrf_exempt
+def obtener_mensajes(request, sustentante_id):
+    """
+    Regresa todos los mensajes asociados a un sustentante (tanto enviados
+    por el administrador como por el sustentante).
+    """
+    if request.method == 'GET':
+        # Filtramos las notificaciones de este sustentante y ordenamos por fecha
+        mensajes = Notificaciones.objects.filter(id_sustentante=sustentante_id).order_by('fecha_envio')
+        
+        # Convertimos a una lista de diccionarios para enviar como JSON
+        lista_mensajes = []
+        for msg in mensajes:
+            lista_mensajes.append({
+                'id_notificacion': msg.id_notificacion,
+                'mensaje': msg.mensaje,
+                'fecha_envio': msg.fecha_envio.strftime('%Y-%m-%d %H:%M:%S'),
+                'es_de_administrador': msg.es_de_administrador,
+                'estado_lectura': msg.estado_lectura,
+            })
+
+        return JsonResponse({'success': True, 'mensajes': lista_mensajes}, status=200)
+    
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
+
+
+@csrf_exempt
+def enviar_mensaje_admin(request):
+    """
+    Endpoint para que el ADMINISTRADOR envíe un mensaje a un sustentante.
+    Espera un JSON con: {"sustentante_id": <num>, "mensaje": "texto"}
+    """
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            sustentante_id = data.get('sustentante_id')
+            mensaje_texto = data.get('mensaje')
+
+            if not sustentante_id or not mensaje_texto:
+                return JsonResponse({'success': False, 'error': 'Datos incompletos'}, status=400)
+
+            # (Opcional) Recuperar el objeto Administrador según tu lógica de sesión 
+            # admin_id = request.session.get('admin_id')
+            # admin_obj = get_object_or_404(Administrativos, id_administrativo=admin_id)
+            # Por simplicidad, no lo usamos aquí, pero podrías guardarlo si lo requieres.
+
+            sustentante = get_object_or_404(Sustentante, id_sustentante=sustentante_id)
+
+            # Creamos el registro en notificaciones
+            Notificaciones.objects.create(
+                id_sustentante=sustentante,
+                mensaje=mensaje_texto,
+                fecha_envio=timezone.now(),
+                estado_lectura='No leído',       # o como manejes tu estado
+                es_de_administrador=True        # Indica que lo manda el admin
+            )
+
+            return JsonResponse({'success': True, 'message': 'Mensaje enviado correctamente'}, status=200)
+        
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
+
+@csrf_exempt
+def enviar_mensaje_sustentante(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        mensaje_texto = data.get('mensaje')
+        # Identifica al sustentante. Ejemplo, si guardaste su ID en la sesión:
+        sustentante_id = request.session.get('sustentante_id')
+
+        if not sustentante_id or not mensaje_texto:
+            return JsonResponse({'success': False, 'error': 'Datos incompletos'}, status=400)
+
+        sustentante = get_object_or_404(Sustentante, id_sustentante=sustentante_id)
+
+        Notificaciones.objects.create(
+            id_sustentante=sustentante,
+            mensaje=mensaje_texto,
+            fecha_envio=timezone.now(),
+            estado_lectura='No leído',
+            es_de_administrador=False  # Se marca como enviado por el sustentante
+        )
+
+        return JsonResponse({'success': True, 'message': 'Mensaje enviado por el sustentante'}, status=200)
+
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)

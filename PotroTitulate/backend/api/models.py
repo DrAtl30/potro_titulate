@@ -31,16 +31,6 @@ class Documentos(models.Model):
         db_table = 'documentos'
 
 
-class Notificaciones(models.Model):
-    id_notificacion = models.AutoField(primary_key=True)
-    id_sustentante = models.ForeignKey('Sustentante', models.DO_NOTHING, db_column='id_sustentante')
-    mensaje = models.TextField()
-    fecha_envio = models.DateField()
-    estado_lectura = models.BooleanField()
-
-    class Meta:
-        managed = False
-        db_table = 'notificaciones'
 
 
 class OpcionTitulacion(models.Model):
@@ -111,3 +101,19 @@ class Tramites(models.Model):
     class Meta:
         managed = False
         db_table = 'tramites'
+        
+        
+class Notificaciones(models.Model):
+    id_notificacion = models.AutoField(primary_key=True)
+    id_sustentante = models.ForeignKey(Sustentante, on_delete=models.CASCADE)
+    mensaje = models.TextField()
+    fecha_envio = models.DateTimeField(auto_now_add=True)
+    estado_lectura = models.CharField(max_length=20, default='No leído')
+    
+    # Campo adicional para indicar si lo manda el admin o el sustentante:
+    es_de_administrador = models.BooleanField(default=False)
+    # Opcionalmente, si necesitas guardar cuál admin fue:
+    # id_administrador = models.ForeignKey(Administrativos, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"Notificación #{self.id_notificacion} | Admin? {self.es_de_administrador}"
