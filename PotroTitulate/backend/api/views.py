@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
-from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
@@ -197,25 +197,6 @@ class RegistroView(APIView):
             serializer.save()
             return Response({'mensaje': 'Registro exitoso'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def generarTokenVerificacion(sustentante):
-        payload = {
-            'id' : sustentante.id_sustentante,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24),
-            'iat': datetime.datetime.utcnow()
-        }
-        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
-        return token
-    
-def enviarCorreoConfirmacion(sustentante):
-    token = default_token_generator.make_token(sustentante)
-    uid = urlsafe_base64_encode(force_bytes(sustentante.id_sustentante))
-    url_confirmacion = f"http://127.0.0.1:8000/api/confirmar-cuenta/{uid}/{token}/"
-    
-    asunto = "Confirma tu cuenta"
-    mensaje = render_to_string('confirmacion_correo.html', {'url_confirmacion': url_confirmacion})
-    
-    send_mail(asunto, mensaje, settings.EMAIL_HOST_USER, [sustentante.correo_electronico], fail_silently=False)
 
 
 class LoginView(APIView):
@@ -223,26 +204,37 @@ class LoginView(APIView):
         serializer = SustentanteLoginSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
-            print('Datos validos:', data)
-            
-            # Guardar el ID del Sustentante en la sesión
-            request.session['sustentante_id'] = data['id_sustentante']
+            print('Datos válidos:', data)
 
-            if data['contrasena_temporal']:
+            # Verificar si la cuenta ya fue confirmada
+            if not data.get('confirmado', False):  
+                return Response({
+                    'mensaje': 'Debes confirmar tu cuenta antes de iniciar sesión.',
+                    'confirmacion_pendiente': True
+                }, status=status.HTTP_403_FORBIDDEN)
+
+            # Guardar el ID del Sustentante en la sesión
+            request.session['sustentante_id'] = data.get('id_sustentante')
+
+            if data.get('contrasena_temporal'):
                 return Response({
                     'mensaje': 'Debes cambiar tu contraseña temporal.',
                     'redirigir_a_cambiar_contrasena': True,
-                    'id_sustentante': data['id_sustentante']
+                    'id_sustentante': data.get('id_sustentante')
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({
                     'mensaje': 'Inicio de sesión exitoso.',
                     'redirigir_a_cambiar_contrasena': False,
-                    'id_sustentante': data['id_sustentante'],
-                    'nombre': data['nombre'],
-                    'correo_electronico': data['correo_electronico']
+                    'id_sustentante': data.get('id_sustentante'),
+                    'nombre': data.get('nombre'),
+                    'correo_electronico': data.get('correo_electronico')
                 }, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Agregar detalles de error para depuración
+        return Response({'mensaje': 'Error en los datos', 'errores': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
     
 class PerfilUsuarioView(APIView):
    def get(self, request):
@@ -481,4 +473,18 @@ def estadoDocumento(request, tramite_id):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
     
+class ConfirmarCuentaView(APIView):
+    def get(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            sustentante = get_object_or_404(Sustentante, id_sustentante=uid)
+
+            if default_token_generator.check_token(sustentante, token):
+                sustentante.confirmado = True
+                sustentante.save()
+                return Response({'mensaje': 'Cuenta confirmada correctamente'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Enlace inválido o expirado'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response({'error': 'Enlace inválido'}, status=status.HTTP_400_BAD_REQUEST)
 
