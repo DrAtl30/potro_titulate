@@ -49,14 +49,25 @@ urlpatterns = [
     path('opcionesTitulacion/', opcionesTitulacion, name='opcionesTitulacion'),
     path('verificarTramiteEnProgreso/<int:id_sustentante>/', verificar_tramite_en_progreso, name='verificarTramiteEnProgreso'),
     path('enviarSolicitud/', enviar_solicitud, name='enviarSolicitud'),
-<<<<<<< HEAD
+
     # mensajeria 
-    path('obtenerMensajes/<int:sustentante_id>/', obtener_mensajes, name='obtenerMensajes'),
-    path('enviarMensajeAdmin/', enviar_mensaje_admin, name='enviarMensajeAdmin'),
-    path('enviarMensajeSustentante/', enviar_mensaje_sustentante, name='enviarMensajeSustentante'),
-=======
+    # 1) GET /obtenerMensajes/7/ => ver mensajes de ID=7
+    path('obtenerMensajes/<int:id_sustentante>/', obtener_mensajes, name='obtenerMensajes'),
+
+    # 2) POST /enviarMensajeAdmin/7/ => enviar mensaje admin a ID=7
+    path('enviarMensajeAdmin/<int:id_sustentante>/', enviar_mensaje_admin, name='enviarMensajeAdmin'),
+
+    # 3) POST /enviarMensajeSustentante/7/ => si el sustentante manda mensaje
+    path('enviarMensajeSustentante/<int:id_sustentante>/', enviar_mensaje_sustentante, name='enviarMensajeSustentante'),
+
+    # 4) confirmación de cuenta (tal cual lo tienes)
     path('confirmar-cuenta/<str:uidb64>/<str:token>/', ConfirmarCuentaView.as_view(), name='confirmar-cuenta'),
->>>>>>> 9dec96ead72940752d24b2306fe41ebcf65aa3cd
+
+    # 5) GET /perfilAdministrador/ => vista de administrador
+    path('perfilAdministrador/', perfilAdministrador, name='perfilAdministrador'),
+    
+     path('listaSustentantes/', lista_sustentantes, name='listaSustentantes'),
+
 
     # Ruta para la API de registro
     path('api/registro/', RegistroView.as_view(), name='api_registro'),  # API para registro

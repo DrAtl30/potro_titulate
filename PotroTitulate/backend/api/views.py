@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, JsonResponse, HttpResponseRedirect
 from rest_framework import status
 from .serializers import AdministradorLoginSerializer, SustentanteRegistroSerializer
 from .serializers import SustentanteLoginSerializer
@@ -21,7 +21,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.urls import reverse
-import jwt
+#import jwt
 from django.conf import settings
 import json
 import os
@@ -597,4 +597,50 @@ def enviar_mensaje_sustentante(request):
 
         return JsonResponse({'success': True, 'message': 'Mensaje enviado por el sustentante'}, status=200)
 
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
+
+
+def perfilAdministrador(request):
+    # 1) Verificar si hay un administrador loggeado en la sesión
+    admin_id = request.session.get('admin_id')
+    if not admin_id:
+        return redirect('loginAdmin')  # o la ruta de tu login de administrador
+    
+    try:
+        # 2) Obtener el objeto del Admin
+        admin_obj = Administrativos.objects.get(id_administrativo=admin_id)
+
+        # 3) Consultar la tabla de notificaciones
+        #    Si quieres TODAS las notificaciones, haces:
+        #    notificaciones = Notificaciones.objects.all()
+
+        #    Si solo quieres las que correspondan a cierto criterio, por ejemplo:
+        #    - Notificaciones vinculadas a este admin
+        #    - Notificaciones más recientes, etc.
+        #    Aquí un ejemplo de TODAS, ordenadas por fecha_envio desc:
+        notificaciones = Notificaciones.objects.select_related('id_sustentante', 'id_administrativo').order_by('-fecha_envio')
+
+        # 4) Preparar el contexto para la plantilla
+        context = {
+            'admin_obj': admin_obj,
+            'notificaciones': notificaciones,
+            'timestamp': datetime.now().timestamp()
+        }
+
+        # 5) Renderizar la plantilla de administrador (por ejemplo, "administrador.html")
+        return render(request, 'administrador.html', context)
+
+    except Administrativos.DoesNotExist:
+        return redirect('loginAdmin')
+    
+def lista_sustentantes(request):
+    if request.method == 'GET':
+        sustentantes = Sustentante.objects.all()
+        lista = []
+        for s in sustentantes:
+            lista.append({
+                'id_sustentante': s.id_sustentante,
+                'nombre': s.nombre
+            })
+        return JsonResponse({'success': True, 'sustentantes': lista})
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
