@@ -24,6 +24,7 @@ from django.urls import reverse
 import jwt
 from django.conf import settings
 import json
+import os
 
 
 
@@ -487,4 +488,15 @@ class ConfirmarCuentaView(APIView):
                 return Response({'error': 'Enlace inválido o expirado'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception:
             return Response({'error': 'Enlace inválido'}, status=status.HTTP_400_BAD_REQUEST)
+        
+def descargar_documento(request, documento_id):
+    documento = get_object_or_404(Documentos, id_documento=documento_id)
+    file_path = os.path.join(settings.MEDIA_ROOT, documento.archivo.name)
+    
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as file:
+            response = HttpResponse(file.read(), content_type='application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename="{os.path.basename(file_path)}"'
+            return response
+    raise Http404("El archivo no existe")
 

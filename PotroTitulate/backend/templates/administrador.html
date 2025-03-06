@@ -60,32 +60,55 @@
             </table>
             <button id="btnRevisarRequisitos" class="btn btn-primary mb-3">Revisión de Requisitos</button>
             <ul id="listaRequisitos" class="list-group" style="display: none;">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Requisito A
+                <li class="list-group-item d-flex justify-content-between align-items-center" id="requisitoA">
+                    <div>
+                        <a href="{% url 'descargar_documento' documento_id=1 %}" download="RequisitoA.pdf">Requisito A</a>
+                    </div>
                     <div class="semaforo-container">
-                        <span class="semaforo espera"></span>
+                        <span class="semaforo no-entregado activo"></span> <!-- Estado por defecto -->
+                        <span class="semaforo pendiente"></span>
                         <span class="semaforo revision"></span>
-                        <span class="semaforo aprobado"></span>
+                        <span class="semaforo aceptado"></span>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="cambiarEstado('requisitoA', 'pendiente')">Pendiente</button>
+                        <button class="btn btn-sm btn-outline-success" onclick="cambiarEstado('requisitoA', 'aceptado')">Aceptado</button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="cambiarEstado('requisitoA', 'rechazado')">Rechazado</button>
                     </div>
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Requisito B
+                <li class="list-group-item d-flex justify-content-between align-items-center" id="requisitoB">
+                    <div>
+                        <a href="{% url 'descargar_documento' documento_id=2 %}" download="RequisitoB.pdf">Requisito B</a>
+                    </div>
                     <div class="semaforo-container">
-                        <span class="semaforo espera"></span>
+                        <span class="semaforo no-entregado activo"></span> <!-- Estado por defecto -->
+                        <span class="semaforo pendiente"></span>
                         <span class="semaforo revision"></span>
-                        <span class="semaforo aprobado"></span>
+                        <span class="semaforo aceptado"></span>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="cambiarEstado('requisitoB', 'pendiente')">Pendiente</button>
+                        <button class="btn btn-sm btn-outline-success" onclick="cambiarEstado('requisitoB', 'aceptado')">Aceptado</button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="cambiarEstado('requisitoB', 'rechazado')">Rechazado</button>
                     </div>
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Requisito C
+                <li class="list-group-item d-flex justify-content-between align-items-center" id="requisitoC">
+                    <div>
+                        <a href="{% url 'descargar_documento' documento_id=3 %}" download="RequisitoC.pdf">Requisito C</a>
+                    </div>
                     <div class="semaforo-container">
-                        <span class="semaforo espera"></span>
+                        <span class="semaforo no-entregado activo"></span> <!-- Estado por defecto -->
+                        <span class="semaforo pendiente"></span>
                         <span class="semaforo revision"></span>
-                        <span class="semaforo aprobado"></span>
+                        <span class="semaforo aceptado"></span>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="cambiarEstado('requisitoC', 'pendiente')">Pendiente</button>
+                        <button class="btn btn-sm btn-outline-success" onclick="cambiarEstado('requisitoC', 'aceptado')">Aceptado</button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="cambiarEstado('requisitoC', 'rechazado')">Rechazado</button>
                     </div>
                 </li>
             </ul>
-        </div>
 
         <div id="mensajeSection" class="container mt-5" style="display: none;">
             <button id="btnRegresarAspirantes" class="btn btn-secondary mb-3">← Regresar</button>
@@ -105,5 +128,3 @@
     <script src="{% static 'js/scripts-admin.js' %}"></script>
 </body>
 </html>
-
-

@@ -104,6 +104,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     return response.json();
                 })
                 .then(data => {
+                    if (data.id_sustentante) {
+                        sessionStorage.setItem('sustentante', JSON.stringify(data));
+                        window.location.href = '/index/';
+                    }
                     console.log('Respuesta del servidor:', data);
 
                     if (data.redirigir_a_cambiar_contrasena && data.id_sustentante) {
@@ -111,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         mostrarModal('Inicio de sesión exitoso', 'successModal');
                         esperarCierreModal('successModal').then(() => {
-                            window.location.href = '/perfilUsuario/'; // Redirigir a la página principal o dashboard
+                            window.location.href = '/index/'; // Redirigir a la página principal o dashboard
                     });
                 }
                 })

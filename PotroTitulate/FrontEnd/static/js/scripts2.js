@@ -236,7 +236,9 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
             aprobado = data.aprobado; // Set the aprobado variable
             opcionTitulacion = data.opcionTitulacion; // Set the opcionTitulacion variable
             console.log("Opcion de titulacion", opcionTitulacion)
-            mostrarMensajeTramiteEnProceso();
+            if (!aprobado) {
+                mostrarMensajeTramiteEnProceso();
+            }
             showRequirements(opcionTitulacion); // Show the requisitos for the selected option
         } else {
             window.location.href = '/opcionesTitulacion/';
@@ -392,6 +394,21 @@ function handleFileChange(requisito) {
     const file = fileInput.files[0];
 
     if (file) {
+        const allowedExtensions = ['.pdf', '.docx', '.odt'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        if (!allowedExtensions.includes(`.${fileExtension}`)) {
+            mostrarModal(`Formato no permitido. Solo se aceptan archivos: ${allowedExtensions.join(', ')}`, 'errorModal');
+            fileInput.value = ''; // Limpiar el input para evitar que se suba un archivo no válido
+            return;
+        }
+
+        // Mostrar mensaje de confirmación antes de subir el archivo
+        const confirmacion = confirm(`¿Estás seguro de que deseas subir el archivo "${file.name}"?`);
+        if (!confirmacion) {
+            return; // Si el usuario cancela, no se sube el archivo
+        }
+
         const formData = new FormData();
         formData.append('file', file);
         formData.append('requisito', requisito);
@@ -404,9 +421,9 @@ function handleFileChange(requisito) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                mostrarModal(`Archivo subido correctamente para ${requisito}`, 'successModal');
-                updateEstado(requisito, 'pendiente'); // Change the state to "pendiente"
-                document.querySelector(`button[onclick="uploadFile('${requisito}')"]`).disabled = true; // Disable the upload button
+                mostrarModal(`Archivo "${file.name}" subido correctamente para ${requisito}`, 'successModal');
+                updateEstado(requisito, 'pendiente'); // Cambia el estado a "pendiente"
+                document.querySelector(`button[onclick="uploadFile('${requisito}')"]`).disabled = true; // Deshabilita el botón de carga
             } else {
                 mostrarModal(`Error al subir el archivo: ${data.error}`, 'errorModal');
             }
@@ -417,10 +434,6 @@ function handleFileChange(requisito) {
         });
     }
 }
-
-
-
-
 
 function cerrarSesion() {
     // Crea un formulario
