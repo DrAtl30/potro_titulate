@@ -47,6 +47,7 @@ urlpatterns = [
     path('verificarTramiteEnProgreso/<int:id_sustentante>/', verificar_tramite_en_progreso, name='verificarTramiteEnProgreso'),
     path('enviarSolicitud/', enviar_solicitud, name='enviarSolicitud'),
     path('confirmar-cuenta/<str:uidb64>/<str:token>/', ConfirmarCuentaView.as_view(), name='confirmar-cuenta'),
+    path('verificarCorreoConfirmado/', verificar_correo_confirmado, name='verificar_correo_confirmado'),
 
     # Ruta para la API de registro
     path('api/registro/', RegistroView.as_view(), name='api_registro'),  # API para registro

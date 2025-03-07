@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, Http404, HttpResponse
 from rest_framework import status
 from .serializers import SustentanteRegistroSerializer
 from .serializers import SustentanteLoginSerializer
@@ -21,7 +21,6 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.urls import reverse
-import jwt
 from django.conf import settings
 import json
 import os
@@ -500,3 +499,16 @@ def descargar_documento(request, documento_id):
             return response
     raise Http404("El archivo no existe")
 
+def verificar_correo_confirmado(request):
+    if request.method == 'POST':
+        import json
+        data = json.loads(request.body)
+        correo = data.get('correo_electronico')
+
+        try:
+            sustentante = Sustentante.objects.get(correo_electronico=correo)
+            return JsonResponse({'confirmado': sustentante.confirmado})
+        except Sustentante.DoesNotExist:
+            return JsonResponse({'error': 'Correo no registrado'}, status=400)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
