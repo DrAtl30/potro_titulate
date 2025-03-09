@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const mensajeSection = document.getElementById("mensajeSection");
 
     const btnAspirantes = document.getElementById("btnAspirantes");
-    const btnMensajes = document.getElementById("btnMensajes"); // si lo usas
+    const btnMensajes = document.getElementById("btnMensajes");
     const btnPerfilAdmin = document.getElementById("btnPerfilAdmin");
 
     const aspirantesList = document.getElementById("aspirantesList");
@@ -17,7 +17,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let currentAspiranteId = null;
 
-    // 2) Función para CARGAR LISTA SUSTENTANTES
+    // 2) Función para alternar visibilidad de secciones
+    function toggleSection(sectionToShow) {
+        if (sectionToShow.style.display === "none" || sectionToShow.style.display === "") {
+            aspirantesSection.style.display = (sectionToShow === aspirantesSection) ? "block" : "none";
+            mensajeSection.style.display = (sectionToShow === mensajeSection) ? "block" : "none";
+        } else {
+            sectionToShow.style.display = "none";
+        }
+    }
+
+    // 3) Función para CARGAR LISTA SUSTENTANTES
     function cargarListaSustentantes() {
         console.log("Cargando lista de sustentantes...");
 
@@ -30,17 +40,12 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(data => {
             if (data.success) {
-                // Limpia la lista
                 aspirantesList.innerHTML = "";
-
-                // Por cada sustentante
                 data.sustentantes.forEach(s => {
                     const li = document.createElement("li");
                     li.classList.add("list-group-item");
                     li.setAttribute("data-id", s.id_sustentante);
-                    // Podrías concatenar s.apellido si gustas
                     li.textContent = s.nombre;
-
                     aspirantesList.appendChild(li);
                 });
             } else {
@@ -50,26 +55,26 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(err => console.error("Error fetch listaSustentantes:", err));
     }
 
-    // 3) Al hacer click en "Aspirantes"
+    // 4) Alternar visibilidad de la lista de aspirantes
     btnAspirantes.addEventListener("click", () => {
-        // Muestra la sección y oculta las demás
-        aspirantesSection.style.display = "block";
-        tablaAspirante.style.display = "none";
-        mensajeSection.style.display = "none";
-
-        // Llama para obtener lista real
-        cargarListaSustentantes();
+        toggleSection(aspirantesSection);
+        if (aspirantesSection.style.display === "block") {
+            cargarListaSustentantes();
+        }
     });
 
-    // 4) Al hacer click en uno de los aspirantes (list-group-item)
+    // 5) Alternar visibilidad de la sección de mensajes
+    btnMensajes.addEventListener("click", () => {
+        toggleSection(mensajeSection);
+    });
+
+    // 6) Al hacer click en un aspirante
     aspirantesList.addEventListener("click", (e) => {
         if (e.target && e.target.matches(".list-group-item")) {
             currentAspiranteId = e.target.getAttribute("data-id");
             const nombreAspirante = e.target.textContent.trim();
 
-            // Oculta aspirantes y muestra chat
             aspirantesSection.style.display = "none";
-            tablaAspirante.style.display = "none";
             mensajeSection.style.display = "block";
 
             nombreAspiranteSpan.textContent = nombreAspirante;
@@ -77,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // 5) Función para cargar la conversación (GET /obtenerMensajes/<id>/)
+    // 7) Función para cargar la conversación
     function cargarConversacion(sustentanteId) {
         console.log("Cargando conversación para ID:", sustentanteId);
 
@@ -104,16 +109,15 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(err => console.error(err));
     }
 
-    // 6) Botón Regresar (a la lista de aspirantes)
+    // 8) Botón Regresar (a la lista de aspirantes)
     btnRegresarAspirantes.addEventListener("click", () => {
         aspirantesSection.style.display = "block";
-        tablaAspirante.style.display = "none";
         mensajeSection.style.display = "none";
         conversacionDiv.innerHTML = "";
         currentAspiranteId = null;
     });
 
-    // 7) Botón Enviar -> llama enviarMensajeAdmin
+    // 9) Botón Enviar mensaje
     btnEnviar.addEventListener("click", () => {
         if (!currentAspiranteId) {
             console.warn("No hay aspirante seleccionado");
@@ -124,11 +128,10 @@ document.addEventListener("DOMContentLoaded", function() {
             console.warn("Mensaje vacío");
             return;
         }
-        console.log("Enviando mensaje admin a ID=", currentAspiranteId, "texto=", texto);
         enviarMensajeAdmin(currentAspiranteId, texto);
     });
 
-    // 8) Función enviarMensajeAdmin
+    // 10) Función enviarMensajeAdmin
     function enviarMensajeAdmin(sustentanteId, texto) {
         fetch("/enviarMensajeAdmin/", {
             method: "POST",
@@ -150,7 +153,6 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             if (data.success) {
                 mensajeTexto.value = "";
-                // Recargar la conversación
                 cargarConversacion(sustentanteId);
             } else {
                 console.error("Error al enviar mensaje:", data.error);
@@ -159,12 +161,8 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(err => console.error(err));
     }
 
-    // 9) Función irPerfilAdministrador (opcional)
+    // 11) Función irPerfilAdministrador (opcional)
     function irAPerfilAdministrador() {
-        // Opción A: cambiar a esa página
-        // window.location.href = "/perfilAdministrador/";
-        
-        // Opción B: fetch y meter HTML
         fetch("/perfilAdministrador/")
         .then(r => r.text())
         .then(html => {
@@ -178,14 +176,14 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(err => console.error(err));
     }
 
-    // 10) Listener para btnPerfilAdmin
+    // 12) Listener para btnPerfilAdmin
     if (btnPerfilAdmin) {
         btnPerfilAdmin.addEventListener("click", () => {
             irAPerfilAdministrador();
         });
     }
 
-    // Función getCookie para CSRF
+    // 13) Función getCookie para CSRF
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== "") {
