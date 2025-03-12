@@ -85,29 +85,37 @@ document.addEventListener("DOMContentLoaded", function() {
     // 7) Función para cargar la conversación
     function cargarConversacion(sustentanteId) {
         console.log("Cargando conversación para ID:", sustentanteId);
-
-        fetch(`/obtenerMensajes/${sustentanteId}/`)
-        .then(r => {
-            if (!r.ok) {
-                throw new Error("Error al obtener mensajes");
-            }
-            return r.json();
-        })
-        .then(data => {
-            if (data.success) {
-                conversacionDiv.innerHTML = "";
-                data.mensajes.forEach(msg => {
-                    const p = document.createElement("p");
-                    const remitente = msg.es_de_administrador ? "Admin" : "Sustentante";
-                    p.textContent = `${remitente}: ${msg.mensaje}`;
-                    conversacionDiv.appendChild(p);
-                });
-            } else {
-                console.error("Error al obtener mensajes:", data.error);
-            }
-        })
-        .catch(err => console.error(err));
+    
+        const conversacionDiv = document.getElementById('conversacionDiv');
+        if (!conversacionDiv) {
+            console.error("Elemento 'conversacion' no encontrado en el DOM");
+            return;
+        }
+    
+        fetch(`/obtener_mensajes/?id_sustentante=${sustentanteId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error al obtener mensajes");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    conversacionDiv.innerHTML = ""; // Limpia la conversación anterior
+                    
+                    data.mensajes.forEach(msg => {
+                        const p = document.createElement("p");
+                        const remitente = msg.es_de_administrador ? "Admin" : "Sustentante";
+                        p.textContent = `${remitente}: ${msg.mensaje}`;
+                        conversacionDiv.appendChild(p);
+                    });
+                } else {
+                    console.error("Error al obtener mensajes:", data.error);
+                }
+            })
+            .catch(error => console.error("Error:", error));
     }
+    
 
     // 8) Botón Regresar (a la lista de aspirantes)
     btnRegresarAspirantes.addEventListener("click", () => {

@@ -39,6 +39,7 @@ class Notificaciones(models.Model):
     mensaje = models.TextField()
     fecha_envio = models.DateField()
     estado_lectura = models.BooleanField()
+    es_de_administrador = models.BooleanField()
 
     class Meta:
         managed = False

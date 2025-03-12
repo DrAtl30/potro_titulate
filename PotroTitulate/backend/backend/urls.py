@@ -56,8 +56,8 @@ urlpatterns = [
 
       # mensajeria 
     # 1) GET /obtenerMensajes/7/ => ver mensajes de ID=7
-    path('obtenerMensajes/<int:id_sustentante>/', obtener_mensajes, name='obtenerMensajes'),
-
+    path('obtener_mensajes/', obtener_mensajes, name='obtener_mensajes'),
+    
     # 2) POST /enviarMensajeAdmin/7/ => enviar mensaje admin a ID=7
     path('enviarMensajeAdmin/<int:id_sustentante>/', enviar_mensaje_admin, name='enviarMensajeAdmin'),
 

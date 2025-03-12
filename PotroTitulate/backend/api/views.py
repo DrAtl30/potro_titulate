@@ -502,28 +502,35 @@ def verificar_correo_confirmado(request):
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 @csrf_exempt
-def obtener_mensajes(request, sustentante_id):
+def obtener_mensajes(request):
     """
     Regresa todos los mensajes asociados a un sustentante (tanto enviados
     por el administrador como por el sustentante).
     """
     if request.method == 'GET':
-        # Filtramos las notificaciones de este sustentante y ordenamos por fecha
-        mensajes = Notificaciones.objects.filter(id_sustentante=sustentante_id).order_by('fecha_envio')
-        
-        # Convertimos a una lista de diccionarios para enviar como JSON
-        lista_mensajes = []
-        for msg in mensajes:
-            lista_mensajes.append({
-                'id_notificacion': msg.id_notificacion,
-                'mensaje': msg.mensaje,
-                'fecha_envio': msg.fecha_envio.strftime('%Y-%m-%d %H:%M:%S'),
-                'es_de_administrador': msg.es_de_administrador,
-                'estado_lectura': msg.estado_lectura,
-            })
+        sustentante_id = request.GET.get('id_sustentante')
 
-        return JsonResponse({'success': True, 'mensajes': lista_mensajes}, status=200)
-    
+        if not sustentante_id:
+            return JsonResponse({'success': False, 'error': 'ID de sustentante no proporcionado'}, status=400)
+
+        try:
+            mensajes = Notificaciones.objects.filter(id_sustentante=sustentante_id).order_by('fecha_envio')
+            lista_mensajes = [
+                {
+                    'id_notificacion': msg.id_notificacion,
+                    'mensaje': msg.mensaje,
+                    'fecha_envio': msg.fecha_envio.strftime('%Y-%m-%d %H:%M:%S'),
+                    'es_de_administrador': msg.es_de_administrador,
+                    'estado_lectura': msg.estado_lectura,
+                }
+                for msg in mensajes
+            ]
+
+            return JsonResponse({'success': True, 'mensajes': lista_mensajes}, status=200)
+
+        except Notificaciones.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'No se encontraron mensajes para este sustentante'}, status=404)
+
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
 
