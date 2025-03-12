@@ -40,9 +40,20 @@ def inicio_sesion(request):
     return render(request, 'iniciosesion.html', {'timestamp': timestamp})
 
 def administrador(request):
-    timestamp = datetime.now().timestamp() # Genera una marca de tiempo
-    return render(request, 'administrador.html', {'timestamp': timestamp})
+    timestamp = datetime.now().timestamp()  # Genera una marca de tiempo
+    context = {'timestamp': timestamp}
+    
+    # Si el admin está en sesión, intenta recuperar el objeto del modelo
+    admin_id = request.session.get('admin_id')
+    if admin_id:
+        try:
+            admin_obj = Administrativos.objects.get(id_administrativo=admin_id)
+            context['admin_obj'] = admin_obj
+        except Administrativos.DoesNotExist:
+            # Aquí podrías limpiar la sesión o redirigir si se desea
+            pass
 
+    return render(request, 'administrador.html', context)
 
 def perfilUsuario(request):
     sustentante_id = request.session.get('sustentante_id')
@@ -83,8 +94,9 @@ def cambiarContrasena(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'cambiar_contrasena.html', {'timestamp': timestamp})
 
+
 def loginAdmin(request):
-    timestamp = datetime.now().timestamp() # Genera una marca de tiempo
+    timestamp = datetime.now().timestamp()  # Genera una marca de tiempo
     return render(request, 'inicioSesionAdmin.html', {'timestamp': timestamp})
 
 def recuperarContrasenaExito(request):
