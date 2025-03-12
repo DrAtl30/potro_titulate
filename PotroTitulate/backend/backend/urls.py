@@ -35,7 +35,6 @@ urlpatterns = [
     path('cambiarContrasena/<int:id_sustentante>/', CambiarContrasenaView.as_view(), name='cambiar_contrasena'),  # Ruta para "cambiar contraseña"
     path('recuperarContrasenaExito/', recuperarContrasenaExito, name='recuperarContrasenaExito'),  # Ruta para "recuperar contraseña exito"
     path('administradorLogin/', AdministradorLoginView.as_view(), name='adminstradorLogin'),
-    #path('perfilUsuario/', PerfilUsuarioView.as_view(), name='perfilUsuario'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('checkSession/', checkSession, name='checkSession'),
     path('uploadDocument/', uploadDocument, name='subirDocumento'),
@@ -54,5 +53,23 @@ urlpatterns = [
     path('api/login/', LoginView.as_view(), name='login'),  # Ruta para login
     path('api/logout/', LogoutView.as_view(), name='logout'),  # Ruta para logout
     path('api/login/administrador/', AdministradorLoginView.as_view(), name='login_administrador'),  # Ruta para login de administrador
+
+      # mensajeria 
+    # 1) GET /obtenerMensajes/7/ => ver mensajes de ID=7
+    path('obtenerMensajes/<int:id_sustentante>/', obtener_mensajes, name='obtenerMensajes'),
+
+    # 2) POST /enviarMensajeAdmin/7/ => enviar mensaje admin a ID=7
+    path('enviarMensajeAdmin/<int:id_sustentante>/', enviar_mensaje_admin, name='enviarMensajeAdmin'),
+
+    # 3) POST /enviarMensajeSustentante/7/ => si el sustentante manda mensaje
+    path('enviarMensajeSustentante/<int:id_sustentante>/', enviar_mensaje_sustentante, name='enviarMensajeSustentante'),
+
+    # 4) confirmación de cuenta (tal cual lo tienes)
+    path('confirmar-cuenta/<str:uidb64>/<str:token>/', ConfirmarCuentaView.as_view(), name='confirmar-cuenta'),
+
+    # 5) GET /perfilAdministrador/ => vista de administrador
+    path('perfilAdministrador/', perfilAdministrador, name='perfilAdministrador'),
+    
+    path('listaSustentantes/', lista_sustentantes, name='listaSustentantes'),
 ]
 
