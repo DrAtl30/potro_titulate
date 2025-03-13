@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import login
 from django.contrib.sessions.models import Session
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404, HttpResponse
 from rest_framework import status
 from .serializers import *;
@@ -205,19 +206,20 @@ class LoginView(APIView):
                         'confirmacion_pendiente': True
                     }, status=status.HTTP_403_FORBIDDEN)
 
-                # Cerrar todas las sesiones activas previas del mismo sustentante
-                # Se obtienen las sesiones activas asociadas con la clave de sesión actual
-                for session in Session.objects.all():
-                    data = session.get_decoded()
-                    if data.get('_auth_user_id') == str(sustentante.id_sustentante):
-                        session.delete()
-
                 # Iniciar nueva sesión
                 login(request, sustentante)
+
+                # Guardar la sesión para generar un session_key
+                request.session.save()
+
+                # Almacenar el ID del Sustentante en la sesión
+                request.session['sustentante_id'] = sustentante.id_sustentante
+
+                # Almacenar el session_key en el modelo Sustentante
                 sustentante.session_key = request.session.session_key
                 sustentante.save()
 
-                # Almacenar la session_key en una cookie
+                # Configurar la cookie session_key
                 response = Response({
                     'mensaje': 'Inicio de sesión exitoso.',
                     'redirigir_a_cambiar_contrasena': sustentante.contrasena_temporal,
@@ -233,7 +235,7 @@ class LoginView(APIView):
                 return Response({'mensaje': 'Sustentante no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
         return Response({'mensaje': 'Error en los datos', 'errores': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
+    
 class PerfilUsuarioView(APIView):
     def get(self, request):
         # Obtén el ID del Sustentante desde la sesión
@@ -260,9 +262,12 @@ class LogoutView(APIView):
     def post(self, request):
         if 'sustentante_id' in request.session:
             del request.session['sustentante_id']
-        #return Response({'mensaje': 'Sesión cerrada correctamente'}, status=status.HTTP_200_OK)
-        return redirect('/iniciosesion/')
-
+        
+        # Limpiar la cookie de session_key
+        response = redirect('/iniciosesion/')
+        response.delete_cookie('session_key')
+        return response
+    
 def checkSession(request):
     is_authenticated = 'sustentante_id' in request.session
     return JsonResponse({'is_authenticated': is_authenticated})
@@ -649,3 +654,20 @@ def lista_sustentantes(request):
             })
         return JsonResponse({'success': True, 'sustentantes': lista})
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
+
+def verificar_sesion(request):
+    session_key = request.COOKIES.get('session_key')
+    sustentante_id = request.session.get('sustentante_id')
+
+    if not session_key or not Session.objects.filter(session_key=session_key).exists():
+        return JsonResponse({'mensaje': 'Sesión no válida'}, status=401)
+
+    # Obtener el session_key actual del usuario desde la base de datos
+    try:
+        sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+        return JsonResponse({
+            'mensaje': 'Sesión válida',
+            'current_session_key': sustentante.session_key  # Asegúrate de que esto esté correctamente configurado
+        }, status=200)
+    except Sustentante.DoesNotExist:
+        return JsonResponse({'mensaje': 'Sustentante no encontrado'}, status=404)
