@@ -1,5 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.contrib.auth import login
+from django.contrib.sessions.models import Session
 from django.http import JsonResponse, Http404, HttpResponse
 from rest_framework import status
 from .serializers import *;
@@ -188,46 +190,52 @@ class RegistroView(APIView):
             return Response({'mensaje': 'Registro exitoso'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class LoginView(APIView):
     def post(self, request):
         serializer = SustentanteLoginSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
-            print('Datos válidos:', data)
+            try:
+                sustentante = Sustentante.objects.get(id_sustentante=data.get('id_sustentante'))
 
-            # Verificar si la cuenta ya fue confirmada
-            if not data.get('confirmado', False):  
-                return Response({
-                    'mensaje': 'Debes confirmar tu cuenta antes de iniciar sesión.',
-                    'confirmacion_pendiente': True
-                }, status=status.HTTP_403_FORBIDDEN)
+                # Si la cuenta no está confirmada
+                if not sustentante.confirmado:
+                    return Response({
+                        'mensaje': 'Debes confirmar tu cuenta antes de iniciar sesión.',
+                        'confirmacion_pendiente': True
+                    }, status=status.HTTP_403_FORBIDDEN)
 
-            # Guardar el ID del Sustentante en la sesión
-            request.session['sustentante_id'] = data.get('id_sustentante')
+                # Cerrar todas las sesiones activas previas del mismo sustentante
+                # Se obtienen las sesiones activas asociadas con la clave de sesión actual
+                for session in Session.objects.all():
+                    data = session.get_decoded()
+                    if data.get('_auth_user_id') == str(sustentante.id_sustentante):
+                        session.delete()
 
-            if data.get('contrasena_temporal'):
-                return Response({
-                    'mensaje': 'Debes cambiar tu contraseña temporal.',
-                    'redirigir_a_cambiar_contrasena': True,
-                    'id_sustentante': data.get('id_sustentante')
-                }, status=status.HTTP_200_OK)
-            else:
-                return Response({
+                # Iniciar nueva sesión
+                login(request, sustentante)
+                sustentante.session_key = request.session.session_key
+                sustentante.save()
+
+                # Almacenar la session_key en una cookie
+                response = Response({
                     'mensaje': 'Inicio de sesión exitoso.',
-                    'redirigir_a_cambiar_contrasena': False,
-                    'id_sustentante': data.get('id_sustentante'),
-                    'nombre': data.get('nombre'),
-                    'correo_electronico': data.get('correo_electronico')
+                    'redirigir_a_cambiar_contrasena': sustentante.contrasena_temporal,
+                    'id_sustentante': sustentante.id_sustentante,
+                    'nombre': sustentante.nombre,
+                    'correo_electronico': sustentante.correo_electronico
                 }, status=status.HTTP_200_OK)
-        
-        # Agregar detalles de error para depuración
+                
+                response.set_cookie('session_key', request.session.session_key, httponly=True, samesite='Lax')
+
+                return response
+            except Sustentante.DoesNotExist:
+                return Response({'mensaje': 'Sustentante no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
         return Response({'mensaje': 'Error en los datos', 'errores': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-
-    
 class PerfilUsuarioView(APIView):
-   def get(self, request):
+    def get(self, request):
         # Obtén el ID del Sustentante desde la sesión
         sustentante_id = request.session.get('sustentante_id')
 

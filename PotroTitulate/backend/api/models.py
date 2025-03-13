@@ -109,6 +109,9 @@ class Sustentante(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(blank=True, null=True)
     id_opcion = models.ForeignKey(OpcionTitulacion, on_delete=models.CASCADE, db_column='id_opcion', null=True)  # Relaciona con OpciónTitulación
 
+    session_key = models.CharField(max_length=40, blank=True, null=True)
+
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
