@@ -25,7 +25,7 @@ urlpatterns = [
     path('index/', index, name='index'),  # Ruta para "index"
     path('registro/', registro, name='registro'),  # Ruta para el formulario de registro
     path('iniciosesion/', inicio_sesion, name='inicio_sesion'),  # Ruta para "iniciar sesión"
-    path('administrador/', administrador, name='administrador'),  # Ruta para "administrador"
+    path('administrador/', perfilAdministrador, name='administrador'),  # Ruta para "administrador"
     path('perfilUsuario/', perfilUsuario, name='perfilUsuario'),  # Ruta para "perfil de
     path('recuperarContrasena/', recuperarContrasena, name='recuperarContrasena'),  # Ruta para "recuperar contraseña"
     path('inicioSesionAdmin/', loginAdmin, name='inicioSesionAdmin'),  # Ruta para "loginAdmin"
@@ -58,10 +58,10 @@ urlpatterns = [
 
       # mensajeria 
     # 1) GET /obtenerMensajes/7/ => ver mensajes de ID=7
-    path('obtener_mensajes/', obtener_mensajes, name='obtener_mensajes'),
+    path('obtener_mensajes/<int:sustentante_id>/', obtener_mensajes, name='obtener_mensajes'),
     
     # 2) POST /enviarMensajeAdmin/7/ => enviar mensaje admin a ID=7
-    path('enviarMensajeAdmin/<int:id_sustentante>/', enviar_mensaje_admin, name='enviarMensajeAdmin'),
+    path('enviarMensajeAdmin/<int:id_sustentante>/', enviar_mensaje_admin, name='enviar_mensaje_admin'),
 
     # 3) POST /enviarMensajeSustentante/7/ => si el sustentante manda mensaje
     path('enviarMensajeSustentante/<int:id_sustentante>/', enviar_mensaje_sustentante, name='enviarMensajeSustentante'),

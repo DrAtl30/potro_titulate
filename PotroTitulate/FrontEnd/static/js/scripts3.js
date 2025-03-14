@@ -11,20 +11,26 @@ document.addEventListener("DOMContentLoaded", function() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken")  // Para protección CSRF
+                "X-CSRFToken": getCookie("csrftoken")
             },
             body: JSON.stringify(formData)
         })
         .then(response => response.json())
         .then(data => {
             if (data.id_administrador) {
-                alert("Inicio de sesión exitoso");
-                window.location.href = "/administrador";  // Redirigir tras éxito
+                // Muestra el modal de éxito y espera a que el usuario lo cierre
+                mostrarModal("Inicio de sesión exitoso", "successModal");
+                esperarCierreModal("successModal").then(() => {
+                    window.location.href = "/administrador/";  // Redirige tras cerrar el modal
+                });
             } else {
-                document.getElementById("mensaje").innerText = "Credenciales incorrectas";
+                mostrarModal("Credenciales incorrectas", "errorModal");
             }
         })
-        .catch(error => console.error("Error:", error));
+        .catch(error => {
+            console.error("Error:", error);
+            mostrarModal("Hubo un problema al procesar tu solicitud", "errorModal");
+        });
     });
 
     function getCookie(name) {
@@ -43,40 +49,58 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-function aprobarTramite(tramiteId) {
-     fetch('/revisarOpcionesTitulacion/', {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': '{{ csrf_token }}'
-            },
-        body: `tramite_id=${tramiteId}&estado=aprobado`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Error al aprobar el trámite');
-                }
-            });
+// Función que muestra el modal
+function mostrarModal(mensaje, modalId) {
+    var modal = document.getElementById(modalId);
+    if (!modal) {
+        console.error(`No se encontró el modal con ID ${modalId}`);
+        return;
+    }
+    var modalMessage = modal.querySelector('.modalMessage');
+    if (modalMessage) {
+        modalMessage.textContent = mensaje;
+    }
+    modal.style.display = 'flex';
+}
+
+// Función que espera a que el usuario cierre el modal
+function esperarCierreModal(modalId) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById(modalId);
+        const closeBtn = modal.querySelector('.close');
+
+        function handleClose() {
+            if (modal.style.display !== 'none') {
+                modal.style.display = 'none';
+                removeListeners();
+                resolve();
+            }
         }
 
-function rechazarTramite(tramiteId) {
-            fetch('/revisarOpcionesTitulacion/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: `tramite_id=${tramiteId}&estado=rechazado`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Error al rechazar el trámite');
-                }
-            });
+        function handleClickOutside(e) {
+            if (e.target === modal) {
+                handleClose();
+            }
         }
+
+        function handleKeyDown(e) {
+            if (e.key === 'Escape') {
+                handleClose();
+            }
+        }
+
+        function removeListeners() {
+            if (closeBtn) closeBtn.removeEventListener('click', handleClose);
+            modal.removeEventListener('click', handleClickOutside);
+            document.removeEventListener('keydown', handleKeyDown);
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', handleClose);
+        } else {
+            console.warn(`No se encontró el botón de cierre en ${modalId}`);
+        }
+        modal.addEventListener('click', handleClickOutside);
+        document.addEventListener('keydown', handleKeyDown);
+    });
+}

@@ -86,13 +86,13 @@ document.addEventListener("DOMContentLoaded", function() {
     function cargarConversacion(sustentanteId) {
         console.log("Cargando conversación para ID:", sustentanteId);
     
-        const conversacionDiv = document.getElementById('conversacionDiv');
+        const conversacionDiv = document.getElementById('conversacion');
         if (!conversacionDiv) {
             console.error("Elemento 'conversacion' no encontrado en el DOM");
             return;
         }
     
-        fetch(`/obtener_mensajes/?id_sustentante=${sustentanteId}`)
+        fetch(`/obtener_mensajes/${sustentanteId}/`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al obtener mensajes");
@@ -140,17 +140,14 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // 10) Función enviarMensajeAdmin
-    function enviarMensajeAdmin(sustentanteId, texto) {
-        fetch("/enviarMensajeAdmin/", {
+    function enviarMensajeAdmin(sustentanteId, mensaje) {
+        fetch(`/enviarMensajeAdmin/${sustentanteId}/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": getCookie("csrftoken")
             },
-            body: JSON.stringify({
-                sustentante_id: sustentanteId,
-                mensaje: texto
-            })
+            body: JSON.stringify({ mensaje: mensaje })
         })
         .then(r => {
             if (!r.ok) {
@@ -160,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(data => {
             if (data.success) {
-                mensajeTexto.value = "";
+                console.log("Mensaje enviado correctamente");
                 cargarConversacion(sustentanteId);
             } else {
                 console.error("Error al enviar mensaje:", data.error);
@@ -168,29 +165,8 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(err => console.error(err));
     }
-
-    // 11) Función irPerfilAdministrador (opcional)
-    function irAPerfilAdministrador() {
-        fetch("/perfilAdministrador/")
-        .then(r => r.text())
-        .then(html => {
-            const contenedor = document.getElementById("contenedor-principal");
-            if (contenedor) {
-                contenedor.innerHTML = html;
-            } else {
-                console.warn("No existe #contenedor-principal para inyectar");
-            }
-        })
-        .catch(err => console.error(err));
-    }
-
-    // 12) Listener para btnPerfilAdmin
-    if (btnPerfilAdmin) {
-        btnPerfilAdmin.addEventListener("click", () => {
-            irAPerfilAdministrador();
-        });
-    }
-
+    
+        
     // 13) Función getCookie para CSRF
     function getCookie(name) {
         let cookieValue = null;
@@ -206,4 +182,5 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         return cookieValue;
     }
+     
 });

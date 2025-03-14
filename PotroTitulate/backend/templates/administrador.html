@@ -2,140 +2,105 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interfaz UAEM</title>
-    <!-- Enlace a Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Enlace a estilos.css -->
-    <link rel="stylesheet" href="{% static 'css/estilos-admin.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interfaz UAEM</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Tus estilos -->
+  <link rel="stylesheet" href="{% static 'css/estilos-admin.css' %}">
 </head>
 <body>
-    <header>
-        <div class="header-left">
-            <img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}" alt="Escudo UAEM">
-            <nav>
-                <button id="btnAspirantes" class="btn-plain">Aspirantes</button>  
-                <button id="btnMensajes" class="btn-plain">Mensajes</button>
-            </nav>
-        </div>
-        <div class="header-right">
-            <a href="#" data-bs-toggle="dropdown">Cerrar sesión</a>
-        </div>
-    </header>
+  <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #5a7561;">
+    <div class="header-left" style="display: flex; align-items: center; gap: 20px;">
+      <img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}" alt="Escudo UAEM" style="max-height: 80px;">
+      <nav style="display: flex; gap: 15px;">
+        <button id="btnAspirantes" class="btn-plain">Aspirantes</button>
+        <button id="btnMensajes" class="btn-plain">Mensajes</button>
+      </nav>
+    </div>
+    <div class="header-right" style="display: flex; align-items: center; gap: 2rem;">
+      <!-- Se muestra el nombre del administrador directamente desde el contexto -->
+      <span style="color: white; font-size: 1.2rem;">
+        {% if admin_obj %}
+          Bienvenido, {{ admin_obj.nombre }}
+        {% else %}
+          Bienvenido
+        {% endif %}
+      </span>
+      <!-- Enlace para Cerrar sesión (redirige a la vista de inicio de sesión) -->
+      <a href="{% url 'inicioSesionAdmin' %}" style="color: white; text-decoration: none;">Cerrar sesión</a>
+    </div>
+  </header>
 
-    <main class="container mt-5">
-        <!-- Lista de Aspirantes -->
-        <div id="aspirantesSection" style="display: none;">
-            <ul id="aspirantesList" class="list-group">
-                <li class="list-group-item" data-id="1">Aspirante A</li>
-                <li class="list-group-item" data-id="2">Aspirante B</li>
-                <li class="list-group-item" data-id="3">Aspirante C</li>
-            </ul>
-        </div>
+  <main>
+    <!-- Sección de lista de aspirantes (dinámica) -->
+    <div id="aspirantesSection" class="container mt-5" style="display: none;">
+      <h3>Lista de Aspirantes</h3>
+      <ul id="aspirantesList" class="list-group">
+        <!-- Llenado mediante JS -->
+      </ul>
+    </div>
 
-        <!-- Tabla de información del Aspirante -->
-        <div id="tablaAspirante" style="display: none;">
-            <button id="btnRegresar" class="btn btn-secondary mb-3">← Regresar</button>
-            <table class="table table-bordered">
-                <tr>
-                    <th>Opción de titulación</th>
-                    <td id="opcionTitulacion"></td>
-                </tr>
-                <tr>
-                    <th>Estado de progreso</th>
-                    <td id="estadoProgreso"></td>
-                </tr>
-                <tr>
-                    <th>Correo institucional</th>
-                    <td id="correoInstitucional"></td>
-                </tr>
-                <tr>
-                    <th>No. de cuenta</th>
-                    <td id="numeroCuenta"></td>
-                </tr>
-                <tr>
-                    <th>Fecha de última actualización</th>
-                    <td id="fechaActualizacion"></td>
-                </tr>
-            </table>
-            <button id="btnRevisarRequisitos" class="btn btn-primary mb-3">Revisión de Requisitos</button>
-            
-            <!-- Lista de Requisitos -->
-            <ul id="listaRequisitos" class="list-group" style="display: none;">
-                <li class="list-group-item d-flex justify-content-between align-items-center" id="requisitoA">
-                    <div>
-                        <a href="{% url 'descargar_documento' documento_id=1 %}" download="RequisitoA.pdf">Requisito A</a>
-                    </div>
-                    <div class="semaforo-container">
-                        <span class="semaforo no-entregado activo"></span> <!-- Estado por defecto -->
-                        <span class="semaforo pendiente"></span>
-                        <span class="semaforo revision"></span>
-                        <span class="semaforo aceptado"></span>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-sm btn-outline-secondary" onclick="cambiarEstado('requisitoA', 'pendiente')">Pendiente</button>
-                        <button class="btn btn-sm btn-outline-success" onclick="cambiarEstado('requisitoA', 'aceptado')">Aceptado</button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="cambiarEstado('requisitoA', 'rechazado')">Rechazado</button>
-                    </div>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center" id="requisitoB">
-                    <div>
-                        <a href="{% url 'descargar_documento' documento_id=2 %}" download="RequisitoB.pdf">Requisito B</a>
-                    </div>
-                    <div class="semaforo-container">
-                        <span class="semaforo no-entregado activo"></span> <!-- Estado por defecto -->
-                        <span class="semaforo pendiente"></span>
-                        <span class="semaforo revision"></span>
-                        <span class="semaforo aceptado"></span>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-sm btn-outline-secondary" onclick="cambiarEstado('requisitoB', 'pendiente')">Pendiente</button>
-                        <button class="btn btn-sm btn-outline-success" onclick="cambiarEstado('requisitoB', 'aceptado')">Aceptado</button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="cambiarEstado('requisitoB', 'rechazado')">Rechazado</button>
-                    </div>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center" id="requisitoC">
-                    <div>
-                        <a href="{% url 'descargar_documento' documento_id=3 %}" download="RequisitoC.pdf">Requisito C</a>
-                    </div>
-                    <div class="semaforo-container">
-                        <span class="semaforo no-entregado activo"></span> <!-- Estado por defecto -->
-                        <span class="semaforo pendiente"></span>
-                        <span class="semaforo revision"></span>
-                        <span class="semaforo aceptado"></span>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-sm btn-outline-secondary" onclick="cambiarEstado('requisitoC', 'pendiente')">Pendiente</button>
-                        <button class="btn btn-sm btn-outline-success" onclick="cambiarEstado('requisitoC', 'aceptado')">Aceptado</button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="cambiarEstado('requisitoC', 'rechazado')">Rechazado</button>
-                    </div>
-                </li>
-            </ul>
-        </div>
+    <!-- Sección para datos extra, si la usas -->
+    <div id="tablaAspirante" class="container mt-5" style="display: none;">
+      <button id="btnRegresar" class="btn btn-secondary mb-3">← Regresar</button>
+      <table class="table">
+        <tr>
+          <th>Opción de titulación</th>
+          <td id="opcionTitulacion"></td>
+        </tr>
+        <tr>
+          <th>Estado de progreso</th>
+          <td id="estadoProgreso"></td>
+        </tr>
+        <tr>
+          <th>Correo institucional</th>
+          <td id="correoInstitucional"></td>
+        </tr>
+        <tr>
+          <th>No. de cuenta</th>
+          <td id="numeroCuenta"></td>
+        </tr>
+        <tr>
+          <th>Fecha de última actualización</th>
+          <td id="fechaActualizacion"></td>
+        </tr>
+      </table>
+      <button id="btnRevisarRequisitos" class="btn btn-primary mb-3">Revisión de Requisitos</button>
+      <ul id="listaRequisitos" class="list-group" style="display: none;">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Requisito A
+          <div class="semaforo-container">
+            <span class="semaforo espera"></span>
+            <span class="semaforo revision"></span>
+            <span class="semaforo aprobado"></span>
+          </div>
+        </li>
+        <!-- Más requisitos si hay -->
+      </ul>
+    </div>
 
-        <!-- Sección de mensajes -->
-        <div id="mensajeSection" style="display: none;">
-            <button id="btnRegresarAspirantes" class="btn btn-secondary mb-3">← Regresar</button>
-            <h2>Enviar mensaje a <span id="nombreAspirante"></span></h2>
-            <textarea id="mensajeTexto" class="form-control" placeholder="Escribe tu mensaje aquí..."></textarea>
-            <button id="btnEnviar" class="btn btn-success mt-3">Enviar</button>
-            
-            <!-- Conversación -->
-            <div id="conversacionDiv" class="mt-4 border rounded p-3" style="height: 300px; overflow-y: scroll; background-color: #f9f9f9;">
-                <!-- Aquí se insertarán los mensajes dinámicamente -->
-            </div>
-        </div>
-    </main>
+    <!-- Sección de mensajería -->
+    <div id="mensajeSection" class="container mt-5" style="display: none;">
+      <button id="btnRegresarAspirantes" class="btn btn-secondary mb-3">← Regresar</button>
+      <h2>Enviar mensaje a <span id="nombreAspirante"></span></h2>
+      <div id="conversacion" style="height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 1rem;">
+        <!-- Inyectado con JS -->
+      </div>
+      <textarea id="mensajeTexto" class="form-control" placeholder="Escribe tu mensaje aquí..."></textarea>
+      <button id="btnEnviar" class="btn btn-success mt-3">Enviar</button>
+    </div>
+  </main>
 
-    <footer class="bg-light py-3 text-center mt-5">
-        <img src="{% static 'img/pleca con hexágonos LARGA.jpg' %}" alt="Imagen del pie de página" class="img-fluid">
-        <p class="mt-2">UAEM - Todos los derechos reservados</p>
-    </footer>
+  <footer>
+    <img src="{% static 'img/pleca con hexágonos LARGA.jpg' %}" alt="Imagen del pie de página">
+    <div class="footer-text"></div>
+  </footer>
 
-    <!-- Enlace a Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Enlace a scripts.js -->
-    <script src="{% static 'js/scripts-admin.js' %}"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Tu script de administración (se carga al final para garantizar que admin_obj ya esté definido) -->
+  <script src="{% static 'js/scripts-admin.js' %}?v={{ timestamp }}"></script>
 </body>
 </html>

@@ -32,11 +32,6 @@ def inicio_sesion(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'iniciosesion.html', {'timestamp': timestamp})
 
-def administrador(request):
-    timestamp = datetime.now().timestamp() # Genera una marca de tiempo
-    return render(request, 'administrador.html', {'timestamp': timestamp})
-
-
 def perfilUsuario(request):
     sustentante_id = request.session.get('sustentante_id')
     timestamp = datetime.now().timestamp()
@@ -516,74 +511,71 @@ def verificar_correo_confirmado(request):
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 @csrf_exempt
-def obtener_mensajes(request):
+def obtener_mensajes(request, sustentante_id):
     """
     Regresa todos los mensajes asociados a un sustentante (tanto enviados
     por el administrador como por el sustentante).
     """
     if request.method == 'GET':
-        sustentante_id = request.GET.get('id_sustentante')
+        # Filtramos las notificaciones de este sustentante y ordenamos por fecha
+        mensajes = Notificaciones.objects.filter(id_sustentante=sustentante_id).order_by('fecha_envio')
+        
+        # Convertimos a una lista de diccionarios para enviar como JSON
+        lista_mensajes = []
+        for msg in mensajes:
+            lista_mensajes.append({
+                'id_notificacion': msg.id_notificacion,
+                'mensaje': msg.mensaje,
+                'fecha_envio': msg.fecha_envio.strftime('%Y-%m-%d %H:%M:%S'),
+                'es_de_administrador': msg.es_de_administrador,
+                'estado_lectura': msg.estado_lectura,
+            })
 
-        if not sustentante_id:
-            return JsonResponse({'success': False, 'error': 'ID de sustentante no proporcionado'}, status=400)
-
-        try:
-            mensajes = Notificaciones.objects.filter(id_sustentante=sustentante_id).order_by('fecha_envio')
-            lista_mensajes = [
-                {
-                    'id_notificacion': msg.id_notificacion,
-                    'mensaje': msg.mensaje,
-                    'fecha_envio': msg.fecha_envio.strftime('%Y-%m-%d %H:%M:%S'),
-                    'es_de_administrador': msg.es_de_administrador,
-                    'estado_lectura': msg.estado_lectura,
-                }
-                for msg in mensajes
-            ]
-
-            return JsonResponse({'success': True, 'mensajes': lista_mensajes}, status=200)
-
-        except Notificaciones.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'No se encontraron mensajes para este sustentante'}, status=404)
-
+        return JsonResponse({'success': True, 'mensajes': lista_mensajes}, status=200)
+    
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
 
 @csrf_exempt
-def enviar_mensaje_admin(request):
+def enviar_mensaje_admin(request, id_sustentante):
     """
     Endpoint para que el ADMINISTRADOR envíe un mensaje a un sustentante.
-    Espera un JSON con: {"sustentante_id": <num>, "mensaje": "texto"}
+    Espera un JSON con: {"mensaje": "texto"}
     """
     if request.method == 'POST':
         try:
+            # Obtener el ID del admin desde la sesión
+            id_administrativo = request.session.get('admin_id')
+            if not id_administrativo:
+                return JsonResponse({'success': False, 'error': 'Administrador no autenticado'}, status=401)
+
             data = json.loads(request.body)
-            sustentante_id = data.get('sustentante_id')
+            print(f"Datos recibidos: {data}")
             mensaje_texto = data.get('mensaje')
 
-            if not sustentante_id or not mensaje_texto:
+            if not mensaje_texto:
                 return JsonResponse({'success': False, 'error': 'Datos incompletos'}, status=400)
 
-            # (Opcional) Recuperar el objeto Administrador según tu lógica de sesión 
-            # admin_id = request.session.get('admin_id')
-            # admin_obj = get_object_or_404(Administrativos, id_administrativo=admin_id)
-            # Por simplicidad, no lo usamos aquí, pero podrías guardarlo si lo requieres.
+            # Recuperar objetos Sustentante y Administrativos
+            sustentante = get_object_or_404(Sustentante, id_sustentante=id_sustentante)
+            administrativo = get_object_or_404(Administrativos, id_administrativo=id_administrativo)
 
-            sustentante = get_object_or_404(Sustentante, id_sustentante=sustentante_id)
-
-            # Creamos el registro en notificaciones
+            # Crear el mensaje en la tabla Notificaciones
             Notificaciones.objects.create(
                 id_sustentante=sustentante,
                 mensaje=mensaje_texto,
                 fecha_envio=timezone.now(),
-                estado_lectura='No leído',       # o como manejes tu estado
-                es_de_administrador=True        # Indica que lo manda el admin
+                estado_lectura=False,  # False para "No leído", True para "Leído"
+                es_de_administrador=True,  # Indica que lo manda el admin
+                id_administrativo=administrativo
             )
 
             return JsonResponse({'success': True, 'message': 'Mensaje enviado correctamente'}, status=200)
         
         except Exception as e:
+            print(f"Error: {str(e)}")
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
+    print("Error: Método no permitido")
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
 @csrf_exempt
@@ -611,11 +603,13 @@ def enviar_mensaje_sustentante(request):
 
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
+
 def perfilAdministrador(request):
+    timestamp = datetime.now().timestamp()
     # 1) Verificar si hay un administrador loggeado en la sesión
     admin_id = request.session.get('admin_id')
     if not admin_id:
-        return redirect('loginAdmin')  # o la ruta de tu login de administrador
+        return redirect('inicioSesionAdmin')  # o la ruta de tu login de administrador
     
     try:
         # 2) Obtener el objeto del Admin
@@ -642,7 +636,7 @@ def perfilAdministrador(request):
         return render(request, 'administrador.html', context)
 
     except Administrativos.DoesNotExist:
-        return redirect('loginAdmin')
+        return redirect('inicioSesionAdmin')
     
 def lista_sustentantes(request):
     if request.method == 'GET':
