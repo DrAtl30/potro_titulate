@@ -14,41 +14,29 @@ function getCookie(name) {
     return null;
 }
 
-
 async function checkSession() {
     try {
-        // Si no hay una sesión activa, no hacer nada
-        if (!currentSessionKey) {
-            console.log('No hay sesión activa.');
-            return;
-        }
-
         const response = await fetch('/api/verificar-sesion/', { method: 'GET', credentials: 'same-origin' });
 
         if (response.status === 401) {
             console.log('Sesión cerrada detectada. Cerrando sesión...');
             alert('Tu sesión ha expirado o ha sido cerrada en otro dispositivo.');
             cerrarSesion(); // Cierra la sesión automáticamente
-            clearInterval(sessionCheckInterval); // Detener la verificación de sesión
         } else if (response.ok) {
             const data = await response.json();
-            console.log('Respuesta del backend:', data); // Depuración
-            const newSessionKey = data.current_session_key; // Obtener el session_key actual del backend
+            const newSessionKey = getCookie('session_key');  // Obtener el valor de session_key
 
-            // Si el backend no devuelve un session_key, no hacer nada
-            if (!newSessionKey) {
-                console.log('No se recibió un session_key válido del backend.');
-                return;
-            }
+            if (newSessionKey) {
+                // Si la sesión es diferente
+                if (newSessionKey !== currentSessionKey) {
+                    console.log('Nueva sesión detectada. Cerrando la sesión anterior...');
+                    alert('Se ha detectado un nuevo inicio de sesión. Redirigiendo...');
+                    cerrarSesion(); // Si hay una sesión nueva, cierra la anterior
+                } else {
+                    console.log('La misma sesión detectada. No hacer nada.');
+                }
 
-            // Solo se activa si la clave de sesión ha cambiado
-            if (newSessionKey !== currentSessionKey) {
-                console.log('Nueva sesión detectada. Cerrando la sesión anterior...');
-                alert('Se ha detectado un nuevo inicio de sesión. Redirigiendo...');
-                cerrarSesion(); // Si hay una sesión nueva, cierra la anterior
-                clearInterval(sessionCheckInterval); // Detener la verificación de sesión
-            } else {
-                console.log('La sesión actual es válida.');
+                currentSessionKey = newSessionKey;  // Actualiza currentSessionKey para futuras comparaciones
             }
         }
     } catch (error) {
@@ -98,14 +86,10 @@ window.addEventListener('storage', (event) => {
 });
 
 // Verifica cada 5 segundos si la sesión sigue activa
-sessionCheckInterval = setInterval(checkSession, 5000);
+setInterval(checkSession, 5000);
 
 // Llamar al script al cargar la página
 window.addEventListener('load', () => {
-    // Solo verificar la sesión si hay una sesión activa
-    if (currentSessionKey) {
-        checkSession();
-    } else {
-        console.log('No hay sesión activa al cargar la página.');
-    }
+    console.log('Session Key al cargar: ', currentSessionKey);  // Verifica si currentSessionKey tiene valor
+    checkSession();
 });

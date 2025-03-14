@@ -21,7 +21,8 @@ import json
 import os
 
 def index(request):
-    return render(request, 'index(2).html')
+    timestamp = datetime.now().timestamp
+    return render(request, 'index(2).html', {'timestamp': timestamp})
 
 def registro(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
@@ -228,7 +229,7 @@ class LoginView(APIView):
                     'correo_electronico': sustentante.correo_electronico
                 }, status=status.HTTP_200_OK)
                 
-                response.set_cookie('session_key', request.session.session_key, httponly=True, samesite='Lax')
+                response.set_cookie('session_key', request.session.session_key, httponly=False, samesite='Lax')
 
                 return response
             except Sustentante.DoesNotExist:
