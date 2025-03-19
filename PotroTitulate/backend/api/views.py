@@ -273,7 +273,11 @@ class AdministradorLoginView(APIView):
     def post(self, request):
         serializer = AdministradorLoginSerializer(data=request.data)
         if serializer.is_valid():
+            # Guardar el ID del administrador en la sesión
+            request.session['admin_id'] = serializer.validated_data['id_administrador']
+
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RecuperarContraseñaView(APIView):
@@ -606,6 +610,9 @@ def enviar_mensaje_sustentante(request):
 
 def perfilAdministrador(request):
     timestamp = datetime.now().timestamp()
+
+    print(f"Session data: {request.session.items()}")  # <-- Depuración
+
     # 1) Verificar si hay un administrador loggeado en la sesión
     admin_id = request.session.get('admin_id')
     if not admin_id:

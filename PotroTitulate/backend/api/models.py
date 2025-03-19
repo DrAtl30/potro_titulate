@@ -35,16 +35,24 @@ class Documentos(models.Model):
 
 class Notificaciones(models.Model):
     id_notificacion = models.AutoField(primary_key=True)
-    id_sustentante = models.ForeignKey('Sustentante', models.DO_NOTHING, db_column='id_sustentante')
+    id_sustentante = models.ForeignKey(
+        'Sustentante', 
+        on_delete=models.CASCADE, 
+        db_column='id_sustentante'
+    )
+    id_administrativo = models.ForeignKey(
+        'Administrativos', 
+        on_delete=models.CASCADE, 
+        db_column='id_administrativo'
+    )
     mensaje = models.TextField()
     fecha_envio = models.DateField()
     estado_lectura = models.BooleanField()
-    es_de_administrador = models.BooleanField()
+    es_de_administrador = models.BooleanField(default=False)  # DEFAULT = false en la BD
 
     class Meta:
         managed = False
         db_table = 'notificaciones'
-
 
 class OpcionTitulacion(models.Model):
     id_opcion = models.AutoField(primary_key=True)
