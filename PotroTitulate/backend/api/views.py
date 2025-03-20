@@ -662,15 +662,27 @@ def verificar_sesion(request):
     session_key = request.COOKIES.get('session_key')
     sustentante_id = request.session.get('sustentante_id')
 
-    if not session_key or not Session.objects.filter(session_key=session_key).exists():
+    print(f"Session key from cookies: {session_key}")  # Depuración
+    print(f"Sustentante ID from session: {sustentante_id}")  # Depuración
+
+    # Si no hay session_key, devolver un 200 con un mensaje indicando que no hay sesión
+    if not session_key:
+        return JsonResponse({'mensaje': 'No hay sesión activa'}, status=200)
+
+    # Si la sesión no es válida, devolver un 401
+    if not Session.objects.filter(session_key=session_key).exists():
         return JsonResponse({'mensaje': 'Sesión no válida'}, status=401)
 
-    # Obtener el session_key actual del usuario desde la base de datos
+    # Si no hay sustentante_id, devolver un 200 con un mensaje indicando que no hay sesión
+    if not sustentante_id:
+        return JsonResponse({'mensaje': 'No hay sesión activa'}, status=200)
+
+    # Si el sustentante no existe, devolver un 404
     try:
         sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
         return JsonResponse({
             'mensaje': 'Sesión válida',
-            'current_session_key': sustentante.session_key  # Asegúrate de que esto esté correctamente configurado
+            'current_session_key': session_key  # Devolver la session_key actual
         }, status=200)
     except Sustentante.DoesNotExist:
         return JsonResponse({'mensaje': 'Sustentante no encontrado'}, status=404)

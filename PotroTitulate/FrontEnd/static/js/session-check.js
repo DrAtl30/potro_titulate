@@ -1,7 +1,6 @@
 let currentSessionKey = getCookie('session_key');
 console.log('Valor de currentSessionKey:', currentSessionKey); // Depuración
 let forcedReload = false;
-let sessionCheckInterval;
 
 function getCookie(name) {
     const cookies = document.cookie.split(';');
@@ -16,27 +15,45 @@ function getCookie(name) {
 
 async function checkSession() {
     try {
-        const response = await fetch('/api/verificar-sesion/', { method: 'GET', credentials: 'same-origin' });
+        const response = await fetch('/api/verificarSesion/', {
+            method: 'GET',
+            credentials: 'same-origin',
+        });
 
-        if (response.status === 401) {
-            console.log('Sesión cerrada detectada. Cerrando sesión...');
-            alert('Tu sesión ha expirado o ha sido cerrada en otro dispositivo.');
-            cerrarSesion(); // Cierra la sesión automáticamente
-        } else if (response.ok) {
+        if (response.status === 200) {
             const data = await response.json();
-            const newSessionKey = getCookie('session_key');  // Obtener el valor de session_key
 
-            if (newSessionKey) {
-                // Si la sesión es diferente
-                if (newSessionKey !== currentSessionKey) {
-                    console.log('Nueva sesión detectada. Cerrando la sesión anterior...');
-                    alert('Se ha detectado un nuevo inicio de sesión. Redirigiendo...');
-                    cerrarSesion(); // Si hay una sesión nueva, cierra la anterior
-                } else {
-                    console.log('La misma sesión detectada. No hacer nada.');
+            // Si no hay sesión activa, no hacer nada
+            if (data.mensaje === 'No hay sesión activa') {
+                console.log('No hay sesión activa. No hacer nada.');
+                return;
+            }
+
+            // Si la sesión es válida, actualizar currentSessionKey
+            if (data.mensaje === 'Sesión válida') {
+                const newSessionKey = getCookie('session_key');  // Obtener el valor de session_key
+
+                if (newSessionKey) {
+                    // Si la sesión es diferente
+                    if (newSessionKey !== currentSessionKey) {
+                        console.log('Nueva sesión detectada. Cerrando la sesión anterior...');
+                        alert('Se ha detectado un nuevo inicio de sesión. Redirigiendo...');
+                        cerrarSesion(); // Si hay una sesión nueva, cierra la anterior
+                    } else {
+                        console.log('La misma sesión detectada. No hacer nada.');
+                    }
+
+                    currentSessionKey = newSessionKey;  // Actualiza currentSessionKey para futuras comparaciones
                 }
-
-                currentSessionKey = newSessionKey;  // Actualiza currentSessionKey para futuras comparaciones
+            }
+        } else if (response.status === 401) {
+            // Solo cerrar la sesión si hay una sesión activa
+            if (currentSessionKey !== null) {
+                console.log('Sesión cerrada detectada. Cerrando sesión...');
+                alert('Tu sesión ha expirado o ha sido cerrada en otro dispositivo.');
+                cerrarSesion(); // Cierra la sesión automáticamente
+            } else {
+                console.log('No hay sesión activa. Ignorando error 401.');
             }
         }
     } catch (error) {
