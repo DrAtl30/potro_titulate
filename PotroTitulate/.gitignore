@@ -1,1 +1,6 @@
 env/
+
+
+# Ignorar carpetas de paquetes de python
+__pycache__/
+*.pyc

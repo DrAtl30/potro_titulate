@@ -1,35 +1,47 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+<<<<<<< HEAD
 from django.http import Http404, HttpResponse, JsonResponse, HttpResponseRedirect
 from rest_framework import status
 from .serializers import AdministradorLoginSerializer, SustentanteRegistroSerializer
 from .serializers import SustentanteLoginSerializer
+=======
+from django.contrib.auth import login
+from django.contrib.sessions.models import Session
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.http import JsonResponse, Http404, HttpResponse
+from rest_framework import status
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
 from .serializers import *;
-from django.shortcuts import redirect, get_object_or_404
-from django.shortcuts import render
+from django.shortcuts import redirect, get_object_or_404, render
 from datetime import datetime
 from django.core.mail import send_mail, BadHeaderError
-from django.shortcuts import render, redirect
 from django.utils.crypto import get_random_string
+<<<<<<< HEAD
 from .models import Notificaciones, Sustentante, Documentos, Tramites, OpcionTitulacion
 from django.contrib.auth.decorators import login_required
+=======
+from .models import *;
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
+<<<<<<< HEAD
 from django.template.loader import render_to_string
 from django.urls import reverse
 #import jwt
+=======
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
 from django.conf import settings
 import json
 import os
 
-
-
 def index(request):
-    return render(request, 'index(2).html')
+    timestamp = datetime.now().timestamp
+    return render(request, 'index(2).html', {'timestamp': timestamp})
 
 def registro(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
@@ -39,6 +51,7 @@ def inicio_sesion(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'iniciosesion.html', {'timestamp': timestamp})
 
+<<<<<<< HEAD
 def administrador(request):
     timestamp = datetime.now().timestamp()  # Genera una marca de tiempo
     context = {'timestamp': timestamp}
@@ -55,6 +68,8 @@ def administrador(request):
 
     return render(request, 'administrador.html', context)
 
+=======
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
 def perfilUsuario(request):
     sustentante_id = request.session.get('sustentante_id')
     timestamp = datetime.now().timestamp()
@@ -211,46 +226,53 @@ class RegistroView(APIView):
             return Response({'mensaje': 'Registro exitoso'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class LoginView(APIView):
     def post(self, request):
         serializer = SustentanteLoginSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
-            print('Datos válidos:', data)
+            try:
+                sustentante = Sustentante.objects.get(id_sustentante=data.get('id_sustentante'))
 
-            # Verificar si la cuenta ya fue confirmada
-            if not data.get('confirmado', False):  
-                return Response({
-                    'mensaje': 'Debes confirmar tu cuenta antes de iniciar sesión.',
-                    'confirmacion_pendiente': True
-                }, status=status.HTTP_403_FORBIDDEN)
+                # Si la cuenta no está confirmada
+                if not sustentante.confirmado:
+                    return Response({
+                        'mensaje': 'Debes confirmar tu cuenta antes de iniciar sesión.',
+                        'confirmacion_pendiente': True
+                    }, status=status.HTTP_403_FORBIDDEN)
 
-            # Guardar el ID del Sustentante en la sesión
-            request.session['sustentante_id'] = data.get('id_sustentante')
+                # Iniciar nueva sesión
+                login(request, sustentante)
 
-            if data.get('contrasena_temporal'):
-                return Response({
-                    'mensaje': 'Debes cambiar tu contraseña temporal.',
-                    'redirigir_a_cambiar_contrasena': True,
-                    'id_sustentante': data.get('id_sustentante')
-                }, status=status.HTTP_200_OK)
-            else:
-                return Response({
+                # Guardar la sesión para generar un session_key
+                request.session.save()
+
+                # Almacenar el ID del Sustentante en la sesión
+                request.session['sustentante_id'] = sustentante.id_sustentante
+
+                # Almacenar el session_key en el modelo Sustentante
+                sustentante.session_key = request.session.session_key
+                sustentante.save()
+
+                # Configurar la cookie session_key
+                response = Response({
                     'mensaje': 'Inicio de sesión exitoso.',
-                    'redirigir_a_cambiar_contrasena': False,
-                    'id_sustentante': data.get('id_sustentante'),
-                    'nombre': data.get('nombre'),
-                    'correo_electronico': data.get('correo_electronico')
+                    'redirigir_a_cambiar_contrasena': sustentante.contrasena_temporal,
+                    'id_sustentante': sustentante.id_sustentante,
+                    'nombre': sustentante.nombre,
+                    'correo_electronico': sustentante.correo_electronico
                 }, status=status.HTTP_200_OK)
-        
-        # Agregar detalles de error para depuración
+                
+                response.set_cookie('session_key', request.session.session_key, httponly=False, samesite='Lax')
+
+                return response
+            except Sustentante.DoesNotExist:
+                return Response({'mensaje': 'Sustentante no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
         return Response({'mensaje': 'Error en los datos', 'errores': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
-
     
 class PerfilUsuarioView(APIView):
-   def get(self, request):
+    def get(self, request):
         # Obtén el ID del Sustentante desde la sesión
         sustentante_id = request.session.get('sustentante_id')
 
@@ -275,9 +297,12 @@ class LogoutView(APIView):
     def post(self, request):
         if 'sustentante_id' in request.session:
             del request.session['sustentante_id']
-        #return Response({'mensaje': 'Sesión cerrada correctamente'}, status=status.HTTP_200_OK)
-        return redirect('/iniciosesion/')
-
+        
+        # Limpiar la cookie de session_key
+        response = redirect('/iniciosesion/')
+        response.delete_cookie('session_key')
+        return response
+    
 def checkSession(request):
     is_authenticated = 'sustentante_id' in request.session
     return JsonResponse({'is_authenticated': is_authenticated})
@@ -287,7 +312,11 @@ class AdministradorLoginView(APIView):
     def post(self, request):
         serializer = AdministradorLoginSerializer(data=request.data)
         if serializer.is_valid():
+            # Guardar el ID del administrador en la sesión
+            request.session['admin_id'] = serializer.validated_data['id_administrador']
+
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class AdministradorLoginView(APIView):
@@ -329,9 +358,7 @@ class RecuperarContraseñaView(APIView):
                 'error': 'Se produjo un eror al enviar el correo. Inténtalo de nuevo.'})
         
         return JsonResponse({'redirect': '/recuperarContrasenaExito'}, status=status.HTTP_200_OK)
-        #return render(request,'recuperarContrasenaExito.html')
-        #return Response({'mensaje': 'Se ha enviado un correo con tu nueva contraseña temporal'}, status=status.HTTP_200_OK)
-    
+
 class CambiarContrasenaView(APIView):
     def get(self, request, id_sustentante):
         return render(request, "cambiar_contrasena.html", {"id_sustentante": id_sustentante})
@@ -522,6 +549,23 @@ def descargar_documento(request, documento_id):
             return response
     raise Http404("El archivo no existe")
 
+<<<<<<< HEAD
+=======
+def verificar_correo_confirmado(request):
+    if request.method == 'POST':
+        import json
+        data = json.loads(request.body)
+        correo = data.get('correo_electronico')
+
+        try:
+            sustentante = Sustentante.objects.get(correo_electronico=correo)
+            return JsonResponse({'confirmado': sustentante.confirmado})
+        except Sustentante.DoesNotExist:
+            return JsonResponse({'error': 'Correo no registrado'}, status=400)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
 @csrf_exempt
 def obtener_mensajes(request, sustentante_id):
     """
@@ -549,6 +593,7 @@ def obtener_mensajes(request, sustentante_id):
 
 
 @csrf_exempt
+<<<<<<< HEAD
 def enviar_mensaje_admin(request):
     """
     Endpoint para que el ADMINISTRADOR envíe un mensaje a un sustentante.
@@ -571,19 +616,57 @@ def enviar_mensaje_admin(request):
             sustentante = get_object_or_404(Sustentante, id_sustentante=sustentante_id)
 
             # Creamos el registro en notificaciones
+=======
+def enviar_mensaje_admin(request, id_sustentante):
+    """
+    Endpoint para que el ADMINISTRADOR envíe un mensaje a un sustentante.
+    Espera un JSON con: {"mensaje": "texto"}
+    """
+    if request.method == 'POST':
+        try:
+            # Obtener el ID del admin desde la sesión
+            id_administrativo = request.session.get('admin_id')
+            if not id_administrativo:
+                return JsonResponse({'success': False, 'error': 'Administrador no autenticado'}, status=401)
+
+            data = json.loads(request.body)
+            print(f"Datos recibidos: {data}")
+            mensaje_texto = data.get('mensaje')
+
+            if not mensaje_texto:
+                return JsonResponse({'success': False, 'error': 'Datos incompletos'}, status=400)
+
+            # Recuperar objetos Sustentante y Administrativos
+            sustentante = get_object_or_404(Sustentante, id_sustentante=id_sustentante)
+            administrativo = get_object_or_404(Administrativos, id_administrativo=id_administrativo)
+
+            # Crear el mensaje en la tabla Notificaciones
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
             Notificaciones.objects.create(
                 id_sustentante=sustentante,
                 mensaje=mensaje_texto,
                 fecha_envio=timezone.now(),
+<<<<<<< HEAD
                 estado_lectura='No leído',       # o como manejes tu estado
                 es_de_administrador=True        # Indica que lo manda el admin
+=======
+                estado_lectura=False,  # False para "No leído", True para "Leído"
+                es_de_administrador=True,  # Indica que lo manda el admin
+                id_administrativo=administrativo
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
             )
 
             return JsonResponse({'success': True, 'message': 'Mensaje enviado correctamente'}, status=200)
         
         except Exception as e:
+<<<<<<< HEAD
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
+=======
+            print(f"Error: {str(e)}")
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    print("Error: Método no permitido")
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
 @csrf_exempt
@@ -613,10 +696,21 @@ def enviar_mensaje_sustentante(request):
 
 
 def perfilAdministrador(request):
+<<<<<<< HEAD
     # 1) Verificar si hay un administrador loggeado en la sesión
     admin_id = request.session.get('admin_id')
     if not admin_id:
         return redirect('loginAdmin')  # o la ruta de tu login de administrador
+=======
+    timestamp = datetime.now().timestamp()
+
+    print(f"Session data: {request.session.items()}")  # <-- Depuración
+
+    # 1) Verificar si hay un administrador loggeado en la sesión
+    admin_id = request.session.get('admin_id')
+    if not admin_id:
+        return redirect('inicioSesionAdmin')  # o la ruta de tu login de administrador
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
     
     try:
         # 2) Obtener el objeto del Admin
@@ -643,7 +737,11 @@ def perfilAdministrador(request):
         return render(request, 'administrador.html', context)
 
     except Administrativos.DoesNotExist:
+<<<<<<< HEAD
         return redirect('loginAdmin')
+=======
+        return redirect('inicioSesionAdmin')
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
     
 def lista_sustentantes(request):
     if request.method == 'GET':
@@ -656,3 +754,58 @@ def lista_sustentantes(request):
             })
         return JsonResponse({'success': True, 'sustentantes': lista})
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
+<<<<<<< HEAD
+=======
+
+def verificar_sesion(request):
+    session_key = request.COOKIES.get('session_key')
+    sustentante_id = request.session.get('sustentante_id')
+
+    print(f"Session key from cookies: {session_key}")  # Depuración
+    print(f"Sustentante ID from session: {sustentante_id}")  # Depuración
+
+    # Si no hay session_key, devolver un 200 con un mensaje indicando que no hay sesión
+    if not session_key:
+        return JsonResponse({'mensaje': 'No hay sesión activa'}, status=200)
+
+    # Si la sesión no es válida, devolver un 401
+    if not Session.objects.filter(session_key=session_key).exists():
+        return JsonResponse({'mensaje': 'Sesión no válida'}, status=401)
+
+    # Si no hay sustentante_id, devolver un 200 con un mensaje indicando que no hay sesión
+    if not sustentante_id:
+        return JsonResponse({'mensaje': 'No hay sesión activa'}, status=200)
+
+    # Si el sustentante no existe, devolver un 404
+    try:
+        sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+        return JsonResponse({
+            'mensaje': 'Sesión válida',
+            'current_session_key': session_key  # Devolver la session_key actual
+        }, status=200)
+    except Sustentante.DoesNotExist:
+        return JsonResponse({'mensaje': 'Sustentante no encontrado'}, status=404)
+    
+@method_decorator(csrf_exempt, name='dispatch')
+@login_required
+def obtener_mensajes_sustentante(request):
+    if request.method == 'GET':
+        sustentante_id = request.session.get('sustentante_id')
+        if not sustentante_id:
+            return JsonResponse({'success': False, 'error': 'No se encontró al sustentante'}, status=400)
+
+        mensajes = Notificaciones.objects.filter(id_sustentante=sustentante_id).order_by('-fecha_envio')
+
+        mensajes_data = [
+            {
+                'id_notificacion': mensaje.id_notificacion,
+                'mensaje': mensaje.mensaje,
+                'fecha_envio': mensaje.fecha_envio.strftime('%d/%m/%Y'),
+                'estado_lectura': mensaje.estado_lectura,
+                'es_de_administrador': mensaje.es_de_administrador
+            } for mensaje in mensajes
+        ]
+
+        return JsonResponse({'success': True, 'mensajes': mensajes_data}, status=200)
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029

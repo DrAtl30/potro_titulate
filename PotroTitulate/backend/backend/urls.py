@@ -25,7 +25,7 @@ urlpatterns = [
     path('index/', index, name='index'),  # Ruta para "index"
     path('registro/', registro, name='registro'),  # Ruta para el formulario de registro
     path('iniciosesion/', inicio_sesion, name='inicio_sesion'),  # Ruta para "iniciar sesión"
-    path('administrador/', administrador, name='administrador'),  # Ruta para "administrador"
+    path('administrador/', perfilAdministrador, name='administrador'),  # Ruta para "administrador"
     path('perfilUsuario/', perfilUsuario, name='perfilUsuario'),  # Ruta para "perfil de
     path('recuperarContrasena/', recuperarContrasena, name='recuperarContrasena'),  # Ruta para "recuperar contraseña"
     path('inicioSesionAdmin/', loginAdmin, name='inicioSesionAdmin'),  # Ruta para "loginAdmin"
@@ -38,7 +38,6 @@ urlpatterns = [
 
     path('recuperarContrasenaExito/', recuperarContrasenaExito, name='recuperarContrasenaExito'),  # Ruta para "recuperar contraseña exito"
     path('administradorLogin/', AdministradorLoginView.as_view(), name='adminstradorLogin'),
-    #path('perfilUsuario/', PerfilUsuarioView.as_view(), name='perfilUsuario'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('checkSession/', checkSession, name='checkSession'),
     path('uploadDocument/', uploadDocument, name='subirDocumento'),
@@ -62,6 +61,7 @@ urlpatterns = [
 
     # 4) confirmación de cuenta (tal cual lo tienes)
     path('confirmar-cuenta/<str:uidb64>/<str:token>/', ConfirmarCuentaView.as_view(), name='confirmar-cuenta'),
+    path('verificarCorreoConfirmado/', verificar_correo_confirmado, name='verificar_correo_confirmado'),
 
     # 5) GET /perfilAdministrador/ => vista de administrador
     path('perfilAdministrador/', perfilAdministrador, name='perfilAdministrador'),
@@ -77,5 +77,27 @@ urlpatterns = [
     path('api/logout/', LogoutView.as_view(), name='logout'),  # Ruta para logout
 
     path('api/login/administrador/', AdministradorLoginView.as_view(), name='login_administrador'),  # Ruta para login de administrador
+    path('api/perfil/', PerfilUsuarioView.as_view(), name='perfil_usuario'),
+    path('api/verificarSesion/', verificar_sesion, name='verificar_sesion'),
+
+      # mensajeria 
+    # 1) GET /obtenerMensajes/7/ => ver mensajes de ID=7
+    path('obtener_mensajes/<int:sustentante_id>/', obtener_mensajes, name='obtener_mensajes'),
+    
+    # 2) POST /enviarMensajeAdmin/7/ => enviar mensaje admin a ID=7
+    path('enviarMensajeAdmin/<int:id_sustentante>/', enviar_mensaje_admin, name='enviar_mensaje_admin'),
+
+    # 3) POST /enviarMensajeSustentante/7/ => si el sustentante manda mensaje
+    path('enviarMensajeSustentante/<int:id_sustentante>/', enviar_mensaje_sustentante, name='enviarMensajeSustentante'),
+
+    # 4) confirmación de cuenta (tal cual lo tienes)
+    path('confirmar-cuenta/<str:uidb64>/<str:token>/', ConfirmarCuentaView.as_view(), name='confirmar-cuenta'),
+
+    # 5) GET /perfilAdministrador/ => vista de administrador
+    path('perfilAdministrador/', perfilAdministrador, name='perfilAdministrador'),
+    
+    path('listaSustentantes/', lista_sustentantes, name='listaSustentantes'),
+
+    path('api/mensajes/sustentante/', obtener_mensajes_sustentante, name='obtener_mensajes_sustentante'),
 ]
 

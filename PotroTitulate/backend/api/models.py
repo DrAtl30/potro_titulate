@@ -33,7 +33,29 @@ class Documentos(models.Model):
         db_table = 'documentos'
 
 
+<<<<<<< HEAD
+=======
+class Notificaciones(models.Model):
+    id_notificacion = models.AutoField(primary_key=True)
+    id_sustentante = models.ForeignKey(
+        'Sustentante', 
+        on_delete=models.CASCADE, 
+        db_column='id_sustentante'
+    )
+    id_administrativo = models.ForeignKey(
+        'Administrativos', 
+        on_delete=models.CASCADE, 
+        db_column='id_administrativo'
+    )
+    mensaje = models.TextField()
+    fecha_envio = models.DateField()
+    estado_lectura = models.BooleanField()
+    es_de_administrador = models.BooleanField(default=False)  # DEFAULT = false en la BD
 
+    class Meta:
+        managed = False
+        db_table = 'notificaciones'
+>>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
 
 class OpcionTitulacion(models.Model):
     id_opcion = models.AutoField(primary_key=True)
@@ -97,6 +119,9 @@ class Sustentante(AbstractBaseUser, PermissionsMixin):
     confirmado = models.BooleanField(default=False)
     last_login = models.DateTimeField(blank=True, null=True)
     id_opcion = models.ForeignKey(OpcionTitulacion, on_delete=models.CASCADE, db_column='id_opcion', null=True)  # Relaciona con OpciónTitulación
+
+    session_key = models.CharField(max_length=40, blank=True, null=True)
+
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

@@ -75,65 +75,113 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Script para Login
-        const csrfTokenLogin = document.querySelector('[name=csrfmiddlewaretoken]');
-        const loginForm = document.getElementById('login-form');
-    
-        if (loginForm) {
-            loginForm.addEventListener('submit', function(event) {
-                event.preventDefault();
+const csrfTokenLogin = document.querySelector('[name=csrfmiddlewaretoken]');
+const loginForm = document.getElementById('login-form');
 
-                console.log('Formulario de login enviado');
-    
-                const correo = document.getElementById('correo').value;
-                const contrasena = document.getElementById('contrasena').value;
-    
-                const data = { correo_electronico: correo, contrasena: contrasena };
-    
-                fetch('/api/login/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfTokenLogin ? csrfTokenLogin.value : ''
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => { throw err; });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.id_sustentante) {
-                        sessionStorage.setItem('sustentante', JSON.stringify(data));
-                        window.location.href = '/index/';
-                    }
-                    console.log('Respuesta del servidor:', data);
+if (loginForm) {
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault();
 
-                    if (data.redirigir_a_cambiar_contrasena && data.id_sustentante) {
-                        window.location.href = `/cambiarContrasena/${data.id_sustentante}/`;
-                    } else {
-                        mostrarModal('Inicio de sesión exitoso', 'successModal');
-                        esperarCierreModal('successModal').then(() => {
-                            window.location.href = '/index/'; // Redirigir a la página principal o dashboard
+        console.log('Formulario de login enviado');
+
+        const correo = document.getElementById('correo').value;
+        const contrasena = document.getElementById('contrasena').value;
+
+        // Verificar si el correo está confirmado antes de continuar
+        fetch('/verificarCorreoConfirmado/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRFToken': csrfTokenLogin ? csrfTokenLogin.value : ''
+            },
+            body: JSON.stringify({ correo_electronico: correo }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP Error ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.confirmado) {
+                mostrarModal('Tu correo aún no ha sido confirmado. Verifica tu bandeja de entrada.', 'errorModal');
+                return Promise.reject('Correo no confirmado');
+            }
+
+            // Si el correo está confirmado, proceder con el inicio de sesión
+            return fetch('/api/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfTokenLogin ? csrfTokenLogin.value : ''
+                },
+                body: JSON.stringify({ correo_electronico: correo, contrasena: contrasena })
+            });
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Respuesta del servidor:', data);
+
+            if (data.id_sustentante) {
+                sessionStorage.setItem('sustentante', JSON.stringify(data));
+
+                if (data.redirigir_a_cambiar_contrasena) {
+                    window.location.href = `/cambiarContrasena/${data.id_sustentante}/`;
+                } else {
+                    mostrarModal('Inicio de sesión exitoso', 'successModal');
+                    esperarCierreModal('successModal').then(() => {
+                        window.location.href = '/index/'; // Redirigir a la página principal o dashboard
                     });
                 }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    mostrarModal('Correo o contraseña incorrectos', 'errorModal');
-                });
-            });
-        }
+            }
+        })
+        .catch(error => {
+            if (error !== 'Correo no confirmado') {
+                console.error('Error:', error);
+                mostrarModal('Correo o contraseña incorrectos', 'errorModal');
+            }
+        });
     });
+}
 
-    //Script para el Modal de recuperar contrasena
-    const recuperarForm = document.querySelector('.recuperarForm');
-    if(recuperarForm) {
-        recuperarForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            var email = document.getElementById('correo_electronico').value;
-        
+
+    // Script para el Modal de recuperar contraseña
+const recuperarForm = document.querySelector('.recuperarForm');
+
+if (recuperarForm) {
+    recuperarForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var email = document.getElementById('correo_electronico').value;
+
+        // Verificar si el correo está confirmado antes de continuar
+        fetch('/verificarCorreoConfirmado/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            },
+            body: JSON.stringify({ correo_electronico: email }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP Error ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.confirmado) {
+                mostrarModal('Tu correo aún no ha sido confirmado. Verifica tu bandeja de entrada.', 'errorModal');
+                return;
+            }
+
+            // Si el correo está confirmado, proceder con la recuperación de contraseña
             fetch('/recuperarContrasena/recuperarContra', {
                 method: 'POST',
                 headers: {
@@ -159,10 +207,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error:', error);
                 mostrarModal('Hubo un problema al procesar tu solicitud. Inténtalo de nuevo.', 'errorModal');
             });
-
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            mostrarModal('Hubo un problema al verificar tu correo. Inténtalo de nuevo.', 'errorModal');
         });
-        
-    }
+    });
+}
+});
+
 
     //Script para el Modal de cambiar contrasena
     const cambiarContrasenaForm = document.querySelector('.cambiarContrasenaForm');

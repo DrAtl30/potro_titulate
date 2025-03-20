@@ -59,6 +59,45 @@
             color: black;
             text-decoration: none;
         }
+
+        .zona-mensajes {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .mensaje-item {
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+
+    .mensaje-item:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Estilos para el botón de cerrar */
+    #cerrarMensajes {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    #cerrarMensajes:hover {
+        background-color: #e53935;
+    }
+
     </style>
 </head>
 <body>
@@ -70,10 +109,21 @@
     <div style="text-align: left; padding: 10px 20px; font-size: 18px; font-weight: bold;">
         Bienvenido: {{ nombre_sustentante }}
     </div>
-
     <!-- Barra de navegación -->
     <header>
         <nav>
+            <button id="botonMensajes" data-sustentante-id="{{ sustentante.id }}" class="btn btn-primary">
+                Ver mensajes
+            </button>          
+            
+            <!-- Contenedor de mensajes, oculto inicialmente -->
+        <div id="zonaMensajes" class="zona-mensajes" style="display: none; position: fixed; top: 20%; left: 50%; transform: translateX(-50%); width: 80%; max-width: 500px; background: #fff; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
+            <h3>Mensajes</h3>
+            <ul id="listaMensajes" class="list-group">
+                <!-- Los mensajes se insertarán aquí mediante JavaScript -->
+            </ul>
+            <button id="cerrarMensajes">Cerrar</button>
+        </div>
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Ver más detalles</a>
                 <div class="dropdown-menu">
@@ -114,19 +164,7 @@
     <div id="requisitosContainer" style="margin-top: 20px;"></div>
 
     <!-- Mostrar documentos subidos -->
-    <div id="documentosSubidos">
-        <h3>Documentos Subidos:</h3>
-        <ul class="list-group">
-            {% for documento in documentos %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ documento.nombre_documento }}
-                    <span class="badge bg-{% if documento.estado_validacion == 'aceptado' %}success{% elif documento.estado_validacion == 'rechazado' %}danger{% elif documento.estado_validacion == 'pendiente' %}warning{% else %}secondary{% endif %}">
-                        {{ documento.estado_validacion }}
-                    </span>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+   
 
     <!-- Modales -->
     <div id="errorModal" class="modal">
@@ -153,6 +191,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Enlace a scripts.js -->
     <script src="{% static 'js/scripts2.js' %}?v={{ timestamp }}"></script>
+    <script src="{% static 'js/session-check.js' %}?v={{ timestamp }}"></script>
+    <script src="{% static 'js/mensajes.js' %}?v={{ timestamp }}"></script>
+    
     <!-- Token CSRF -->
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
