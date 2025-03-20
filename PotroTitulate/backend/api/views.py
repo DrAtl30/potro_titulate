@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from django.contrib.auth import login
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.http import JsonResponse, Http404, HttpResponse
 from rest_framework import status
 from .serializers import *;
@@ -673,3 +674,26 @@ def verificar_sesion(request):
         }, status=200)
     except Sustentante.DoesNotExist:
         return JsonResponse({'mensaje': 'Sustentante no encontrado'}, status=404)
+    
+@method_decorator(csrf_exempt, name='dispatch')
+@login_required
+def obtener_mensajes_sustentante(request):
+    if request.method == 'GET':
+        sustentante_id = request.session.get('sustentante_id')
+        if not sustentante_id:
+            return JsonResponse({'success': False, 'error': 'No se encontró al sustentante'}, status=400)
+
+        mensajes = Notificaciones.objects.filter(id_sustentante=sustentante_id).order_by('-fecha_envio')
+
+        mensajes_data = [
+            {
+                'id_notificacion': mensaje.id_notificacion,
+                'mensaje': mensaje.mensaje,
+                'fecha_envio': mensaje.fecha_envio.strftime('%d/%m/%Y'),
+                'estado_lectura': mensaje.estado_lectura,
+                'es_de_administrador': mensaje.es_de_administrador
+            } for mensaje in mensajes
+        ]
+
+        return JsonResponse({'success': True, 'mensajes': mensajes_data}, status=200)
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)

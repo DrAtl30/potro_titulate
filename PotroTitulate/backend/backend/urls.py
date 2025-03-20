@@ -73,5 +73,7 @@ urlpatterns = [
     path('perfilAdministrador/', perfilAdministrador, name='perfilAdministrador'),
     
     path('listaSustentantes/', lista_sustentantes, name='listaSustentantes'),
+
+    path('api/mensajes/sustentante/', obtener_mensajes_sustentante, name='obtener_mensajes_sustentante'),
 ]
 
