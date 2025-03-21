@@ -274,7 +274,6 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
             let contenido = `
                 <span class="requisito-texto">${requisito}</span>
                 <div class="semaforo">
-                    <span class="estado no-entregado" id="estado-${requisito}-no-entregado"></span>
                     <span class="estado pendiente" id="estado-${requisito}-pendiente" style="opacity: 0.3;"></span>
                     <span class="estado aceptado" id="estado-${requisito}-aceptado" style="opacity: 0.3;"></span>
                     <span class="estado rechazado" id="estado-${requisito}-rechazado" style="opacity: 0.3;"></span>
@@ -351,7 +350,7 @@ function cargarEstados(tramite_id) {
 
 
 function updateEstado(requisito, nuevoEstado) {
-    const estados = ['no-entregado', 'pendiente', 'aceptado', 'rechazado'];
+    const estados = ['pendiente', 'aceptado', 'rechazado'];
 
     estados.forEach(estado => {
         const elemento = document.getElementById(`estado-${requisito}-${estado}`);
