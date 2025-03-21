@@ -47,6 +47,7 @@ urlpatterns = [
     path('enviarSolicitud/', enviar_solicitud, name='enviarSolicitud'),
     path('confirmar-cuenta/<str:uidb64>/<str:token>/', ConfirmarCuentaView.as_view(), name='confirmar-cuenta'),
     path('verificarCorreoConfirmado/', verificar_correo_confirmado, name='verificar_correo_confirmado'),
+    path('specialLogout/', SpecialLogoutView.as_view(), name='special_logout'),
 
     # Ruta para la API de registro
     path('api/registro/', RegistroView.as_view(), name='api_registro'),  # API para registro
@@ -55,6 +56,7 @@ urlpatterns = [
     path('api/login/administrador/', AdministradorLoginView.as_view(), name='login_administrador'),  # Ruta para login de administrador
     path('api/perfil/', PerfilUsuarioView.as_view(), name='perfil_usuario'),
     path('api/verificarSesion/', verificar_sesion, name='verificar_sesion'),
+
 
       # mensajeria 
     # 1) GET /obtenerMensajes/7/ => ver mensajes de ID=7

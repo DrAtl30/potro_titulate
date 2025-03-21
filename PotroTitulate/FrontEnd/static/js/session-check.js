@@ -62,35 +62,48 @@ async function checkSession() {
 }
 
 function cerrarSesion() {
+    // Guardar el id_sustentante de la nueva sesión
+    const idSustentante = sessionStorage.getItem('id_sustentante');
+
+    // Limpiar solo los datos innecesarios del sessionStorage
+    Object.keys(sessionStorage).forEach(key => {
+        if (key !== 'id_sustentante') {
+            sessionStorage.removeItem(key);
+        }
+    });
+
+    // Limpiar localStorage si es necesario
+    localStorage.clear();
+
+    // Restaurar el id_sustentante en sessionStorage (por si acaso)
+    if (idSustentante) {
+        sessionStorage.setItem('id_sustentante', idSustentante);
+    }
+
     // Crear un formulario oculto para enviar la solicitud de cierre de sesión
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/logout/';
+    form.action = '/specialLogout/';  // Usar la nueva vista especial
 
     // Obtener CSRF desde el DOM o cookies
     let csrfTokenElement = document.querySelector('input[name="csrfmiddlewaretoken"]');
     let csrfToken = csrfTokenElement ? csrfTokenElement.value : getCookie('csrftoken');
 
-    if (csrfToken) {
-        let csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = 'csrfmiddlewaretoken';
-        csrfInput.value = csrfToken;
-        form.appendChild(csrfInput);
+    if (!csrfToken) {
+        console.error('No se pudo obtener el token CSRF.');
+        return;
     }
 
-    // Limpiar localStorage y sessionStorage
-    sessionStorage.clear();
-    localStorage.clear();
+    // Agregar el token CSRF al formulario
+    let csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
 
     // Añadir el formulario al body y enviarlo
     document.body.appendChild(form);
     form.submit();
-
-    // Redirigir al usuario a la página principal después de un breve retraso
-    setTimeout(() => {
-        window.location.href = '/';
-    }, 100);
 }
 
 // Evento para cerrar sesión en otras pestañas

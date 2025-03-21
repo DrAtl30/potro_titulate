@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import login
+from django.views import View
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -709,3 +710,14 @@ def obtener_mensajes_sustentante(request):
 
         return JsonResponse({'success': True, 'mensajes': mensajes_data}, status=200)
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
+
+class SpecialLogoutView(View):
+    """
+    Vista especial para cerrar sesión sin eliminar el sustentante_id.
+    """
+    def post(self, request, *args, **kwargs):
+        # No eliminar el sustentante_id de la sesión
+        # Solo limpiar la cookie de session_key
+        response = redirect('/iniciosesion/')
+        response.delete_cookie('session_key')
+        return response
