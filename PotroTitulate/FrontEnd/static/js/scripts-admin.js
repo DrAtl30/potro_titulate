@@ -3,10 +3,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const aspirantesSection = document.getElementById("aspirantesSection");
     const tablaAspirante = document.getElementById("tablaAspirante");
     const mensajeSection = document.getElementById("mensajeSection");
+    const tramitesSection = document.getElementById("tramitesSection");
 
     const btnAspirantes = document.getElementById("btnAspirantes");
     const btnMensajes = document.getElementById("btnMensajes");
-    const btnPerfilAdmin = document.getElementById("btnPerfilAdmin");
+    const btnTramites = document.getElementById("btnTramites");
 
     const aspirantesList = document.getElementById("aspirantesList");
     const btnRegresarAspirantes = document.getElementById("btnRegresarAspirantes");
@@ -15,29 +16,34 @@ document.addEventListener("DOMContentLoaded", function() {
     const nombreAspiranteSpan = document.getElementById("nombreAspirante");
     const mensajeTexto = document.getElementById("mensajeTexto");
 
+    // Elementos de trámites
+    const btnMostrarEspera = document.getElementById("btnMostrarEspera");
+    const btnMostrarProgreso = document.getElementById("btnMostrarProgreso");
+    const listaTramitesEspera = document.getElementById("listaTramitesEspera");
+    const listaTramitesProgreso = document.getElementById("listaTramitesProgreso");
+
     let currentAspiranteId = null;
 
-    // 2) Función para alternar visibilidad de secciones
-    function toggleSection(sectionToShow) {
-        if (sectionToShow.style.display === "none" || sectionToShow.style.display === "") {
-            aspirantesSection.style.display = (sectionToShow === aspirantesSection) ? "block" : "none";
-            mensajeSection.style.display = (sectionToShow === mensajeSection) ? "block" : "none";
-        } else {
-            sectionToShow.style.display = "none";
-        }
+    // 2) Función para ocultar todas las secciones
+    function hideAllSections() {
+        aspirantesSection.style.display = "none";
+        mensajeSection.style.display = "none";
+        tablaAspirante.style.display = "none";
+        tramitesSection.style.display = "none";
     }
 
-    // 3) Función para CARGAR LISTA SUSTENTANTES
+    // 3) Función para mostrar una sección específica
+    function showSection(sectionToShow) {
+        hideAllSections();
+        sectionToShow.style.display = "block";
+    }
+
+    // 4) Función para CARGAR LISTA SUSTENTANTES
     function cargarListaSustentantes() {
         console.log("Cargando lista de sustentantes...");
 
         fetch("/listaSustentantes/")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error al obtener la lista de sustentantes");
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
                 aspirantesList.innerHTML = "";
@@ -55,54 +61,107 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(err => console.error("Error fetch listaSustentantes:", err));
     }
 
-    // 4) Alternar visibilidad de la lista de aspirantes
+    // 5) Función para cargar trámites en espera
+    function cargarTramitesEspera() {
+        fetch("/api/tramites/espera/")
+            .then(response => response.json())
+            .then(data => {
+                // Asegurarse de que 'data.tramites' sea un array
+                if (!Array.isArray(data.tramites)) {
+                    console.error("La respuesta no contiene un array en la propiedad 'tramites':", data);
+                    return; // Salir de la función si no es un array
+                }
+
+                listaTramitesEspera.innerHTML = "";
+                data.tramites.forEach(tramite => {
+                    const li = document.createElement("li");
+                    li.classList.add("list-group-item");
+                    li.textContent = `${tramite.sustentante} - ${tramite.nombre}`;
+                    listaTramitesEspera.appendChild(li);
+                });
+
+                document.getElementById("tramitesEspera").style.display = "block";
+                document.getElementById("tramitesProgreso").style.display = "none";
+            })
+            .catch(error => console.error("Error en la solicitud:", error));
+    }
+
+
+    // 6) Función para cargar trámites en proceso
+    function cargarTramitesProgreso() {
+        fetch("/api/tramites/progreso/")
+            .then(response => response.json())
+            .then(data => {
+                listaTramitesProgreso.innerHTML = "";
+
+                if (!data.success) {
+                    console.error("Error al obtener trámites en progreso:", data.error);
+                    return;
+                }
+
+                data.tramites.forEach(tramite => {
+                    const li = document.createElement("li");
+                    li.classList.add("list-group-item");
+                    li.textContent = `${tramite.sustentante} - ${tramite.nombre} (Actualizado: ${tramite.fecha_actualizacion})`;
+                    listaTramitesProgreso.appendChild(li);
+                });
+
+                document.getElementById("tramitesEspera").style.display = "none";
+                document.getElementById("tramitesProgreso").style.display = "block";
+            })
+            .catch(error => console.error("Error en la solicitud:", error));
+    }
+
+    // 7) Función para aprobar trámites
+    window.aprobarTramite = function(id) {
+        fetch(`/api/tramites/aprobar/${id}/`, { method: "POST" })
+            .then(response => response.json())
+            .then(data => {
+                alert("Trámite aprobado");
+                cargarTramitesProgreso();
+            });
+    }
+
+    // 8) Event listeners para botones principales
     btnAspirantes.addEventListener("click", () => {
-        toggleSection(aspirantesSection);
-        if (aspirantesSection.style.display === "block") {
-            cargarListaSustentantes();
-        }
+        showSection(aspirantesSection);
+        cargarListaSustentantes();
     });
 
-    // 5) Alternar visibilidad de la sección de mensajes
     btnMensajes.addEventListener("click", () => {
-        toggleSection(mensajeSection);
+        showSection(mensajeSection);
     });
 
-    // 6) Al hacer click en un aspirante
+    btnTramites.addEventListener("click", () => {
+        showSection(tramitesSection);
+        // Aquí se elimina la llamada automática a cargarTramitesEspera
+    });
+
+    // 9) Event listeners para botones de trámites
+    btnMostrarEspera.addEventListener("click", cargarTramitesEspera);  // Solo se ejecuta cuando se hace clic en el botón de espera
+    btnMostrarProgreso.addEventListener("click", cargarTramitesProgreso);
+    
+    // 10) Al hacer click en un aspirante
     aspirantesList.addEventListener("click", (e) => {
         if (e.target && e.target.matches(".list-group-item")) {
             currentAspiranteId = e.target.getAttribute("data-id");
             const nombreAspirante = e.target.textContent.trim();
 
-            aspirantesSection.style.display = "none";
-            mensajeSection.style.display = "block";
-
+            showSection(mensajeSection);
             nombreAspiranteSpan.textContent = nombreAspirante;
             cargarConversacion(currentAspiranteId);
         }
     });
 
-    // 7) Función para cargar la conversación
+    // 11) Función para cargar la conversación
     function cargarConversacion(sustentanteId) {
         console.log("Cargando conversación para ID:", sustentanteId);
     
-        const conversacionDiv = document.getElementById('conversacion');
-        if (!conversacionDiv) {
-            console.error("Elemento 'conversacion' no encontrado en el DOM");
-            return;
-        }
-    
         fetch(`/obtener_mensajes/${sustentanteId}/`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Error al obtener mensajes");
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    conversacionDiv.innerHTML = ""; // Limpia la conversación anterior
-                    
+                    conversacionDiv.innerHTML = "";
                     data.mensajes.forEach(msg => {
                         const p = document.createElement("p");
                         const remitente = msg.es_de_administrador ? "Admin" : "Sustentante";
@@ -115,17 +174,15 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .catch(error => console.error("Error:", error));
     }
-    
 
-    // 8) Botón Regresar (a la lista de aspirantes)
+    // 12) Botón Regresar
     btnRegresarAspirantes.addEventListener("click", () => {
-        aspirantesSection.style.display = "block";
-        mensajeSection.style.display = "none";
+        showSection(aspirantesSection);
         conversacionDiv.innerHTML = "";
         currentAspiranteId = null;
     });
 
-    // 9) Botón Enviar mensaje
+    // 13) Botón Enviar mensaje
     btnEnviar.addEventListener("click", () => {
         if (!currentAspiranteId) {
             console.warn("No hay aspirante seleccionado");
@@ -139,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function() {
         enviarMensajeAdmin(currentAspiranteId, texto);
     });
 
-    // 10) Función enviarMensajeAdmin
+    // 14) Función enviarMensajeAdmin
     function enviarMensajeAdmin(sustentanteId, mensaje) {
         fetch(`/enviarMensajeAdmin/${sustentanteId}/`, {
             method: "POST",
@@ -149,15 +206,10 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify({ mensaje: mensaje })
         })
-        .then(r => {
-            if (!r.ok) {
-                throw new Error("Error al enviar mensaje admin");
-            }
-            return r.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
-                console.log("Mensaje enviado correctamente");
+                mensajeTexto.value = "";
                 cargarConversacion(sustentanteId);
             } else {
                 console.error("Error al enviar mensaje:", data.error);
@@ -166,8 +218,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(err => console.error(err));
     }
     
-        
-    // 13) Función getCookie para CSRF
+    // 15) Función getCookie para CSRF
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== "") {
@@ -182,7 +233,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         return cookieValue;
     }
-     
 });
 
  // Función para esperar a que el modal se cierre

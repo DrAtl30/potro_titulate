@@ -4,6 +4,7 @@ from django.contrib.auth import login
 from django.views import View
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_GET, require_POST
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse, Http404, HttpResponse
 from rest_framework import status
@@ -721,3 +722,137 @@ class SpecialLogoutView(View):
         response = redirect('/iniciosesion/')
         response.delete_cookie('session_key')
         return response
+    
+
+@require_GET
+def tramites_espera(request):
+    """
+    Vista para obtener trámites en estado de espera
+    """
+    try:
+        # Filtrar trámites con estado "Pendiente" y no aprobados
+        tramites = Tramites.objects.filter(
+            estado_actual='Pendiente',
+            aprobado=False
+        ).select_related('id_sustentante')
+
+        resultados = []
+        for tramite in tramites:
+            sustentante = tramite.id_sustentante
+            resultados.append({
+                'id': tramite.id_tramite,
+                'sustentante': f"{sustentante.nombre} {sustentante.apellido}",  # Corregido apellido
+                'nombre': f"Trámite {tramite.id_tramite} - {tramite.estado_actual}",
+                'fecha_inicio': tramite.fecha_inicio.strftime('%Y-%m-%d'),
+                'progreso': getattr(tramite, 'progreso', 0)  # Si no existe el campo progreso, usa 0
+            })
+
+        return JsonResponse({
+            'success': True,
+            'tramites': resultados
+        })
+        
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())  # Esto imprimirá detalles del error en la terminal
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+
+@require_GET
+def tramites_progreso(request):
+    """
+    Vista para obtener trámites en proceso (aprobados y en progreso)
+    """
+    try:
+        tramites = Tramites.objects.filter(
+            aprobado=True,
+            estado_actual='En Progreso'
+        ).select_related('id_sustentante')
+
+        resultados = []
+        for tramite in tramites:
+            sustentante = tramite.id_sustentante
+            resultados.append({
+                'id': tramite.id_tramite,
+                'sustentante': f"{sustentante.nombre} {sustentante.apellido}",  # Corregido
+                'nombre': f"Trámite {tramite.id_tramite} - En Progreso",
+                'fecha_actualizacion': tramite.fecha_actualizacion.strftime('%Y-%m-%d') if tramite.fecha_actualizacion else None
+            })
+
+        return JsonResponse({
+            'success': True,
+            'tramites': resultados
+        })
+
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())  # Depuración en consola
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@csrf_exempt
+@require_POST
+def aprobar_tramite(request, tramite_id):
+    """
+    Vista para aprobar un trámite específico
+    """
+    try:
+        tramite = Tramites.objects.get(id_tramite=tramite_id)
+
+        if tramite.aprobado:
+            return JsonResponse({'success': False, 'error': 'El trámite ya está aprobado'}, status=400)
+
+        tramite.aprobado = True
+        tramite.estado_actual = 'en progreso'  # Cambia a 'en progreso' al aprobar
+        tramite.save()
+
+        # Opcional: Actualizar documentos asociados
+        Documentos.objects.filter(id_tramite=tramite_id).update(
+            estado_validacion='aceptado'
+        )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Trámite aprobado correctamente',
+            'nuevo_estado': tramite.estado_actual,
+        })
+
+    except Tramites.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())  # Depuración en consola
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@require_GET
+def documentos_tramite(request, tramite_id):
+    """
+    Vista para obtener documentos asociados a un trámite
+    """
+    try:
+        documentos = Documentos.objects.filter(id_tramite=tramite_id)
+
+        resultados = []
+        for doc in documentos:
+            resultados.append({
+                'id': doc.id_documento,
+                'nombre': doc.nombre_documento,
+                'tipo': doc.tipo_documento,
+                'estado': doc.estado_validacion,
+                'fecha_subida': doc.fecha_subida.strftime('%Y-%m-%d') if doc.fecha_subida else None,
+                'comentarios': doc.comentarios_validacion or '',
+                'archivo_url': doc.archivo.url if doc.archivo and hasattr(doc.archivo, 'url') else None
+            })
+
+        return JsonResponse({
+            'success': True,
+            'documentos': resultados
+        })
+
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())  # Depuración en consola
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)

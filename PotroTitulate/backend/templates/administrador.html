@@ -17,6 +17,7 @@
       <nav style="display: flex; gap: 15px;">
         <button id="btnAspirantes" class="btn-plain">Aspirantes</button>
         <button id="btnMensajes" class="btn-plain">Mensajes</button>
+        <button id="btnTramites" class="btn-plain">Revisar Trámites</button>
       </nav>
     </div>
     <div class="header-right" style="display: flex; align-items: center; gap: 2rem;">
@@ -91,6 +92,31 @@
       <textarea id="mensajeTexto" class="form-control" placeholder="Escribe tu mensaje aquí..."></textarea>
       <button id="btnEnviar" class="btn btn-success mt-3">Enviar</button>
     </div>
+
+    <!-- Sección de Trámites -->
+    <div id="tramitesSection" class="container mt-5" style="display: none;">
+      <h3>Revisión de Trámites</h3>
+      <div class="d-flex gap-3 mb-4">
+        <button id="btnMostrarEspera" class="btn btn-primary">Trámites en Espera</button>
+        <button id="btnMostrarProgreso" class="btn btn-primary">Trámites en Proceso</button>
+      </div>
+      
+      <!-- Subsección para Trámites en Espera -->
+      <div id="tramitesEspera" style="display: none;">
+        <h4>Trámites en Espera</h4>
+        <ul id="listaTramitesEspera" class="list-group">
+          <!-- Llenado mediante JS -->
+        </ul>
+      </div>
+      
+      <!-- Subsección para Trámites en Proceso -->
+      <div id="tramitesProgreso" style="display: none;">
+        <h4>Trámites en Proceso</h4>
+        <ul id="listaTramitesProgreso" class="list-group">
+          <!-- Llenado mediante JS -->
+        </ul>
+      </div>
+    </div>
   </main>
 
   <footer>
@@ -102,5 +128,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Tu script de administración (se carga al final para garantizar que admin_obj ya esté definido) -->
   <script src="{% static 'js/scripts-admin.js' %}?v={{ timestamp }}"></script>
+  
 </body>
 </html>

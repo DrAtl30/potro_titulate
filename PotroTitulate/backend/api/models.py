@@ -158,7 +158,6 @@ class Tramites(models.Model):
     estado_actual = models.CharField(max_length=50)
     fecha_inicio = models.DateField()
     fecha_actualizacion = models.DateField()
-    progreso = models.IntegerField()
     aprobado = models.BooleanField(default=False)
 
     class Meta:
