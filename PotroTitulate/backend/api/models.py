@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 
@@ -26,6 +27,19 @@ class Documentos(models.Model):
     estado_validacion = models.CharField(max_length=50)
     comentarios_validacion = models.TextField(blank=True, null=True)
     archivo = models.FileField(upload_to='documentos/', null=True, blank=True)
+    # Campos nuevos para rechazo de documentos
+    motivo_rechazo = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name="Motivo de rechazo del documento"
+    )
+    revisado_por = models.ForeignKey(
+        'auth.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='documentos_revisados'
+    )
 
 
     class Meta:
@@ -159,7 +173,66 @@ class Tramites(models.Model):
     fecha_inicio = models.DateField()
     fecha_actualizacion = models.DateField()
     aprobado = models.BooleanField(default=False)
+    # Campos nuevos para rechazo
+    motivo_rechazo = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name="Motivo de rechazo"
+    )
+    fecha_rechazo = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Fecha de rechazo"
+    )
+    rechazado_por = models.ForeignKey(
+        'auth.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='tramites_rechazados'
+    )
+    
+    # Campos para seguimiento
+    ultima_actualizacion = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Última actualización"
+    )
 
     class Meta:
         managed = False
         db_table = 'tramites'
+        indexes = [
+            models.Index(fields=['estado_actual']),
+            models.Index(fields=['aprobado']),
+            models.Index(fields=['fecha_rechazo']),
+        ]
+
+class HistorialTramite(models.Model):
+    """
+    Registro detallado de todas las acciones importantes realizadas sobre un trámite
+    """
+    id_historial = models.AutoField(primary_key=True)
+    id_tramite = models.ForeignKey(
+        'Tramites', 
+        on_delete=models.CASCADE,
+        related_name='historial'
+    )
+    accion = models.CharField(max_length=50)  # Ej: "Aprobado", "Rechazado", "Corrección"
+    detalles = models.TextField()
+    fecha_accion = models.DateTimeField(default=timezone.now)
+    usuario = models.ForeignKey(
+        'auth.User',  # Asume que usas el modelo User de Django
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        managed = False
+        db_table = 'historial_tramites'
+        ordering = ['-fecha_accion']
+        verbose_name = 'Historial de Trámite'
+        verbose_name_plural = 'Historial de Trámites'
+
+    def __str__(self):
+        return f"{self.id_tramite} - {self.accion} ({self.fecha_accion.strftime('%Y-%m-%d')})"

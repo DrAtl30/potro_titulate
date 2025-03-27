@@ -20,6 +20,9 @@ from django.utils import timezone
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
+from django.db import transaction
+import logging
+logger = logging.getLogger(__name__)  # Esto obtiene un logger con el nombre del módulo actual
 import json
 import os
 
@@ -48,7 +51,6 @@ def perfilUsuario(request):
         opcion_titulacion = tramite.id_opcion.nombre_opcion if tramite and tramite.id_opcion else None
         documentos = Documentos.objects.filter(id_sustentante=sustentante)
         opciones_titulacion = OpcionTitulacion.objects.all()
-        progreso = tramite.progreso if tramite else 0
         aprobado = tramite.aprobado if tramite else False
 
         return render(request, 'perfilDeUsuario.html', {
@@ -57,7 +59,6 @@ def perfilUsuario(request):
             'documentos': documentos,
             'opcion_titulacion': opcion_titulacion,
             'opciones_titulacion': opciones_titulacion,
-            'progreso': progreso,
             'id_tramite': tramite.id_tramite if tramite else None, # Aquí pasamos el id_tramite
             'id_sustentante': sustentante_id, 
             'aprobado' : aprobado
@@ -162,7 +163,6 @@ def enviar_solicitud(request):
                 estado_actual='Pendiente',
                 fecha_inicio=timezone.now(),
                 fecha_actualizacion=timezone.now(),
-                progreso=0
             )
 
             sustentante.id_opcion = opcion_titulacion
@@ -734,17 +734,20 @@ def tramites_espera(request):
         tramites = Tramites.objects.filter(
             estado_actual='Pendiente',
             aprobado=False
-        ).select_related('id_sustentante')
+        ).select_related('id_sustentante', 'id_opcion')  # Agregado select_related para id_opcion
 
         resultados = []
         for tramite in tramites:
             sustentante = tramite.id_sustentante
+            nombre_opcion = tramite.id_opcion.nombre_opcion if tramite.id_opcion else "Sin opción especificada"
+            
             resultados.append({
-                'id': tramite.id_tramite,
-                'sustentante': f"{sustentante.nombre} {sustentante.apellido}",  # Corregido apellido
+                'id_tramite': tramite.id_tramite,
+                'sustentante': f"{sustentante.nombre} {sustentante.apellido}",
                 'nombre': f"Trámite {tramite.id_tramite} - {tramite.estado_actual}",
                 'fecha_inicio': tramite.fecha_inicio.strftime('%Y-%m-%d'),
-                'progreso': getattr(tramite, 'progreso', 0)  # Si no existe el campo progreso, usa 0
+                'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,  # Agregado id_opcion
+                'nombre_opcion': nombre_opcion  # Agregado nombre_opcion
             })
 
         return JsonResponse({
@@ -761,7 +764,6 @@ def tramites_espera(request):
         }, status=500)
 
 
-
 @require_GET
 def tramites_progreso(request):
     """
@@ -771,16 +773,21 @@ def tramites_progreso(request):
         tramites = Tramites.objects.filter(
             aprobado=True,
             estado_actual='En Progreso'
-        ).select_related('id_sustentante')
+        ).select_related('id_sustentante', 'id_opcion')  # Agregado select_related para id_opcion
 
         resultados = []
         for tramite in tramites:
             sustentante = tramite.id_sustentante
+            # Obtener el nombre de la opción de titulación si existe la relación
+            nombre_opcion = tramite.id_opcion.nombre_opcion if tramite.id_opcion else "Sin opción especificada"
+            
             resultados.append({
-                'id': tramite.id_tramite,
-                'sustentante': f"{sustentante.nombre} {sustentante.apellido}",  # Corregido
+                'id_tramite': tramite.id_tramite,
+                'sustentante': f"{sustentante.nombre} {sustentante.apellido}",
                 'nombre': f"Trámite {tramite.id_tramite} - En Progreso",
-                'fecha_actualizacion': tramite.fecha_actualizacion.strftime('%Y-%m-%d') if tramite.fecha_actualizacion else None
+                'fecha_actualizacion': tramite.fecha_actualizacion.strftime('%Y-%m-%d') if tramite.fecha_actualizacion else None,
+                'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,  # Agregado id_opcion
+                'nombre_opcion': nombre_opcion  # Agregado nombre_opcion
             })
 
         return JsonResponse({
@@ -826,7 +833,66 @@ def aprobar_tramite(request, tramite_id):
         import traceback
         print(traceback.format_exc())  # Depuración en consola
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    
+@csrf_exempt
+@require_POST
+def rechazar_tramite(request, tramite_id):
+    try:
+        with transaction.atomic():
+            tramite = Tramites.objects.select_for_update().get(id_tramite=tramite_id)
+            
+            if tramite.estado_actual == 'Rechazado':
+                return JsonResponse({
+                    'success': False, 
+                    'error': 'El trámite ya fue rechazado anteriormente'
+                }, status=400)
 
+            motivo = request.POST.get('motivo_rechazo', 'Rechazado por el administrador')
+            
+            # Actualizar trámite
+            tramite.aprobado = False
+            tramite.estado_actual = 'Rechazado'
+            tramite.motivo_rechazo = motivo
+            tramite.fecha_rechazo = timezone.now()
+            tramite.rechazado_por = request.user if request.user.is_authenticated else None
+            tramite.save()
+
+            # Registrar en historial
+            HistorialTramite.objects.create(
+                id_tramite=tramite,
+                accion='Rechazado',
+                detalles=f"Motivo: {motivo}",
+                usuario=request.user if request.user.is_authenticated else None
+            )
+
+            # Actualizar documentos relacionados (opcional)
+            Documentos.objects.filter(id_tramite=tramite).update(
+                estado_validacion='rechazado',
+                motivo_rechazo=motivo,
+                revisado_por=request.user if request.user.is_authenticated else None
+            )
+
+            return JsonResponse({
+                'success': True,
+                'message': 'Trámite rechazado con registro completo',
+                'data': {
+                    'id_tramite': tramite.id_tramite,
+                    'estado': tramite.estado_actual,
+                    'fecha_rechazo': tramite.fecha_rechazo.isoformat(),
+                    'motivo': motivo[:200],  # Versión resumida para respuesta
+                    'usuario': request.user.username if request.user.is_authenticated else 'Sistema'
+                }
+            })
+
+    except Tramites.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
+    except Exception as e:
+        logger.error(f"Error al rechazar trámite {tramite_id}: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'error': 'Error interno al procesar el rechazo'
+        }, status=500)
+    
 @require_GET
 def documentos_tramite(request, tramite_id):
     """

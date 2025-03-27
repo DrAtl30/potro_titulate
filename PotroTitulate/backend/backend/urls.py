@@ -63,7 +63,7 @@ urlpatterns = [
     path('api/tramites/progreso/', tramites_progreso, name='tramites_progreso'),
     path('api/tramites/aprobar/<int:tramite_id>/', aprobar_tramite, name='aprobar_tramite'),
     path('api/tramites/documentos/<int:tramite_id>/', documentos_tramite, name='documentos_tramite'),
-
+    path('api/tramites/rechazar/<int:tramite_id>/', rechazar_tramite, name='rechazar_tramite'),
 
       # mensajeria 
     # 1) GET /obtenerMensajes/7/ => ver mensajes de ID=7

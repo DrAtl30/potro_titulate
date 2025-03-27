@@ -22,7 +22,32 @@ document.addEventListener("DOMContentLoaded", function() {
     const listaTramitesEspera = document.getElementById("listaTramitesEspera");
     const listaTramitesProgreso = document.getElementById("listaTramitesProgreso");
 
+    // Modal de confirmación
+    const modalConfirmacion = document.createElement('div');
+    modalConfirmacion.className = 'modal fade';
+    modalConfirmacion.id = 'confirmacionModal';
+    modalConfirmacion.innerHTML = `
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar acción</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage">¿Estás seguro de realizar esta acción?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmarAccion">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modalConfirmacion);
+
     let currentAspiranteId = null;
+    let currentTramiteId = null;
+    let currentAction = null; // 'aprobar' o 'rechazar'
 
     // 2) Función para ocultar todas las secciones
     function hideAllSections() {
@@ -61,23 +86,67 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(err => console.error("Error fetch listaSustentantes:", err));
     }
 
-    // 5) Función para cargar trámites en espera
+    // 5) Función para cargar trámites en espera (modificada)
     function cargarTramitesEspera() {
         fetch("/api/tramites/espera/")
             .then(response => response.json())
             .then(data => {
-                // Asegurarse de que 'data.tramites' sea un array
+                console.log("Datos recibidos:", data);  // ← Verifica esto en la consola
+
                 if (!Array.isArray(data.tramites)) {
                     console.error("La respuesta no contiene un array en la propiedad 'tramites':", data);
-                    return; // Salir de la función si no es un array
+                    return;
                 }
 
                 listaTramitesEspera.innerHTML = "";
                 data.tramites.forEach(tramite => {
+                    console.log("Trámite:", tramite);  // ← Verifica cada trámite
+
                     const li = document.createElement("li");
-                    li.classList.add("list-group-item");
-                    li.textContent = `${tramite.sustentante} - ${tramite.nombre}`;
+                    li.classList.add("list-group-item", "tramite-item");
+                    li.setAttribute("data-id", tramite.id_tramite);
+                    li.setAttribute("data-opcion", tramite.id_opcion);
+                    
+                    li.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="font-weight-bold">${tramite.sustentante}</span>
+                                <small class="d-block text-muted">${tramite.nombre}</small>
+                                <small class="d-block">Inicio: ${tramite.fecha_inicio}</small>
+                            </div>
+                            <span class="badge badge-opcion-titulacion">
+                                ${tramite.nombre_opcion}
+                            </span>
+                        </div>
+                        <div class="tramite-acciones mt-2 text-center" style="display: none;">
+                            <button class="btn btn-success btn-sm mr-2" 
+                                    onclick="mostrarConfirmacion(${tramite.id_tramite}, 'aprobar')">
+                                <i class="fas fa-check"></i> Aprobar
+                            </button>
+                            <button class="btn btn-danger btn-sm" 
+                                    onclick="mostrarConfirmacion(${tramite.id_tramite}, 'rechazar')">
+                                <i class="fas fa-times"></i> Rechazar
+                            </button>
+                        </div>
+                    `;
                     listaTramitesEspera.appendChild(li);
+                });    
+
+                // Evento para mostrar acciones al hacer click en un trámite
+                document.querySelectorAll('.tramite-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        // Evitar que se activen los botones cuando se hace click en ellos
+                        if (e.target.tagName === 'BUTTON') return;
+                        
+                        // Ocultar todas las acciones primero
+                        document.querySelectorAll('.tramite-acciones').forEach(accion => {
+                            accion.style.display = 'none';
+                        });
+                        
+                        // Mostrar acciones del item clickeado
+                        const acciones = item.querySelector('.tramite-acciones');
+                        acciones.style.display = acciones.style.display === 'none' ? 'block' : 'none';
+                    });
                 });
 
                 document.getElementById("tramitesEspera").style.display = "block";
@@ -85,7 +154,6 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .catch(error => console.error("Error en la solicitud:", error));
     }
-
 
     // 6) Función para cargar trámites en proceso
     function cargarTramitesProgreso() {
@@ -112,17 +180,47 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => console.error("Error en la solicitud:", error));
     }
 
-    // 7) Función para aprobar trámites
-    window.aprobarTramite = function(id) {
-        fetch(`/api/tramites/aprobar/${id}/`, { method: "POST" })
-            .then(response => response.json())
-            .then(data => {
-                alert("Trámite aprobado");
-                cargarTramitesProgreso();
-            });
-    }
+    // Función para mostrar el modal de confirmación (nueva)
+    window.mostrarConfirmacion = function(tramiteId, accion) {
+        currentTramiteId = tramiteId;
+        currentAction = accion;
+        
+        const modalMessage = document.getElementById('modalMessage');
+        modalMessage.textContent = `¿Estás seguro de que deseas ${accion} este trámite?`;
+        
+        $('#confirmacionModal').modal('show');
+    };
 
-    // 8) Event listeners para botones principales
+    // Evento para el botón de confirmar en el modal (nuevo)
+    document.getElementById('confirmarAccion').addEventListener('click', function() {
+        $('#confirmacionModal').modal('hide');
+        
+        const endpoint = currentAction === 'aprobar' 
+            ? `/api/tramites/aprobar/${currentTramiteId}/` 
+            : `/api/tramites/rechazar/${currentTramiteId}/`;
+            
+        fetch(endpoint, { 
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken")
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`Trámite ${currentAction === 'aprobar' ? 'aprobado' : 'rechazado'} correctamente`);
+                cargarTramitesEspera();
+            } else {
+                alert(`Error al ${currentAction} el trámite: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Ocurrió un error al procesar la solicitud");
+        });
+    });
+
+    // 7) Event listeners para botones principales
     btnAspirantes.addEventListener("click", () => {
         showSection(aspirantesSection);
         cargarListaSustentantes();
@@ -134,14 +232,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     btnTramites.addEventListener("click", () => {
         showSection(tramitesSection);
-        // Aquí se elimina la llamada automática a cargarTramitesEspera
     });
 
-    // 9) Event listeners para botones de trámites
-    btnMostrarEspera.addEventListener("click", cargarTramitesEspera);  // Solo se ejecuta cuando se hace clic en el botón de espera
+    // 8) Event listeners para botones de trámites
+    btnMostrarEspera.addEventListener("click", cargarTramitesEspera);
     btnMostrarProgreso.addEventListener("click", cargarTramitesProgreso);
     
-    // 10) Al hacer click en un aspirante
+    // 9) Al hacer click en un aspirante
     aspirantesList.addEventListener("click", (e) => {
         if (e.target && e.target.matches(".list-group-item")) {
             currentAspiranteId = e.target.getAttribute("data-id");
@@ -153,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // 11) Función para cargar la conversación
+    // 10) Función para cargar la conversación
     function cargarConversacion(sustentanteId) {
         console.log("Cargando conversación para ID:", sustentanteId);
     
@@ -175,14 +272,14 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => console.error("Error:", error));
     }
 
-    // 12) Botón Regresar
+    // 11) Botón Regresar
     btnRegresarAspirantes.addEventListener("click", () => {
         showSection(aspirantesSection);
         conversacionDiv.innerHTML = "";
         currentAspiranteId = null;
     });
 
-    // 13) Botón Enviar mensaje
+    // 12) Botón Enviar mensaje
     btnEnviar.addEventListener("click", () => {
         if (!currentAspiranteId) {
             console.warn("No hay aspirante seleccionado");
@@ -196,7 +293,7 @@ document.addEventListener("DOMContentLoaded", function() {
         enviarMensajeAdmin(currentAspiranteId, texto);
     });
 
-    // 14) Función enviarMensajeAdmin
+    // 13) Función enviarMensajeAdmin
     function enviarMensajeAdmin(sustentanteId, mensaje) {
         fetch(`/enviarMensajeAdmin/${sustentanteId}/`, {
             method: "POST",
@@ -218,7 +315,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(err => console.error(err));
     }
     
-    // 15) Función getCookie para CSRF
+    // 14) Función getCookie para CSRF
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== "") {

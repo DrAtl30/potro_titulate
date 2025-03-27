@@ -1,0 +1,15 @@
+Internal Server Error: /enviarSolicitud/
+"POST /enviarSolicitud/ HTTP/1.1" 500 68
+Internal Server Error: /enviarSolicitud/
+"POST /enviarSolicitud/ HTTP/1.1" 500 68
+Internal Server Error: /perfilUsuario/
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/api/views.py", line 54, in perfilUsuario
+    progreso = tramite.progreso if tramite else 0
+               ^^^^^^^^^^^^^^^^
+AttributeError: 'Tramites' object has no attribute 'progreso'
+"GET /perfilUsuario/ HTTP/1.1" 500 73874

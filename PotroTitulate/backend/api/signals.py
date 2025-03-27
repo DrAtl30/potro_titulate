@@ -3,6 +3,18 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User  # Cambia a Sustentante si usas ese modelo
 from django.conf import settings
+from .models import Tramites, HistorialTramite
+
+
+
+@receiver(post_save, sender=Tramites)
+def registrar_cambios(sender, instance, created, **kwargs):
+    if not created:
+        HistorialTramite.objects.create(
+            id_tramite=instance,
+            accion='Actualización',
+            detalles=f"Cambio de estado a {instance.estado_actual}"
+        )
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def close_old_sessions(sender, instance, created, **kwargs):

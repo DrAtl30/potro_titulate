@@ -218,3 +218,11 @@ footer img {
 #btnEnviar {
     width: 100%;
 }
+
+.badge-opcion-titulacion {
+    color: #212529 !important; /* Color de texto oscuro */
+    background-color: #e3f2fd !important; /* Fondo azul claro */
+    font-size: 0.85rem;
+    padding: 0.35em 0.65em;
+    border: 1px solid #bbdefb;
+}
