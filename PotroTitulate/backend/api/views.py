@@ -772,7 +772,7 @@ def tramites_progreso(request):
     try:
         tramites = Tramites.objects.filter(
             aprobado=True,
-            estado_actual='En Progreso'
+            estado_actual='en progreso'
         ).select_related('id_sustentante', 'id_opcion')  # Agregado select_related para id_opcion
 
         resultados = []
@@ -838,6 +838,9 @@ def aprobar_tramite(request, tramite_id):
 @require_POST
 def rechazar_tramite(request, tramite_id):
     try:
+        data = json.loads(request.body)
+        motivo = data.get('motivo_rechazo', 'Rechazado por el administrador')
+        
         with transaction.atomic():
             tramite = Tramites.objects.select_for_update().get(id_tramite=tramite_id)
             
@@ -847,8 +850,6 @@ def rechazar_tramite(request, tramite_id):
                     'error': 'El trámite ya fue rechazado anteriormente'
                 }, status=400)
 
-            motivo = request.POST.get('motivo_rechazo', 'Rechazado por el administrador')
-            
             # Actualizar trámite
             tramite.aprobado = False
             tramite.estado_actual = 'Rechazado'
@@ -865,25 +866,14 @@ def rechazar_tramite(request, tramite_id):
                 usuario=request.user if request.user.is_authenticated else None
             )
 
-            # Actualizar documentos relacionados (opcional)
-            Documentos.objects.filter(id_tramite=tramite).update(
-                estado_validacion='rechazado',
-                motivo_rechazo=motivo,
-                revisado_por=request.user if request.user.is_authenticated else None
-            )
-
             return JsonResponse({
                 'success': True,
-                'message': 'Trámite rechazado con registro completo',
-                'data': {
-                    'id_tramite': tramite.id_tramite,
-                    'estado': tramite.estado_actual,
-                    'fecha_rechazo': tramite.fecha_rechazo.isoformat(),
-                    'motivo': motivo[:200],  # Versión resumida para respuesta
-                    'usuario': request.user.username if request.user.is_authenticated else 'Sistema'
-                }
+                'message': 'Trámite rechazado correctamente',
+                'motivo': motivo
             })
 
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Datos inválidos'}, status=400)
     except Tramites.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
     except Exception as e:
@@ -922,3 +912,64 @@ def documentos_tramite(request, tramite_id):
         import traceback
         print(traceback.format_exc())  # Depuración en consola
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@require_GET
+def obtener_motivo_rechazo(request, tramite_id):
+    try:
+        tramite = Tramites.objects.get(id_tramite=tramite_id)
+        return JsonResponse({
+            'success': True,
+            'motivo': tramite.motivo_rechazo if tramite.motivo_rechazo else ""
+        })
+    except Tramites.DoesNotExist:
+        return JsonResponse({'success': False}, status=404)
+
+@require_POST
+@csrf_exempt
+def validar_documento(request, documento_id):
+    """
+    Vista para validar (aprobar/rechazar) un documento
+    """
+    try:
+        documento = Documentos.objects.get(id_documento=documento_id)
+        data = json.loads(request.body)
+        
+        # Validar acción
+        accion = data.get('accion')
+        if accion not in ['aceptado', 'rechazado']:
+            return JsonResponse({'success': False, 'error': 'Acción no válida'}, status=400)
+        
+        # Actualizar documento
+        documento.estado_validacion = accion
+        documento.comentarios_validacion = data.get('comentario', '')
+        documento.fecha_validacion = timezone.now()
+        documento.validado_por = request.user if request.user.is_authenticated else None
+        documento.save()
+        
+        # Actualizar estado del trámite si es necesario
+        actualizar_estado_tramite(documento.id_tramite)
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'Documento {accion} correctamente',
+            'tramite_id': documento.id_tramite.id_tramite
+        })
+        
+    except Documentos.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Documento no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+def actualizar_estado_tramite(tramite):
+    """
+    Función auxiliar para actualizar estado del trámite
+    según sus documentos
+    """
+    documentos = tramite.documentos_set.all()
+    
+    if all(doc.estado_validacion == 'aceptado' for doc in documentos):
+        tramite.estado_actual = 'Documentación completa'
+    elif any(doc.estado_validacion == 'rechazado' for doc in documentos):
+        tramite.estado_actual = 'Documentación incompleta'
+    
+    tramite.save()

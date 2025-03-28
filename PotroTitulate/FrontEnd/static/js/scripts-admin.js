@@ -22,28 +22,154 @@ document.addEventListener("DOMContentLoaded", function() {
     const listaTramitesEspera = document.getElementById("listaTramitesEspera");
     const listaTramitesProgreso = document.getElementById("listaTramitesProgreso");
 
-    // Modal de confirmación
+    // Modal de confirmación mejorado
+    // Modal de confirmación mejorado
     const modalConfirmacion = document.createElement('div');
     modalConfirmacion.className = 'modal fade';
     modalConfirmacion.id = 'confirmacionModal';
+    modalConfirmacion.setAttribute('tabindex', '-1');
+    modalConfirmacion.setAttribute('aria-hidden', 'true');
     modalConfirmacion.innerHTML = `
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirmar acción</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title" id="modalTitle">Confirmar acción</h5>
+                    <button type="button" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <p id="modalMessage">¿Estás seguro de realizar esta acción?</p>
+                    <div id="motivoRechazoContainer" style="display: none;">
+                        <div class="form-group mt-3">
+                            <label for="motivoRechazoInput">Motivo de rechazo:</label>
+                            <textarea 
+                                id="motivoRechazoInput" 
+                                class="form-control" 
+                                rows="3" 
+                                placeholder="Ingrese el motivo de rechazo"></textarea>
+                            <small class="text-muted">Puede modificar el motivo existente</small>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" id="cancelarAccion">Cancelar</button>
                     <button type="button" class="btn btn-primary" id="confirmarAccion">Confirmar</button>
                 </div>
             </div>
         </div>
     `;
     document.body.appendChild(modalConfirmacion);
+
+    // Sistema de manejo de modales unificado
+    const ModalManager = {
+        currentModal: null,
+        
+        show: function(modalElement) {
+            this.hide(); // Cerrar cualquier modal abierto
+            this.currentModal = modalElement;
+            modalElement.classList.add('show');
+            modalElement.style.display = 'block';
+            document.body.classList.add('modal-open');
+            
+            // Agregar backdrop
+            const backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            document.body.appendChild(backdrop);
+        },
+        
+        hide: function() {
+            if (this.currentModal) {
+                this.currentModal.classList.remove('show');
+                this.currentModal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                
+                // Remover backdrop
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
+                
+                this.currentModal = null;
+            }
+        },
+        
+        setupModalEvents: function(modalElement) {
+            // Botón de cerrar (X)
+            modalElement.querySelector('.close').addEventListener('click', () => this.hide());
+            
+            // Botón Cancelar
+            const cancelBtn = modalElement.querySelector('#cancelarAccion');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => this.hide());
+            }
+            
+            // Clic fuera del modal
+            modalElement.addEventListener('click', (e) => {
+                if (e.target === modalElement) {
+                    this.hide();
+                }
+            });
+        }
+    };
+
+    // Configurar eventos para el modal de confirmación
+    ModalManager.setupModalEvents(modalConfirmacion);
+
+    // Función para mostrar confirmación con motivo de rechazo (actualizada)
+    window.mostrarConfirmacion = function(tramiteId, accion, motivoActual = '') {
+        const modal = document.getElementById('confirmacionModal');
+        const motivoContainer = document.getElementById('motivoRechazoContainer');
+        const motivoInput = document.getElementById('motivoRechazoInput');
+        
+        // Configurar según el tipo de acción
+        if (accion === 'rechazar') {
+            document.getElementById('modalTitle').textContent = 'Confirmar rechazo';
+            document.getElementById('modalMessage').textContent = '¿Estás seguro de rechazar este trámite?';
+            motivoContainer.style.display = 'block';
+            motivoInput.value = motivoActual || 'No cumple con los requisitos establecidos';
+        } else {
+            document.getElementById('modalTitle').textContent = 'Confirmar aprobación';
+            document.getElementById('modalMessage').textContent = '¿Estás seguro de aprobar este trámite?';
+            motivoContainer.style.display = 'none';
+        }
+
+        // Configurar acción del botón confirmar
+        const confirmBtn = document.getElementById('confirmarAccion');
+        confirmBtn.onclick = function() {
+            const data = {
+                motivo_rechazo: accion === 'rechazar' ? motivoInput.value.trim() : ''
+            };
+
+            fetch(`/api/tramites/${accion}/${tramiteId}/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"),
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    ModalManager.hide();
+                    const mensaje = accion === 'aprobar' 
+                        ? 'Trámite aprobado correctamente' 
+                        : 'Trámite rechazado correctamente';
+                    
+                    alert(mensaje);
+                    cargarTramitesEspera();
+                } else {
+                    throw new Error(data.error || 'Error desconocido');
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert(`Error al ${accion} el trámite: ${error.message}`);
+            });
+        };
+
+        // Mostrar modal usando el manager
+        ModalManager.show(modal);
+    };
 
     let currentAspiranteId = null;
     let currentTramiteId = null;
@@ -155,70 +281,412 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => console.error("Error en la solicitud:", error));
     }
 
-    // 6) Función para cargar trámites en proceso
+    //6 Función para cargar trámites en progreso
     function cargarTramitesProgreso() {
+        // Mostrar indicador de carga
+        listaTramitesProgreso.innerHTML = `
+            <li class="list-group-item text-center">
+                <i class="fas fa-spinner fa-spin mr-2"></i>
+                Cargando trámites en progreso...
+            </li>
+        `;
+    
         fetch("/api/tramites/progreso/")
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
-                listaTramitesProgreso.innerHTML = "";
-
+                // Verificación básica de estructura de datos
+                if (!data || typeof data !== 'object') {
+                    throw new Error('Respuesta no válida del servidor');
+                }
+    
                 if (!data.success) {
-                    console.error("Error al obtener trámites en progreso:", data.error);
+                    console.error("Error en la respuesta:", data.error);
+                    mostrarErrorEnLista("Error al obtener trámites: " + (data.error || 'Error desconocido'));
                     return;
                 }
-
+    
+                if (!Array.isArray(data.tramites)) {
+                    throw new Error('Formato de datos inesperado: se esperaba array en data.tramites');
+                }
+    
+                // Limpiar lista
+                listaTramitesProgreso.innerHTML = "";
+    
+                // Procesar cada trámite
                 data.tramites.forEach(tramite => {
-                    const li = document.createElement("li");
-                    li.classList.add("list-group-item");
-                    li.textContent = `${tramite.sustentante} - ${tramite.nombre} (Actualizado: ${tramite.fecha_actualizacion})`;
-                    listaTramitesProgreso.appendChild(li);
+                    try {
+                        // Validar campos mínimos requeridos
+                        const tramiteId = tramite.id_tramite ? tramite.id_tramite.toString() : 'nd';
+                        const nombreSustentante = tramite.sustentante || 'Sustentante no disponible';
+                        const nombreTramite = tramite.nombre || 'Trámite sin nombre';
+                        const fechaActualizacion = tramite.fecha_actualizacion || 'Fecha no disponible';
+                        const nombreOpcion = tramite.nombre_opcion || 'Opción no especificada';
+    
+                        const li = document.createElement("li");
+                        li.classList.add("list-group-item", "tramite-item");
+                        li.setAttribute("data-id", tramiteId);
+                        li.setAttribute("data-opcion", tramite.id_opcion || '');
+                        li.setAttribute("data-sustentante", tramite.id_sustentante || '');
+                        
+                        li.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="font-weight-bold">${nombreSustentante}</span>
+                                    <small class="d-block text-muted">${nombreTramite}</small>
+                                    <small class="d-block">Actualizado: ${fechaActualizacion}</small>
+                                </div>
+                                <div>
+                                    <span class="badge badge-opcion-titulacion">
+                                        ${nombreOpcion}
+                                    </span>
+                                    <span class="badge badge-success ml-2">
+                                        ${tramite.estado_actual || 'En progreso'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="documentos-container mt-2" style="display: none;">
+                                <h6 class="mt-3">Documentos enviados:</h6>
+                                <ul class="list-group documentos-list" id="documentos-${tramiteId}">
+                                    <li class="list-group-item text-center text-muted">
+                                        <i class="fas fa-spinner fa-spin mr-2"></i>
+                                        Cargando documentos...
+                                    </li>
+                                </ul>
+                            </div>
+                        `;
+                        listaTramitesProgreso.appendChild(li);
+    
+                    } catch (error) {
+                        console.error("Error al procesar trámite:", error, tramite);
+                        // Mostrar al menos el ID del trámite con error
+                        const errorItem = document.createElement("li");
+                        errorItem.classList.add("list-group-item", "text-danger");
+                        errorItem.innerHTML = `
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            Error al cargar trámite ${tramite.id_tramite || 'ID desconocido'}
+                        `;
+                        listaTramitesProgreso.appendChild(errorItem);
+                    }
                 });
-
+    
+                // Configurar eventos para mostrar documentos
+                setupDocumentosEvents();
+    
+                // Mostrar sección
                 document.getElementById("tramitesEspera").style.display = "none";
                 document.getElementById("tramitesProgreso").style.display = "block";
+    
             })
-            .catch(error => console.error("Error en la solicitud:", error));
+            .catch(error => {
+                console.error("Error al cargar trámites:", error);
+                mostrarErrorEnLista("Error de conexión: " + error.message);
+            });
+    }
+    
+    // Función auxiliar para configurar eventos de documentos
+    function setupDocumentosEvents() {
+        document.querySelectorAll('.tramite-item').forEach(item => {
+            item.addEventListener('click', async (e) => {
+                // Evitar que se activen los eventos en elementos hijos (botones, enlaces, etc.)
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('button, a')) {
+                    return;
+                }
+                
+                const tramiteId = item.getAttribute('data-id');
+                const sustentanteId = item.getAttribute('data-sustentante');
+                const documentosContainer = item.querySelector('.documentos-container');
+                
+                // Alternar visibilidad
+                const mostrarDocumentos = documentosContainer.style.display === 'none';
+                documentosContainer.style.display = mostrarDocumentos ? 'block' : 'none';
+                
+                // Cargar documentos solo si se están mostrando y no están ya cargados
+                if (mostrarDocumentos) {
+                    const documentosList = item.querySelector('.documentos-list');
+                    if (documentosList.children.length === 1 && 
+                        documentosList.firstElementChild.textContent.includes('Cargando')) {
+                        await cargarDocumentosTramite(tramiteId, sustentanteId, item);
+                    }
+                }
+            });
+        });
+    }
+    
+    // Función auxiliar para mostrar errores en la lista
+    function mostrarErrorEnLista(mensaje) {
+        listaTramitesProgreso.innerHTML = `
+            <li class="list-group-item text-center text-danger">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                ${mensaje}
+                <button class="btn btn-sm btn-outline-primary ml-3" onclick="cargarTramitesProgreso()">
+                    <i class="fas fa-sync-alt mr-1"></i> Reintentar
+                </button>
+            </li>
+        `;
     }
 
-    // Función para mostrar el modal de confirmación (nueva)
-    window.mostrarConfirmacion = function(tramiteId, accion) {
-        currentTramiteId = tramiteId;
-        currentAction = accion;
+    // Función para cargar documentos de un trámite 
+    async function cargarDocumentosTramite(tramiteId, sustentanteId, parentElement) {
+        const documentosList = parentElement.querySelector(`#documentos-${tramiteId}`);
         
-        const modalMessage = document.getElementById('modalMessage');
-        modalMessage.textContent = `¿Estás seguro de que deseas ${accion} este trámite?`;
+        try {
+            // Mostrar estado de carga
+            documentosList.innerHTML = `
+                <li class="list-group-item text-center">
+                    <i class="fas fa-spinner fa-spin mr-2"></i>
+                    Cargando documentos...
+                </li>
+            `;
+    
+            const response = await fetch(`/api/tramites/documentos/${tramiteId}/`);
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+    
+            const data = await response.json();
+    
+            if (!data.success || !Array.isArray(data.documentos)) {
+                throw new Error('Estructura de datos inesperada');
+            }
+    
+            documentosList.innerHTML = "";
+    
+            if (data.documentos.length === 0) {
+                documentosList.innerHTML = `
+                    <li class="list-group-item text-center text-muted">
+                        No se encontraron documentos asociados
+                    </li>
+                `;
+                return;
+            }
+    
+            // Procesar cada documento
+            data.documentos.forEach(doc => {
+                try {
+                    const docItem = document.createElement("li");
+                    
+                    // Clases base
+                    const clases = [
+                        "list-group-item", 
+                        "d-flex", 
+                        "justify-content-between", 
+                        "align-items-center"
+                    ];
+                    
+                    // Añadir clase según estado solo si existe
+                    if (doc.estado === 'rechazado') {
+                        clases.push("list-group-item-danger");
+                    } else if (doc.estado === 'aceptado') {
+                        clases.push("list-group-item-success");
+                    }
+                    
+                    // Filtrar clases vacías y unir
+                    docItem.className = clases.filter(c => c).join(" ");
+                    
+                    // Obtener icono seguro
+                    const icono = obtenerIconoDocumentoSeguro(doc.tipo);
+                    const estadoBadge = obtenerBadgeEstadoSeguro(doc.estado);
+                    
+                    // Manejar valores posibles nulos
+                    const nombreDoc = doc.nombre || 'Documento sin nombre';
+                    const fechaSubida = doc.fecha_subida ? `Subido: ${doc.fecha_subida}` : '';
+                    const comentarios = doc.comentarios ? `<small class="text-muted d-block">${doc.comentarios}</small>` : '';
+                    const archivoUrl = doc.archivo_url || '#';
+                    
+                    docItem.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <div class="mr-3" style="font-size: 1.5rem;">
+                                ${icono}
+                            </div>
+                            <div>
+                                <strong>${nombreDoc}</strong>
+                                ${comentarios}
+                                ${fechaSubida ? `<small class="text-muted d-block">${fechaSubida}</small>` : ''}
+                            </div>
+                        </div>
+                        <div>
+                            ${estadoBadge}
+                            <a href="${archivoUrl}" target="_blank" 
+                               class="btn btn-sm btn-outline-primary ml-2"
+                               title="Ver documento">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            ${doc.estado === 'pendiente' ? `
+                            <button class="btn btn-sm btn-outline-success ml-2" 
+                                    onclick="validarDocumento(${doc.id || 'null'}, 'aceptado', ${tramiteId})"
+                                    title="Aprobar documento">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger ml-1" 
+                                    onclick="validarDocumento(${doc.id || 'null'}, 'rechazado', ${tramiteId})"
+                                    title="Rechazar documento">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            ` : ''}
+                        </div>
+                    `;
+                    documentosList.appendChild(docItem);
+                } catch (error) {
+                    console.error("Error al renderizar documento:", error, doc);
+                    const errorItem = document.createElement("li");
+                    errorItem.className = "list-group-item text-danger";
+                    errorItem.textContent = `Error al cargar documento: ${doc.nombre || 'Documento sin nombre'}`;
+                    documentosList.appendChild(errorItem);
+                }
+            });
+    
+        } catch (error) {
+            console.error("Error al cargar documentos:", error);
+            documentosList.innerHTML = `
+                <li class="list-group-item text-center text-danger">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    Error al cargar documentos: ${error.message}
+                    <button class="btn btn-sm btn-outline-primary ml-2" 
+                            onclick="cargarDocumentosTramite(${tramiteId}, ${sustentanteId}, this.parentElement.parentElement.parentElement)">
+                        <i class="fas fa-sync-alt mr-1"></i> Reintentar
+                    </button>
+                </li>
+            `;
+        }
+    }
+    
+    // Función auxiliar segura para obtener icono
+    function obtenerIconoDocumentoSeguro(tipo) {
+        if (!tipo) return '<i class="fas fa-file"></i>';
         
-        $('#confirmacionModal').modal('show');
+        const iconos = {
+            'identificacion': 'fas fa-id-card',
+            'certificado': 'fas fa-certificate',
+            'tesis': 'fas fa-file-alt',
+            'reporte': 'fas fa-file-signature',
+            'carta': 'fas fa-envelope',
+            'fotografia': 'fas fa-camera',
+            'comprobante': 'fas fa-receipt',
+            'application/pdf': 'fas fa-file-pdf'
+        };
+        
+        // Buscar coincidencia exacta o parcial
+        const tipoLower = tipo.toLowerCase();
+        const clase = iconos[tipoLower] || 
+                     iconos[tipoLower.split('/')[0]] || 
+                     'fas fa-file';
+        
+        return `<i class="${clase}"></i>`;
+    }
+    
+    // Función auxiliar segura para obtener badge de estado
+    function obtenerBadgeEstadoSeguro(estado) {
+        if (!estado) return '<span class="badge badge-secondary">Sin estado</span>';
+        
+        const clases = {
+            'pendiente': 'badge badge-warning',
+            'aceptado': 'badge badge-success',
+            'rechazado': 'badge badge-danger'
+        };
+        
+        const textos = {
+            'pendiente': 'Pendiente',
+            'aceptado': 'Aprobado',
+            'rechazado': 'Rechazado'
+        };
+        
+        const clase = clases[estado.toLowerCase()] || 'badge badge-secondary';
+        const texto = textos[estado.toLowerCase()] || estado;
+        
+        return `<span class="${clase}">${texto}</span>`;
+    }
+
+    // Función para validar documentos (con soporte para comentarios)
+    window.validarDocumento = function(documentoId, accion, tramiteId) {
+        // Si es rechazo, pedir motivo
+        if (accion === 'rechazado') {
+            const motivo = prompt('Ingrese el motivo del rechazo:');
+            if (motivo === null) return; // Usuario canceló
+            if (!motivo.trim()) {
+                alert('Debe ingresar un motivo para el rechazo');
+                return;
+            }
+            procesarValidacion(documentoId, accion, motivo, tramiteId);
+        } else {
+            procesarValidacion(documentoId, accion, '', tramiteId);
+        }
     };
 
-    // Evento para el botón de confirmar en el modal (nuevo)
-    document.getElementById('confirmarAccion').addEventListener('click', function() {
-        $('#confirmacionModal').modal('hide');
-        
-        const endpoint = currentAction === 'aprobar' 
-            ? `/api/tramites/aprobar/${currentTramiteId}/` 
-            : `/api/tramites/rechazar/${currentTramiteId}/`;
+    // Función que realiza la petición al servidor
+    async function procesarValidacion(documentoId, accion, comentario, tramiteId) {
+        try {
+            const response = await fetch(`/validar_documento/${documentoId}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: JSON.stringify({ 
+                    accion: accion,
+                    comentario: comentario 
+                })
+            });
             
-        fetch(endpoint, { 
-            method: "POST",
-            headers: {
-                "X-CSRFToken": getCookie("csrftoken")
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
+            const data = await response.json();
+            
             if (data.success) {
-                alert(`Trámite ${currentAction === 'aprobar' ? 'aprobado' : 'rechazado'} correctamente`);
-                cargarTramitesEspera();
+                // Mostrar notificación
+                mostrarToast(
+                    `Documento ${accion === 'aceptado' ? 'aprobado' : 'rechazado'}`,
+                    'success'
+                );
+                
+                // Recargar documentos del trámite
+                const tramiteItem = document.querySelector(`[data-id="${tramiteId}"]`);
+                if (tramiteItem) {
+                    const sustentanteId = tramiteItem.getAttribute('data-sustentante');
+                    await cargarDocumentosTramite(tramiteId, sustentanteId, tramiteItem);
+                }
             } else {
-                alert(`Error al ${currentAction} el trámite: ${data.error}`);
+                throw new Error(data.error || 'Error desconocido');
             }
-        })
-        .catch(error => {
+        } catch (error) {
             console.error("Error:", error);
-            alert("Ocurrió un error al procesar la solicitud");
-        });
-    });
+            mostrarToast(
+                `Error al procesar la solicitud: ${error.message}`,
+                'error'
+            );
+        }
+    }
+
+    // Función para mostrar notificaciones toast (opcional)
+    function mostrarToast(mensaje, tipo = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast show align-items-center text-white bg-${tipo === 'error' ? 'danger' : 'success'}`;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.zIndex = '9999';
+        
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${mensaje}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Auto-eliminación después de 5 segundos
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
 
     // 7) Event listeners para botones principales
     btnAspirantes.addEventListener("click", () => {
@@ -332,74 +800,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
- // Función para esperar a que el modal se cierre
- function esperarCierreModal(modalId) {
-    return new Promise((resolve) => {
-        const modal = document.getElementById(modalId);
-        const closeBtn = modal.querySelector('.close');
-
-        // Resuelve la promesa cuando el modal se cierre
-        closeBtn.onclick = () => {
-            modal.style.display = 'none';
-            resolve();
-        };
-
-        // También resuelve la promesa si se hace clic fuera del modal
-        window.onclick = (event) => {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-                resolve();
-            }
-        };
-
-        // Resuelve la promesa si se presiona la tecla Escape
-        window.onkeydown = (event) => {
-            const escapeKeys = ['Escape', 'Esc'];
-            const escapeKeyCodes = [27];
-            const escapeKeyCodesDeprecated = [1, '1']; // Algunos teclados pueden enviar un código de tecla de escape diferente
-        
-            if (escapeKeys.includes(event.key) || escapeKeyCodes.includes(event.keyCode) || escapeKeyCodesDeprecated.includes(event.keyCode)) {
-                modal.style.display = 'none';
-                resolve();
-            }
-        };
-    });
-}
-
-function mostrarModal(mensaje, modalId) {
-    var modal = document.getElementById(modalId);
-    if (!modal) {
-        console.error(`No se encontró el modal con ID ${modalId}`);
-        return;
-    }
-
-    var modalMessage = modal.querySelector('.modalMessage');
-    if (modalMessage) {
-        modalMessage.textContent = mensaje;
-    } else {
-        console.warn(`No se encontró el elemento con clase 'modalMessage' dentro de ${modalId}`);
-    }
-
-    modal.style.display = 'flex';
-
-    var closeBtn = modal.querySelector('.close');
-    if (closeBtn) {
-        closeBtn.onclick = function() {
-            modal.style.display = 'none';
-        };
-    } else {
-        console.warn(`No se encontró el botón de cierre en ${modalId}`);
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    };
-
-    window.onkeydown = function(event) {
-        if (event.key === 'Escape') {
-            modal.style.display = 'none';
-        }
-    };
-}
+ 

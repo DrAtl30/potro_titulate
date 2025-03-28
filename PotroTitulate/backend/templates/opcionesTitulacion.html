@@ -223,7 +223,7 @@
             "Tesis": 8,
             "Aprovechamiento Académico": 9,
             "Créditos en Estudios Avanzados": 10,
-            "Examen General para el Egreso de la Licenciatura EGEL": 11
+            "Examen General para el Egreso de la Licenciatura (EGEL)": 11
              
         };
         // Definir los requisitos para cada opción de titulación
@@ -466,6 +466,8 @@ function enviarSolicitud() {
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
     const idSustentanteInput = document.getElementById("idSustentante");
     const idOpcion = obtenerIdOpcionSeleccionada(); // Obtener el ID de la opción seleccionada
+
+    console.log("ID de la opción seleccionada:", idOpcion); // Verificar el ID de la opción seleccionada
 
     if (!idOpcion) {
         alert('Selecciona una opción de titulación válida.');
