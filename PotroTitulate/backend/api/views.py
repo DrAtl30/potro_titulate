@@ -732,9 +732,9 @@ def tramites_espera(request):
     try:
         # Filtrar trámites con estado "Pendiente" y no aprobados
         tramites = Tramites.objects.filter(
-        estado_actual='Pendiente',
+            estado_actual='Pendiente',
             aprobado=False
-        ).select_related('id_sustentante', 'id_opcion')  # Agregado select_related para id_opcion
+        ).select_related('id_sustentante', 'id_opcion')
 
         resultados = []
         for tramite in tramites:
@@ -744,10 +744,13 @@ def tramites_espera(request):
             resultados.append({
                 'id_tramite': tramite.id_tramite,
                 'sustentante': f"{sustentante.nombre} {sustentante.apellido}",
+                'nombre_completo': f"{sustentante.nombre} {sustentante.apellido}",  # Nombre completo
+                'numero_cuenta': sustentante.numero_cuenta,  # Número de cuenta
+                'correo': sustentante.correo_electronico,    # Correo electrónico
                 'nombre': f"Trámite {tramite.id_tramite} - {tramite.estado_actual}",
                 'fecha_inicio': tramite.fecha_inicio.strftime('%Y-%m-%d'),
-                'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,  # Agregado id_opcion
-                'nombre_opcion': nombre_opcion  # Agregado nombre_opcion
+                'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,
+                'nombre_opcion': nombre_opcion
             })
 
         return JsonResponse({
@@ -757,7 +760,7 @@ def tramites_espera(request):
         
     except Exception as e:
         import traceback
-        print(traceback.format_exc())  # Esto imprimirá detalles del error en la terminal
+        print(traceback.format_exc())
         return JsonResponse({
             'success': False,
             'error': str(e)
@@ -773,21 +776,24 @@ def tramites_progreso(request):
         tramites = Tramites.objects.filter(
             aprobado=True,
             estado_actual='en progreso'
-        ).select_related('id_sustentante', 'id_opcion')  # Agregado select_related para id_opcion
+        ).select_related('id_sustentante', 'id_opcion')
 
         resultados = []
         for tramite in tramites:
             sustentante = tramite.id_sustentante
-            # Obtener el nombre de la opción de titulación si existe la relación
             nombre_opcion = tramite.id_opcion.nombre_opcion if tramite.id_opcion else "Sin opción especificada"
             
             resultados.append({
                 'id_tramite': tramite.id_tramite,
                 'sustentante': f"{sustentante.nombre} {sustentante.apellido}",
+                'nombre_completo': f"{sustentante.nombre} {sustentante.apellido}",  # Nombre completo
+                'numero_cuenta': sustentante.numero_cuenta,  # Número de cuenta
+                'correo': sustentante.correo_electronico,    # Correo electrónico
                 'nombre': f"Trámite {tramite.id_tramite} - En Progreso",
                 'fecha_actualizacion': tramite.fecha_actualizacion.strftime('%Y-%m-%d') if tramite.fecha_actualizacion else None,
-                'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,  # Agregado id_opcion
-                'nombre_opcion': nombre_opcion  # Agregado nombre_opcion
+                'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,
+                'nombre_opcion': nombre_opcion,
+                'estado_actual': tramite.estado_actual  # Agregar estado actual
             })
 
         return JsonResponse({
@@ -797,7 +803,7 @@ def tramites_progreso(request):
 
     except Exception as e:
         import traceback
-        print(traceback.format_exc())  # Depuración en consola
+        print(traceback.format_exc())
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 @csrf_exempt

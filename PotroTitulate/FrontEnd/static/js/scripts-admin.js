@@ -236,8 +236,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     li.innerHTML = `
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="font-weight-bold">${tramite.sustentante}</span>
+                                <span class="font-weight-bold">${tramite.nombre_completo || tramite.sustentante}</span>
                                 <small class="d-block text-muted">${tramite.nombre}</small>
+                                <small class="d-block">No. cuenta: ${tramite.numero_cuenta || 'No disponible'}</small>
+                                <small class="d-block">Correo: ${tramite.correo || 'No disponible'}</small>
                                 <small class="d-block">Inicio: ${tramite.fecha_inicio}</small>
                             </div>
                             <span class="badge badge-opcion-titulacion">
@@ -250,7 +252,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <i class="fas fa-check"></i> Aprobar
                             </button>
                             <button class="btn btn-danger btn-sm" 
-                                    onclick="mostrarConfirmacion(${tramite.id_tramite}, 'rechazar')">
+                                    onclick="mostrarConfirmacion(${tramite.id_tramite}, 'rechazado')">
                                 <i class="fas fa-times"></i> Rechazar
                             </button>
                         </div>
@@ -336,13 +338,15 @@ document.addEventListener("DOMContentLoaded", function() {
                         li.innerHTML = `
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="font-weight-bold">${nombreSustentante}</span>
-                                    <small class="d-block text-muted">${nombreTramite}</small>
-                                    <small class="d-block">Actualizado: ${fechaActualizacion}</small>
+                                    <span class="font-weight-bold">${tramite.nombre_completo || tramite.sustentante}</span>
+                                    <small class="d-block text-muted">${tramite.nombre}</small>
+                                    <small class="d-block">No. cuenta: ${tramite.numero_cuenta || 'No disponible'}</small>
+                                    <small class="d-block">Correo: ${tramite.correo || 'No disponible'}</small>
+                                    <small class="d-block">Actualizado: ${tramite.fecha_actualizacion}</small>
                                 </div>
                                 <div>
                                     <span class="badge badge-opcion-titulacion">
-                                        ${nombreOpcion}
+                                        ${tramite.nombre_opcion}
                                     </span>
                                     <span class="badge badge-success ml-2">
                                         ${tramite.estado_actual || 'En progreso'}
@@ -358,7 +362,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     </li>
                                 </ul>
                             </div>
-                        `;
+`;
                         listaTramitesProgreso.appendChild(li);
     
                     } catch (error) {
