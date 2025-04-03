@@ -602,90 +602,206 @@ document.addEventListener("DOMContentLoaded", function() {
         return `<span class="${clase}">${texto}</span>`;
     }
 
-    // Función para validar documentos (con soporte para comentarios)
-    window.validarDocumento = function(documentoId, accion, tramiteId) {
-        // Si es rechazo, pedir motivo
+    // Función para validar documentos
+window.validarDocumento = async function(documentoId, accion, tramiteId) {
+    try {
+        let comentario = '';
+        
+        // Si es rechazo, pedir motivo usando un modal más elegante
         if (accion === 'rechazado') {
-            const motivo = prompt('Ingrese el motivo del rechazo:');
-            if (motivo === null) return; // Usuario canceló
-            if (!motivo.trim()) {
-                alert('Debe ingresar un motivo para el rechazo');
+            comentario = await new Promise((resolve) => {
+                const modal = document.createElement('div');
+                modal.className = 'modal fade';
+                modal.innerHTML = `
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Motivo del rechazo</h5>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <textarea id="motivoRechazo" class="form-control" rows="3" 
+                                          placeholder="Ingrese el motivo del rechazo"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-primary" id="confirmarMotivo">Confirmar</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                $(modal).modal('show');
+                
+                document.getElementById('confirmarMotivo').onclick = () => {
+                    const motivo = document.getElementById('motivoRechazo').value.trim();
+                    $(modal).modal('hide');
+                    setTimeout(() => modal.remove(), 500);
+                    resolve(motivo);
+                };
+                
+                modal.querySelector('.close').onclick = () => {
+                    $(modal).modal('hide');
+                    setTimeout(() => modal.remove(), 500);
+                    resolve(null);
+                };
+            });
+            
+            if (comentario === null || !comentario) {
+                if (comentario === '') {
+                    alert('Debe ingresar un motivo para el rechazo');
+                }
                 return;
             }
-            procesarValidacion(documentoId, accion, motivo, tramiteId);
-        } else {
-            procesarValidacion(documentoId, accion, '', tramiteId);
+        }
+
+        // Mostrar indicador de carga
+        const botones = document.querySelectorAll(`[onclick*="validarDocumento(${documentoId}, ${accion}, ${tramiteId})"]`);
+        botones.forEach(boton => {
+            boton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            boton.disabled = true;
+        });
+
+        // Realizar la petición
+        const response = await fetch(`/api/validar_documento/${documentoId}/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({ 
+                accion: accion,
+                comentario: comentario 
+            })
+        });
+
+        // Restaurar botones
+        botones.forEach(boton => {
+            boton.innerHTML = accion === 'aceptado' ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>';
+            boton.disabled = false;
+        });
+
+        // Verificar si la respuesta es JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('La respuesta no es JSON');
+        }
+
+        const data = await response.json();
+        
+        if (!response.ok || !data.success) {
+            throw new Error(data.error || 'Error al validar documento');
+        }
+
+        // Mostrar notificación de éxito
+        mostrarToast(`Documento ${accion === 'aceptado' ? 'aprobado' : 'rechazado'} correctamente`, 'success');
+        
+        // Recargar documentos del trámite
+        const tramiteItem = document.querySelector(`[data-id="${tramiteId}"]`);
+        if (tramiteItem) {
+            const sustentanteId = tramiteItem.getAttribute('data-sustentante');
+            await cargarDocumentosTramite(tramiteId, sustentanteId, tramiteItem);
+        }
+
+    } catch (error) {
+        console.error("Error al validar documento:", error);
+        mostrarToast(`Error: ${error.message}`, 'error');
+        
+        // Restaurar botones en caso de error
+        const botones = document.querySelectorAll(`[onclick*="validarDocumento(${documentoId}, ${accion}, ${tramiteId})"]`);
+        botones.forEach(boton => {
+            boton.innerHTML = accion === 'aceptado' ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>';
+            boton.disabled = false;
+        });
+    }
+};
+
+    // Función para mostrar notificaciones toast mejorada
+function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
+    // Configuración de tipos
+    const tipos = {
+        success: {
+            bg: 'bg-success',
+            icon: 'fas fa-check-circle'
+        },
+        error: {
+            bg: 'bg-danger',
+            icon: 'fas fa-exclamation-circle'
+        },
+        warning: {
+            bg: 'bg-warning',
+            icon: 'fas fa-exclamation-triangle'
+        },
+        info: {
+            bg: 'bg-info',
+            icon: 'fas fa-info-circle'
         }
     };
 
-    // Función que realiza la petición al servidor
-    async function procesarValidacion(documentoId, accion, comentario, tramiteId) {
-        try {
-            const response = await fetch(`/validar_documento/${documentoId}/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCookie("csrftoken")
-                },
-                body: JSON.stringify({ 
-                    accion: accion,
-                    comentario: comentario 
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                // Mostrar notificación
-                mostrarToast(
-                    `Documento ${accion === 'aceptado' ? 'aprobado' : 'rechazado'}`,
-                    'success'
-                );
-                
-                // Recargar documentos del trámite
-                const tramiteItem = document.querySelector(`[data-id="${tramiteId}"]`);
-                if (tramiteItem) {
-                    const sustentanteId = tramiteItem.getAttribute('data-sustentante');
-                    await cargarDocumentosTramite(tramiteId, sustentanteId, tramiteItem);
-                }
-            } else {
-                throw new Error(data.error || 'Error desconocido');
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            mostrarToast(
-                `Error al procesar la solicitud: ${error.message}`,
-                'error'
-            );
-        }
+    // Seleccionar configuración según tipo (default a success)
+    const config = tipos[tipo.toLowerCase()] || tipos.success;
+
+    // Crear contenedor principal de toasts si no existe
+    let toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.style.position = 'fixed';
+        toastContainer.style.bottom = '20px';
+        toastContainer.style.right = '20px';
+        toastContainer.style.zIndex = '9999';
+        toastContainer.style.maxWidth = '350px';
+        toastContainer.style.width = '100%';
+        document.body.appendChild(toastContainer);
     }
 
-    // Función para mostrar notificaciones toast (opcional)
-    function mostrarToast(mensaje, tipo = 'success') {
-        const toast = document.createElement('div');
-        toast.className = `toast show align-items-center text-white bg-${tipo === 'error' ? 'danger' : 'success'}`;
-        toast.style.position = 'fixed';
-        toast.style.bottom = '20px';
-        toast.style.right = '20px';
-        toast.style.zIndex = '9999';
-        
-        toast.innerHTML = `
-            <div class="d-flex">
-                <div class="toast-body">
-                    ${mensaje}
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    // Crear toast individual
+    const toastId = `toast-${Date.now()}`;
+    const toast = document.createElement('div');
+    toast.id = toastId;
+    toast.className = `toast show ${config.bg} text-white mb-3`;
+    toast.role = 'alert';
+    toast.ariaLive = 'assertive';
+    toast.ariaAtomic = 'true';
+    
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-icon p-3 d-flex align-items-center">
+                <i class="${config.icon} fa-2x"></i>
             </div>
-        `;
-        
-        document.body.appendChild(toast);
-        
-        // Auto-eliminación después de 5 segundos
-        setTimeout(() => {
+            <div class="toast-body">
+                <strong class="text-capitalize">${tipo}</strong>
+                <div>${mensaje}</div>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" 
+                    onclick="document.getElementById('${toastId}').remove()">
+            </button>
+        </div>
+    `;
+
+    // Agregar al contenedor
+    toastContainer.insertBefore(toast, toastContainer.firstChild);
+
+    // Auto-eliminación después del tiempo especificado
+    let timeoutId = setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, tiempo);
+
+    // Pausar desvanecimiento al hacer hover
+    toast.addEventListener('mouseenter', () => {
+        clearTimeout(timeoutId);
+    });
+
+    // Reanudar desvanecimiento al salir
+    toast.addEventListener('mouseleave', () => {
+        timeoutId = setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => toast.remove(), 300);
-        }, 5000);
-    }
+        }, 1000);
+    });
+}
 
 
     // 7) Event listeners para botones principales

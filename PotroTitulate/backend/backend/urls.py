@@ -65,6 +65,7 @@ urlpatterns = [
     path('api/tramites/documentos/<int:tramite_id>/', documentos_tramite, name='documentos_tramite'),
     path('api/tramites/rechazar/<int:tramite_id>/', rechazar_tramite, name='rechazar_tramite'),
     path('api/tramites/obtener-motivo/<int:tramite_id>/', obtener_motivo_rechazo, name='obtener_motivo'),
+    path('api/validar_documento/<int:documento_id>/', validar_documento, name='validar_documento'),
     
 
       # mensajeria 

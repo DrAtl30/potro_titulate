@@ -732,7 +732,7 @@ def tramites_espera(request):
     try:
         # Filtrar trámites con estado "Pendiente" y no aprobados
         tramites = Tramites.objects.filter(
-            estado_actual='Pendiente',
+        estado_actual='Pendiente',
             aprobado=False
         ).select_related('id_sustentante', 'id_opcion')  # Agregado select_related para id_opcion
 
@@ -931,35 +931,59 @@ def validar_documento(request, documento_id):
     Vista para validar (aprobar/rechazar) un documento
     """
     try:
+        # Verificar que el documento exista
         documento = Documentos.objects.get(id_documento=documento_id)
-        data = json.loads(request.body)
+        
+        # Parsear datos JSON
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Datos JSON inválidos'}, status=400)
         
         # Validar acción
         accion = data.get('accion')
         if accion not in ['aceptado', 'rechazado']:
             return JsonResponse({'success': False, 'error': 'Acción no válida'}, status=400)
         
+        # Validar motivo si es rechazo
+        if accion == 'rechazado' and not data.get('comentario', '').strip():
+            return JsonResponse({
+                'success': False, 
+                'error': 'Se requiere un motivo para el rechazo'
+            }, status=400)
+        
         # Actualizar documento
         documento.estado_validacion = accion
         documento.comentarios_validacion = data.get('comentario', '')
         documento.fecha_validacion = timezone.now()
-        documento.validado_por = request.user if request.user.is_authenticated else None
-        documento.save()
         
-        # Actualizar estado del trámite si es necesario
-        actualizar_estado_tramite(documento.id_tramite)
+        # Registrar usuario que realiza la validación si está autenticado
+        if request.user.is_authenticated:
+            documento.validado_por = request.user
+        
+        documento.save()
         
         return JsonResponse({
             'success': True,
             'message': f'Documento {accion} correctamente',
-            'tramite_id': documento.id_tramite.id_tramite
+            'tramite_id': documento.id_tramite.id_tramite,
+            'documento_id': documento.id_documento,
+            'nuevo_estado': documento.estado_validacion
         })
-        
-    except Documentos.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'Documento no encontrado'}, status=404)
-    except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
+    except Documentos.DoesNotExist:
+        return JsonResponse({
+            'success': False, 
+            'error': 'Documento no encontrado'
+        }, status=404)
+        
+    except Exception as e:
+        logger.error(f"Error al validar documento {documento_id}: {str(e)}")
+        return JsonResponse({
+            'success': False, 
+            'error': 'Error interno del servidor'
+        }, status=500)
+    
 def actualizar_estado_tramite(tramite):
     """
     Función auxiliar para actualizar estado del trámite
