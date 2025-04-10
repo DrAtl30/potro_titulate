@@ -1,6 +1,6 @@
 env/
 
-BDConnection/
+backend/BDConnection/
 
 # Ignorar carpetas de paquetes de python
 __pycache__/
