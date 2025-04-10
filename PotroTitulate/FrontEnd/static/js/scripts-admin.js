@@ -607,58 +607,58 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Función para validar documentos
-window.validarDocumento = async function(documentoId, accion, tramiteId) {
-    try {
-        let comentario = '';
-        
-        // Si es rechazo, pedir motivo usando un modal más elegante
-        if (accion === 'rechazado') {
-            comentario = await new Promise((resolve) => {
-                const modal = document.createElement('div');
-                modal.className = 'modal fade';
-                modal.innerHTML = `
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Motivo del rechazo</h5>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <textarea id="motivoRechazo" class="form-control" rows="3" 
-                                          placeholder="Ingrese el motivo del rechazo"></textarea>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                <button type="button" class="btn btn-primary" id="confirmarMotivo">Confirmar</button>
+    window.validarDocumento = async function(documentoId, accion, tramiteId) {
+        try {
+            let comentario = '';
+            
+            // Si es rechazo, pedir motivo usando un modal más elegante
+            if (accion === 'rechazado') {
+                comentario = await new Promise((resolve) => {
+                    const modal = document.createElement('div');
+                    modal.className = 'modal fade';
+                    modal.innerHTML = `
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Motivo del rechazo</h5>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <textarea id="motivoRechazo" class="form-control" rows="3" 
+                                            placeholder="Ingrese el motivo del rechazo"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary" id="confirmarMotivo">Confirmar</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                    
+                    document.body.appendChild(modal);
+                    $(modal).modal('show');
+                    
+                    document.getElementById('confirmarMotivo').onclick = () => {
+                        const motivo = document.getElementById('motivoRechazo').value.trim();
+                        $(modal).modal('hide');
+                        setTimeout(() => modal.remove(), 500);
+                        resolve(motivo);
+                    };
+                    
+                    modal.querySelector('.close').onclick = () => {
+                        $(modal).modal('hide');
+                        setTimeout(() => modal.remove(), 500);
+                        resolve(null);
+                    };
+                });
                 
-                document.body.appendChild(modal);
-                $(modal).modal('show');
-                
-                document.getElementById('confirmarMotivo').onclick = () => {
-                    const motivo = document.getElementById('motivoRechazo').value.trim();
-                    $(modal).modal('hide');
-                    setTimeout(() => modal.remove(), 500);
-                    resolve(motivo);
-                };
-                
-                modal.querySelector('.close').onclick = () => {
-                    $(modal).modal('hide');
-                    setTimeout(() => modal.remove(), 500);
-                    resolve(null);
-                };
-            });
-            
-            if (comentario === null || !comentario) {
-                if (comentario === '') {
-                    alert('Debe ingresar un motivo para el rechazo');
+                if (comentario === null || !comentario) {
+                    if (comentario === '') {
+                        alert('Debe ingresar un motivo para el rechazo');
+                    }
+                    return;
                 }
-                return;
             }
-        }
 
         // Mostrar indicador de carga
         const botones = document.querySelectorAll(`[onclick*="validarDocumento(${documentoId}, ${accion}, ${tramiteId})"]`);

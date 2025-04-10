@@ -402,6 +402,15 @@ function handleFileChange(requisito) {
             return;
         }
 
+        const maxSizeMB = 3 
+        const maxSizeBytes = maxSizeMB * 1024 * 1024; 
+
+        if (file.size > maxSizeBytes) {
+            mostrarModal(`El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`, 'errorModal');
+            fileInput.value = '';
+            return;
+        }
+
         // Mostrar mensaje de confirmación antes de subir el archivo
         const confirmacion = confirm(`¿Estás seguro de que deseas subir el archivo "${file.name}"?`);
         if (!confirmacion) {
