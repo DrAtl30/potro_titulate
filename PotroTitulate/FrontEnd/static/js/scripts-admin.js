@@ -22,8 +22,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const listaTramitesEspera = document.getElementById("listaTramitesEspera");
     const listaTramitesProgreso = document.getElementById("listaTramitesProgreso");
 
-    // Modal de confirmación mejorado
-    // Modal de confirmación mejorado
     const modalConfirmacion = document.createElement('div');
     modalConfirmacion.className = 'modal fade';
     modalConfirmacion.id = 'confirmacionModal';
@@ -253,7 +251,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <i class="fas fa-check"></i> Aprobar
                             </button>
                             <button class="btn btn-danger btn-sm" 
-                                    onclick="mostrarConfirmacion(${tramite.id_tramite}, 'rechazado')">
+                                    onclick="mostrarConfirmacion(${tramite.id_tramite}, 'rechazar')">
                                 <i class="fas fa-times"></i> Rechazar
                             </button>
                         </div>
