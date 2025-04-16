@@ -232,6 +232,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     li.classList.add("list-group-item", "tramite-item");
                     li.setAttribute("data-id", tramite.id_tramite);
                     li.setAttribute("data-opcion", tramite.id_opcion);
+                    li.style.minHeight = '100px';
                     
                     li.innerHTML = `
                         <div class="d-flex justify-content-between align-items-center">
@@ -334,6 +335,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         li.setAttribute("data-id", tramiteId);
                         li.setAttribute("data-opcion", tramite.id_opcion || '');
                         li.setAttribute("data-sustentante", tramite.id_sustentante || '');
+                        li.style.minHeight = '100px';
                         
                         li.innerHTML = `
                             <div class="d-flex justify-content-between align-items-center">

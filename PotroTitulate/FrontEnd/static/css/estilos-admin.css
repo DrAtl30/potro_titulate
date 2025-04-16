@@ -5,6 +5,7 @@ body, html {
     padding: 0;
     background-color: #f4f4f4;
     height: 100%;
+    overflow-y: hidden;
 }
 
 header {
@@ -14,6 +15,7 @@ header {
     background-color: #5a7561;
     padding: 10px 20px;
     color: white;
+    flex-shrink: 0;
 }
 
 .header-left {
@@ -54,6 +56,11 @@ body {
 
 main {
     flex: 1;
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    padding-top: 6px !important; 
+    margin-top: 6px !important;
 }
 
 footer {
@@ -261,4 +268,45 @@ footer img {
     background-color: #f8d7da !important;
     border: 1px solid #f5c6cb;
   }
+
+  .tramites-list-container {
+    max-height: 500px; /* Altura máxima para mostrar ~5 elementos */
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    margin-bottom: 20px;
+}
+
+.tramites-list-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.tramites-list-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.tramites-list-container::-webkit-scrollbar-thumb {
+    background: #5a7561;
+    border-radius: 4px;
+}
+
+.tramites-list-container::-webkit-scrollbar-thumb:hover {
+    background: #4a6551;
+}
+
+/* Asegurar que el header siempre esté visible */
+body {
+    overflow-x: hidden;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.list-group-container {
+    max-height: calc(100vh - 150px); /* Ajusta según necesidades */
+    overflow-y: auto;
+}
   
