@@ -655,7 +655,9 @@ def lista_sustentantes(request):
         for s in sustentantes:
             lista.append({
                 'id_sustentante': s.id_sustentante,
-                'nombre': s.nombre
+                'nombre': s.nombre,
+                'numero_cuenta': s.numero_cuenta,  # Agregar número de cuenta
+                'correo': s.correo_electronico     # Agregar correo electrónico
             })
         return JsonResponse({'success': True, 'sustentantes': lista})
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)

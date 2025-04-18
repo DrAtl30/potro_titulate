@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const conversacionDiv = document.getElementById("conversacion");
     const nombreAspiranteSpan = document.getElementById("nombreAspirante");
     const mensajeTexto = document.getElementById("mensajeTexto");
+    const searchAspirantes = document.getElementById("searchAspirantes");
+    const searchTramites = document.getElementById("searchTramites");
 
     // Elementos de trámites
     const btnMostrarEspera = document.getElementById("btnMostrarEspera");
@@ -188,6 +190,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // 4) Función para CARGAR LISTA SUSTENTANTES
+    let sustentantesData = []; // Variable global para almacenar los datos originales
     function cargarListaSustentantes() {
         console.log("Cargando lista de sustentantes...");
 
@@ -195,19 +198,35 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                aspirantesList.innerHTML = "";
-                data.sustentantes.forEach(s => {
-                    const li = document.createElement("li");
-                    li.classList.add("list-group-item");
-                    li.setAttribute("data-id", s.id_sustentante);
-                    li.textContent = s.nombre;
-                    aspirantesList.appendChild(li);
-                });
+                sustentantesData = data.sustentantes; // Guardamos los datos originales
+                actualizarListaAspirantes(data.sustentantes);
             } else {
                 console.error("Error en listaSustentantes:", data.error);
             }
         })
         .catch(err => console.error("Error fetch listaSustentantes:", err));
+    }
+
+    // Función auxiliar para actualizar la lista visualmente
+    function actualizarListaAspirantes(sustentantes) {
+        aspirantesList.innerHTML = "";
+        sustentantes.forEach(s => {
+            const li = document.createElement("li");
+            li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+            li.setAttribute("data-id", s.id_sustentante);
+            
+            const contenido = document.createElement("div");
+            contenido.innerHTML = `
+                <strong>${s.nombre}</strong>
+                <div class="text-muted small">
+                    ${s.numero_cuenta ? `No. cuenta: ${s.numero_cuenta}` : 'No. cuenta: No disponible'} | 
+                    ${s.correo || 'Correo: No disponible'}
+                </div>
+            `;
+            
+            li.appendChild(contenido);
+            aspirantesList.appendChild(li);
+        });
     }
 
     // 5) Función para cargar trámites en espera (modificada)
@@ -918,6 +937,41 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
         }
         return cookieValue;
     }
+    function filtrarAspirantes() {
+        const searchTerm = searchAspirantes.value.toLowerCase();
+        const items = aspirantesList.querySelectorAll("li.list-group-item");
+        
+        items.forEach(item => {
+            const cuentaText = item.textContent.toLowerCase();
+            if (cuentaText.includes(searchTerm)) {
+                item.style.display = "flex";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+    
+    // Función para filtrar trámites
+    function filtrarTramites() {
+        const searchTerm = searchTramites.value.toLowerCase();
+        const items = [...document.querySelectorAll("#listaTramitesEspera li.tramite-item, #listaTramitesProgreso li.tramite-item")];
+        
+        items.forEach(item => {
+            const cuentaText = item.textContent.toLowerCase();
+            if (cuentaText.includes(searchTerm)) {
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+    
+    // Event listeners para los campos de búsqueda
+    if (searchAspirantes) {
+        searchAspirantes.addEventListener("input", filtrarAspirantes);
+    }
+    
+    if (searchTramites) {
+        searchTramites.addEventListener("input", filtrarTramites);
+    }
 });
-
- 
