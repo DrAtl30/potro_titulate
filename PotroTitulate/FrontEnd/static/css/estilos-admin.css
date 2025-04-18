@@ -296,7 +296,6 @@ footer img {
     background: #4a6551;
 }
 
-/* Asegurar que el header siempre esté visible */
 body {
     overflow-x: hidden;
 }
@@ -307,13 +306,13 @@ header {
     z-index: 1000;
 }
 .list-group-container {
-    max-height: calc(100vh - 150px); /* Ajusta según necesidades */
+    max-height: calc(100vh - 150px); 
     overflow-y: auto;
     padding-bottom: 1rem;
 }
 
 .list-group-container2 {
-    max-height: calc(100vh - 150px); /* Ajusta según necesidades */
+    max-height: calc(100vh - 150px); }
     overflow-y: auto;
     padding-bottom: 4.5rem;
 }
@@ -325,7 +324,7 @@ header {
 #mensajeSection {
     flex: 1;
     overflow: hidden;
-    max-height: calc(100vh - 100px); /* Ajusta 100px según la altura real de tu header */
+    max-height: calc(100vh - 100px); 
     padding-bottom: 1rem;
 
 }
@@ -337,13 +336,11 @@ header {
     margin-top: 0.3rem;
     font-size: 0.85rem;
 }
-/* Agregar al final del archivo */
 .search-box {
     width: 300px;
     margin-left: 15px;
   }
   
-  /* Para pantallas pequeñas */
   @media (max-width: 768px) {
     .d-flex.justify-content-between.align-items-center {
       flex-direction: column;
