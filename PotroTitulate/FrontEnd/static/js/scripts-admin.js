@@ -717,14 +717,26 @@ document.addEventListener("DOMContentLoaded", function() {
             throw new Error(data.error || 'Error al validar documento');
         }
 
-        // Mostrar notificación de éxito
-        mostrarToast(`Documento ${accion === 'aceptado' ? 'aprobado' : 'rechazado'} correctamente`, 'success');
         
-        // Recargar documentos del trámite
-        const tramiteItem = document.querySelector(`[data-id="${tramiteId}"]`);
+        //mostrarToast(`Documento ${accion === 'aceptado' ? 'aprobado' : 'rechazado'} correctamente`, 'success');
+        
+        
+        /*const tramiteItem = document.querySelector(`[data-id="${tramiteId}"]`);
         if (tramiteItem) {
             const sustentanteId = tramiteItem.getAttribute('data-sustentante');
             await cargarDocumentosTramite(tramiteId, sustentanteId, tramiteItem);
+        }*/
+       
+        // Mostrar notificación de éxito
+        // Recargar documentos del trámite
+        mostrarToast(`Documento ${accion === 'aceptado' ? 'aprobado' : 'rechazado'} correctamente`, 'success')
+        const tramiteItem = document.querySelector(`.tramite-item[data-id="${tramiteId}"]`);
+        if (tramiteItem){
+            const sustentanteId = tramiteItem.getAttribute('data-sustentante');
+            const documentosContainer = tramiteItem.querySelector('.documentos-container');
+            if (documentosContainer && documentosContainer.style.display === 'block'){
+                await cargarDocumentosTramite(tramiteId, sustentanteId, tramiteItem)
+            }
         }
 
     } catch (error) {
