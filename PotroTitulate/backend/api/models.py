@@ -236,3 +236,14 @@ class HistorialTramite(models.Model):
 
     def __str__(self):
         return f"{self.id_tramite} - {self.accion} ({self.fecha_accion.strftime('%Y-%m-%d')})"
+    
+
+
+    class Formatos(models.Model):
+        nombre = models.CharField(max_length=200)
+        archivo = models.FileField(upload_to="formatos/")
+        codigo = models.CharField(max_length=20, unique=True)
+
+        def __str__(self):
+            return f"{self.codigo} - {self.nombre}"
+    

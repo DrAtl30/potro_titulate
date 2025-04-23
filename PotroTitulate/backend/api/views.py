@@ -25,6 +25,8 @@ import logging
 logger = logging.getLogger(__name__)  # Esto obtiene un logger con el nombre del módulo actual
 import json
 import os
+from django.http import FileResponse
+
 
 def index(request):
     timestamp = datetime.now().timestamp
@@ -989,3 +991,30 @@ def actualizar_estado_tramite(tramite):
         tramite.estado_actual = 'Documentación incompleta'
     
     tramite.save()
+
+
+
+FORMATOS_PERMITIDOS = {
+    'formato_8_1.docx' : '8.1 Solicitud y Registro',
+    'formato_8_3.docx' : '8.3 Dictamen',
+    'formato_8_5.docx' : '8.5 Voto Aprobatorio',
+    'formato_8_7.docx' : '8.7 Evaluación Profesional',
+    'formato_8_10.docx' : '8.10 Revocación',
+    'formato_8_11.docx' : '8.11 Cesión de Derechos',
+}
+def descargar_formato(request, nombre_archivo):
+
+    formatos_dir = os.path.join(settings.STATICFILES_DIRS[0], 'formatos')
+    archivos_disponibles = os.listdir(formatos_dir)
+    print(f"Archivos en 'formatos': {archivos_disponibles}")  
+
+    if nombre_archivo not in FORMATOS_PERMITIDOS:
+        raise Http404("Formato no válido")
+    # Construye la ruta relativa a tu carpeta 'formatos'
+    file_path = os.path.join(settings.STATICFILES_DIRS[0], 'formatos', nombre_archivo)
+    
+    
+
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=nombre_archivo)
+    raise Http404("El archivo no existe")
