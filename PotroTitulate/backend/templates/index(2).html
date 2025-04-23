@@ -42,6 +42,19 @@
         .perfil-container.active .perfil-menu {
             display: block;
         }
+        /*Nuvos estilos para Formatos y Preguntas Frecuentes*/
+
+        .dropdown-menu {
+            min-width: 300px;
+            max-width: 400px;
+            max-height: calc(4*40px);
+            overflow-y: auto;
+            white-space: normal;
+        }
+        .dropdown-menu a {
+            padding: 8px 15px;
+            word-break: break-word;
+        }
     </style>
 </head>
 <body>
@@ -50,43 +63,24 @@
             <img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}" alt="Escudo UAEM">
             <nav>
                 <div class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">opciones</a>
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Formatos</a>
                     <div class="dropdown-menu">
-                        <a href="#">Opción 1</a>
-                        <a href="#">Opción 2</a>
-                        <a href="#">Opción 3</a>
-                        <a href="#">Opción 4</a>
-                        <a href="#">Opción 5</a>
+                        <a href="#">8.1 Solicitud y Registro para la Evaluación Profesiona</a>
+                        <a href="#">8.3 Dictamen de Revisión de protocolo</a>
+                        <a href="#">8.5 Voto Aprobatorio</a>
+                        <a href="#">8.7 Documentación para la Evaluación Profesional</a>
+                        <a href="#">8.10 Revocación de Asesor/Revisor/Jurado</a>
+                        <a href="#">8.10 Carta de Cesión de Derechos</a>
                     </div>
                 </div>
                 <div class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">formatos</a>
-                    <div class="dropdown-menu">
-                        <a href="#">Formato 1</a>
-                        <a href="#">Formato 2</a>
-                        <a href="#">Formato 3</a>
-                        <a href="#">Formato 4</a>
-                        <a href="#">Formato 5</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">FAQ</a>
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Preguntas Frecuentes</a>
                     <div class="dropdown-menu">
                         <a href="#">Pregunta 1</a>
                         <a href="#">Pregunta 2</a>
                         <a href="#">Pregunta 3</a>
                         <a href="#">Pregunta 4</a>
                         <a href="#">Pregunta 5</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">otros</a>
-                    <div class="dropdown-menu">
-                        <a href="#">Otro 1</a>
-                        <a href="#">Otro 2</a>
-                        <a href="#">Otro 3</a>
-                        <a href="#">Otro 4</a>
-                        <a href="#">Otro 5</a>
                     </div>
                 </div>
             </nav>
@@ -140,17 +134,16 @@
             <div class="footer-contact">
                 <h4>Contacto</h4>
                 <ul>
-                    <li><strong>Teléfono:</strong> +52 123 456 7890</li>
-                    <li><strong>Correo electrónico:</strong> contacto@uaemex.mx</li>
+                    <li><strong>Correo electrónico: </strong><a href="mailto:fcatitulacion@uaemex.mx">fcatitulacion@uaemex.mx</a></li>
                     <li><strong>Dirección:</strong> Cerro de Coatepec S/N, Ciudad Universitaria, Toluca, México</li>
                 </ul>
             </div>
             <div class="footer-social">
                 <h4>Síguenos</h4>
                 <ul>
-                    <li><a href="https://www.facebook.com/FacCAUAEMex" target="_blank">Facebook</a></li>
-                    <li><a href="https://www.tiktok.com/@fcauaemex" target="_blank">TikTok</a></li>
-                    <li><a href="https://www.instagram.com/fcaauemex/" target="_blank">Instagram</a></li>
+                    <li><a href="https://www.facebook.com/FacCAUAEMex" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+                    <li><a href="https://www.tiktok.com/@fcauaemex" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+                    <li><a href="https://www.instagram.com/fcaauemex/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
                 </ul>
             </div>
         </div>
