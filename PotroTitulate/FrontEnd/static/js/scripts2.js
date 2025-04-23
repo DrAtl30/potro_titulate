@@ -238,7 +238,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (data.tramiteEnProgreso) {
             aprobado = data.aprobado;
             opcionTitulacion = data.opcionTitulacion;
-            console.log("Opción de titulación", opcionTitulacion);
             if (!aprobado) {
                 mostrarMensajeTramiteEnProceso();
             }
@@ -360,7 +359,6 @@ function updateEstado(requisito, nuevoEstado) {
     }
 
     if (nuevoEstado === 'aceptado') {
-        actualizarProgresoBackend();
     }
 
     guardarEstado(requisito, nuevoEstado);
@@ -553,31 +551,5 @@ function enviarOpcionTitulacion() {
     .catch(error => {
         console.error('Error:', error);
         mostrarModal('Error al enviar la opción de titulación', 'errorModal');
-    });
-}
-
-function actualizarProgresoBackend() {
-    fetch('/actualizarProgreso/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
-        },
-        body: JSON.stringify({
-            id_tramite: obtenerIdTramite(),
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            document.querySelector('.progress-bar').style.width = `${data.progreso}%`;
-            document.querySelector('.progress-bar').setAttribute('aria-valuenow', data.progreso);
-            document.querySelector('.progress-bar').textContent = `${data.progreso}%`;
-        } else {
-            console.error('Error al actualizar el progreso:', data.error);
-        }
-    })
-    .catch(error => {
-        console.error('Error al actualizar el progreso:', error);
     });
 }

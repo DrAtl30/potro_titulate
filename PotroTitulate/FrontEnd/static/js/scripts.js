@@ -216,9 +216,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const licenciatura = document.getElementById('licenciatura').value;
             const correo = document.getElementById('correo').value;
 
-            console.log('Formulario de registro enviado');
-            console.log({ nombre, apellido, numCuenta: numCuenta.value, licenciatura, correo, contrasena: password });
-
             const data = {
                 nombre: nombre,
                 apellido: apellido,
@@ -227,8 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 contrasena: password,
                 licenciatura: licenciatura
             };
-
-            console.log('Datos a enviar:', data);
 
             fetch('/api/registro/', {
                 method: 'POST',
@@ -264,8 +259,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (loginForm) {
         loginForm.addEventListener('submit', function(event) {
             event.preventDefault();
-
-            console.log('Formulario de login enviado');
 
             const correo = document.getElementById('correo').value;
             const contrasena = document.getElementById('contrasena').value;
@@ -309,7 +302,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                console.log('Respuesta del servidor:', data);
 
                 if (data.id_sustentante) {
                     sessionStorage.setItem('sustentante', JSON.stringify(data));
@@ -391,7 +383,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             })
             .catch(error => {
-                console.error('Error:', error);
                 mostrarModal('Hubo un problema al verificar tu correo. Inténtalo de nuevo.', 'errorModal');
             });
         });

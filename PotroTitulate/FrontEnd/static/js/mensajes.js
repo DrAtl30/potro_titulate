@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('botonMensajes').addEventListener('click', () => {
-        console.log('✅ Botón de mensajes presionado.');
 
         const sustentanteId = document.getElementById('idSustentante').value;
-        console.log('🔎 ID de sustentante obtenido:', sustentanteId);
 
         if (!sustentanteId) {
             console.warn('⚠️ ID de sustentante no disponible.');
@@ -17,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(`/obtener_mensajes/${sustentanteId}/`)
             .then(response => response.json())
             .then(data => {
-                console.log('📥 Respuesta del servidor:', data);
                 if (data.success) {
                     const listaMensajes = document.getElementById('listaMensajes');
                     if (!listaMensajes) {

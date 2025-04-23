@@ -162,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             })
             .catch(error => {
-                console.error("Error:", error);
                 alert(`Error al ${accion} el trámite: ${error.message}`);
             });
         };
@@ -192,7 +191,6 @@ document.addEventListener("DOMContentLoaded", function() {
     // 4) Función para CARGAR LISTA SUSTENTANTES
     let sustentantesData = []; // Variable global para almacenar los datos originales
     function cargarListaSustentantes() {
-        console.log("Cargando lista de sustentantes...");
 
         fetch("/listaSustentantes/")
         .then(response => response.json())
@@ -234,7 +232,6 @@ document.addEventListener("DOMContentLoaded", function() {
         fetch("/api/tramites/espera/")
             .then(response => response.json())
             .then(data => {
-                console.log("Datos recibidos:", data);  // ← Verifica esto en la consola
 
                 if (!Array.isArray(data.tramites)) {
                     console.error("La respuesta no contiene un array en la propiedad 'tramites':", data);
@@ -243,7 +240,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 listaTramitesEspera.innerHTML = "";
                 data.tramites.forEach(tramite => {
-                    console.log("Trámite:", tramite);  // ← Verifica cada trámite
 
                     const li = document.createElement("li");
                     li.classList.add("list-group-item", "tramite-item");
@@ -385,7 +381,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         listaTramitesProgreso.appendChild(li);
     
                     } catch (error) {
-                        console.error("Error al procesar trámite:", error, tramite);
                         // Mostrar al menos el ID del trámite con error
                         const errorItem = document.createElement("li");
                         errorItem.classList.add("list-group-item", "text-danger");
@@ -406,7 +401,6 @@ document.addEventListener("DOMContentLoaded", function() {
     
             })
             .catch(error => {
-                console.error("Error al cargar trámites:", error);
                 mostrarErrorEnLista("Error de conexión: " + error.message);
             });
     }
@@ -556,7 +550,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     `;
                     documentosList.appendChild(docItem);
                 } catch (error) {
-                    console.error("Error al renderizar documento:", error, doc);
                     const errorItem = document.createElement("li");
                     errorItem.className = "list-group-item text-danger";
                     errorItem.textContent = `Error al cargar documento: ${doc.nombre || 'Documento sin nombre'}`;
@@ -565,7 +558,6 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     
         } catch (error) {
-            console.error("Error al cargar documentos:", error);
             documentosList.innerHTML = `
                 <li class="list-group-item text-center text-danger">
                     <i class="fas fa-exclamation-triangle mr-2"></i>
@@ -740,7 +732,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
     } catch (error) {
-        console.error("Error al validar documento:", error);
         mostrarToast(`Error: ${error.message}`, 'error');
         
         // Restaurar botones en caso de error
@@ -871,7 +862,6 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
 
     // 10) Función para cargar la conversación
     function cargarConversacion(sustentanteId) {
-        console.log("Cargando conversación para ID:", sustentanteId);
     
         fetch(`/obtener_mensajes/${sustentanteId}/`)
             .then(response => response.json())

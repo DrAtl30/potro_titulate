@@ -133,12 +133,8 @@ def verificar_tramite_en_progreso(request, id_sustentante):
 def enviar_solicitud(request):
     if request.method == 'POST':
         try:
-            # Print raw request body for debugging
-            print("Raw Body:", request.body)
-            
             # Parse JSON data from the request body
             data = json.loads(request.body)
-            print("Parsed Data:", data)
 
             # Extract id_sustentante and id_opcion from the request data
             id_sustentante = data.get('id_sustentante')
@@ -148,15 +144,9 @@ def enviar_solicitud(request):
             if not id_sustentante or not id_opcion:
                 return JsonResponse({'error': 'Datos incompletos'}, status=400)
 
-            # Fetch the Sustentante and OpcionTitulacion objects
-            print(f"Buscando Sustentante con ID: {id_sustentante}")
-            print(f"Buscando Opción de Titulación con ID: {id_opcion}")
-
             sustentante = get_object_or_404(Sustentante, id_sustentante=id_sustentante)
             opcion_titulacion = get_object_or_404(OpcionTitulacion, id_opcion=id_opcion)
 
-            # Create a new Tramites record
-            print("Creando trámite...")
             Tramites.objects.create(
                 id_sustentante=sustentante,
                 id_opcion=opcion_titulacion,
@@ -557,7 +547,6 @@ def enviar_mensaje_admin(request, id_sustentante):
                 return JsonResponse({'success': False, 'error': 'Administrador no autenticado'}, status=401)
 
             data = json.loads(request.body)
-            print(f"Datos recibidos: {data}")
             mensaje_texto = data.get('mensaje')
 
             if not mensaje_texto:
@@ -614,8 +603,6 @@ def enviar_mensaje_sustentante(request):
 def perfilAdministrador(request):
     timestamp = datetime.now().timestamp()
 
-    print(f"Session data: {request.session.items()}")  # <-- Depuración
-
     # 1) Verificar si hay un administrador loggeado en la sesión
     admin_id = request.session.get('admin_id')
     if not admin_id:
@@ -665,9 +652,6 @@ def lista_sustentantes(request):
 def verificar_sesion(request):
     session_key = request.COOKIES.get('session_key')
     sustentante_id = request.session.get('sustentante_id')
-
-    print(f"Session key from cookies: {session_key}")  # Depuración
-    print(f"Sustentante ID from session: {sustentante_id}")  # Depuración
 
     # Si no hay session_key, devolver un 200 con un mensaje indicando que no hay sesión
     if not session_key:

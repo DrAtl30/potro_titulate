@@ -1,5 +1,4 @@
 let currentSessionKey = getCookie('session_key');
-console.log('Valor de currentSessionKey:', currentSessionKey); // Depuración
 let forcedReload = false;
 
 function getCookie(name) {
@@ -25,7 +24,6 @@ async function checkSession() {
 
             // Si no hay sesión activa, no hacer nada
             if (data.mensaje === 'No hay sesión activa') {
-                console.log('No hay sesión activa. No hacer nada.');
                 return;
             }
 
@@ -36,11 +34,9 @@ async function checkSession() {
                 if (newSessionKey) {
                     // Si la sesión es diferente
                     if (newSessionKey !== currentSessionKey) {
-                        console.log('Nueva sesión detectada. Cerrando la sesión anterior...');
                         alert('Se ha detectado un nuevo inicio de sesión. Redirigiendo...');
                         cerrarSesion(); // Si hay una sesión nueva, cierra la anterior
                     } else {
-                        console.log('La misma sesión detectada. No hacer nada.');
                     }
 
                     currentSessionKey = newSessionKey;  // Actualiza currentSessionKey para futuras comparaciones
@@ -49,11 +45,9 @@ async function checkSession() {
         } else if (response.status === 401) {
             // Solo cerrar la sesión si hay una sesión activa
             if (currentSessionKey !== null) {
-                console.log('Sesión cerrada detectada. Cerrando sesión...');
                 alert('Tu sesión ha expirado o ha sido cerrada en otro dispositivo.');
                 cerrarSesion(); // Cierra la sesión automáticamente
             } else {
-                console.log('No hay sesión activa. Ignorando error 401.');
             }
         }
     } catch (error) {
@@ -120,6 +114,5 @@ setInterval(checkSession, 5000);
 
 // Llamar al script al cargar la página
 window.addEventListener('load', () => {
-    console.log('Session Key al cargar: ', currentSessionKey);  // Verifica si currentSessionKey tiene valor
     checkSession();
 });
