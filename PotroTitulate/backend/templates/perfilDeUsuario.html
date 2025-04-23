@@ -97,6 +97,17 @@
     #cerrarMensajes:hover {
         background-color: #e53935;
     }
+    /*Estilos para Preguntas Frecuentes*/
+    .dropdown-menu {
+        min-width: 300px;
+        max-width: 400px;
+        overflow-y: auto;
+        white-space: normal;
+    }
+    .dropdown-menu a {
+        padding: 8px 15px;
+        word-break: break-word;
+    }
 
     </style>
 </head>
@@ -124,36 +135,13 @@
             </ul>
             <button id="cerrarMensajes">Cerrar</button>
         </div>
-            <div class="dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Ver más detalles</a>
-                <div class="dropdown-menu">
-                    <a href="#">Opción 1</a>
-                    <a href="#">Opción 2</a>
-                    <a href="#">Opción 3</a>
-                </div>
             </div>
             <div class="dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Estado actual</a>
-                <div class="dropdown-menu">
-                    <a href="#">Formato 1</a>
-                    <a href="#">Formato 2</a>
-                    <a href="#">Formato 3</a>
-                </div>
-            </div>
-            <div class="dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">FAQ</a>
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Preguntas Frecuentes</a>
                 <div class="dropdown-menu">
                     <a href="#">Pregunta 1</a>
                     <a href="#">Pregunta 2</a>
                     <a href="#">Pregunta 3</a>
-                </div>
-            </div>
-            <div class="dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Otros</a>
-                <div class="dropdown-menu">
-                    <a href="#">Otro 1</a>
-                    <a href="#">Otro 2</a>
-                    <a href="#">Otro 3</a>
                 </div>
             </div>
             <button class="btn btn-link text-white ms-auto" style="text-decoration: none;" onclick="cerrarSesion()">Cerrar sesión</button>
