@@ -939,19 +939,40 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
         }
         return cookieValue;
     }
-    function filtrarAspirantes() {
-        const searchTerm = searchAspirantes.value.toLowerCase();
-        const items = aspirantesList.querySelectorAll("li.list-group-item");
+
+
+function filtrarAspirantes() {
+    const searchTerm = searchAspirantes.value.toLowerCase().trim();
+    const items = aspirantesList.querySelectorAll("li.list-group-item");
+    
+    items.forEach(item => {
+        // Encontrar el elemento que contiene el número de cuenta
+        const cuentaElement = item.querySelector('.text-muted.small');
+        let mostrarItem = false;
         
-        items.forEach(item => {
-            const cuentaText = item.textContent.toLowerCase();
-            if (cuentaText.includes(searchTerm)) {
-                item.style.display = "flex";
-            } else {
-                item.style.display = "none";
+        if (cuentaElement) {
+            const textoCuenta = cuentaElement.textContent.toLowerCase();
+            // Buscar el patrón "no. cuenta: XXXXXX"
+            const match = textoCuenta.match(/no\. cuenta:\s*([^|]+)/);
+            
+            if (match) {
+                const numeroCuenta = match[1].trim();
+                mostrarItem = numeroCuenta.includes(searchTerm);
             }
-        });
-    }
+        }
+        
+        item.style.display = mostrarItem ? "flex" : "none";
+        
+        if (searchTerm && !mostrarItem) {
+            item.classList.add('d-none');
+        } else {
+            item.classList.remove('d-none');
+        }
+    });
+
+}
+
+
     
     // Función para filtrar trámites
     function filtrarTramites() {
@@ -961,7 +982,7 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
         items.forEach(item => {
             const cuentaText = item.textContent.toLowerCase();
             if (cuentaText.includes(searchTerm)) {
-                item.style.display = "block";
+                item.style.display = "flex";
             } else {
                 item.style.display = "none";
             }
