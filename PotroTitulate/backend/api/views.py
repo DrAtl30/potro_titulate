@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.views import View
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
@@ -22,11 +22,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 from django.db import transaction
 import logging
-logger = logging.getLogger(__name__)  # Esto obtiene un logger con el nombre del módulo actual
+logger = logging.getLogger(__name__)  
 import json
 import os
 from django.http import FileResponse
-
 
 def index(request):
     timestamp = datetime.now().timestamp
@@ -264,17 +263,16 @@ def checkSession(request):
     return JsonResponse({'is_authenticated': is_authenticated})
     
 class AdministradorLoginView(APIView):
-    
     def post(self, request):
-        serializer = AdministradorLoginSerializer(data=request.data)
+        serializer = AdministradorLoginSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            # Guardar el ID del administrador en la sesión
-            request.session['admin_id'] = serializer.validated_data['id_administrador']
-
+            user = serializer.context.get('user') or User.objects.get(
+                email=serializer.validated_data['correo_electronico']
+            )
+            login(request, user)
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
 class RecuperarContraseñaView(APIView):
     def post(self, request, format=None):
         correo = request.data.get('correo_electronico')
@@ -831,16 +829,42 @@ def aprobar_tramite(request, tramite_id):
 @csrf_exempt
 @require_POST
 def rechazar_tramite(request, tramite_id):
+    # 1. Verificar autenticación del usuario Django
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Autenticación requerida'}, status=401)
+
+    # 2. Obtener el registro Administrativos correspondiente al usuario logueado
+    try:
+        # Intentamos encontrar el administrativo usando el email del usuario logueado
+        admin_email = request.user.email
+        if not admin_email:
+             logger.warning(f"Usuario {request.user.username} autenticado pero sin email registrado en su perfil.")
+             return JsonResponse({'success': False, 'error': 'El perfil de usuario no tiene un email asociado.'}, status=400)
+
+        # Usamos get_object_or_404 para buscar por correo_electronico y manejar el caso Not Found
+        admin_obj = get_object_or_404(Administrativos, correo_electronico=admin_email)
+
+    except Administrativos.DoesNotExist:
+        # Este error significa que el email del usuario logueado no está en la tabla Administrativos
+        logger.error(f"Usuario {request.user.username} (email: {admin_email}) intentó rechazar trámite, pero no se encontró registro en la tabla 'administrativos'.")
+        return JsonResponse({'success': False, 'error': 'Usuario no encontrado en el registro de administrativos.'}, status=403) # 403 Forbidden parece apropiado
+    except Exception as e:
+        # Captura otros posibles errores durante la búsqueda
+        logger.error(f"Error inesperado buscando administrativo para {request.user.username}: {str(e)}")
+        return JsonResponse({'success': False, 'error': 'Error interno al verificar permisos de administrador.'}, status=500)
+
+
+    # 3. Procesar el rechazo (el resto de la lógica)
     try:
         data = json.loads(request.body)
         motivo = data.get('motivo_rechazo', 'Rechazado por el administrador')
-        
+
         with transaction.atomic():
-            tramite = Tramites.objects.select_for_update().get(id_tramite=tramite_id)
-            
+            tramite = Tramites.objects.select_related('id_sustentante', 'id_opcion').select_for_update().get(id_tramite=tramite_id)
+
             if tramite.estado_actual == 'Rechazado':
                 return JsonResponse({
-                    'success': False, 
+                    'success': False,
                     'error': 'El trámite ya fue rechazado anteriormente'
                 }, status=400)
 
@@ -849,7 +873,10 @@ def rechazar_tramite(request, tramite_id):
             tramite.estado_actual = 'Rechazado'
             tramite.motivo_rechazo = motivo
             tramite.fecha_rechazo = timezone.now()
-            tramite.rechazado_por = request.user if request.user.is_authenticated else None
+            # Asignamos la instancia de Administrativos encontrada al campo FK
+            # **Asegúrate que tramite.rechazado_por sea un ForeignKey a Administrativos**
+            # Si fuera un FK a User, usarías request.user
+            tramite.rechazado_por = admin_obj
             tramite.save()
 
             # Registrar en historial
@@ -857,25 +884,41 @@ def rechazar_tramite(request, tramite_id):
                 id_tramite=tramite,
                 accion='Rechazado',
                 detalles=f"Motivo: {motivo}",
-                usuario=request.user if request.user.is_authenticated else None
+                # Aquí también, si 'usuario' es FK a User usa request.user,
+                # si es FK a Administrativos usa admin_obj
+                usuario=request.user # Asumiendo que es FK a User
+            )
+
+            # Crear Notificación para el Sustentante
+            opcion_nombre = tramite.id_opcion.nombre_opcion if tramite.id_opcion else 'desconocido'
+            mensaje_notificacion = f"Su trámite ({opcion_nombre}) ha sido rechazado. Motivo: {motivo}"
+
+            Notificaciones.objects.create(
+                id_sustentante=tramite.id_sustentante,
+                id_administrativo=admin_obj, # Usamos el objeto Administrativos encontrado
+                mensaje=mensaje_notificacion,
+                fecha_envio=timezone.now().date(),
+                estado_lectura=False,
+                es_de_administrador=True
             )
 
             return JsonResponse({
                 'success': True,
-                'message': 'Trámite rechazado correctamente',
+                'message': 'Trámite rechazado correctamente y notificación enviada.',
                 'motivo': motivo
             })
 
     except json.JSONDecodeError:
-        return JsonResponse({'success': False, 'error': 'Datos inválidos'}, status=400)
+        return JsonResponse({'success': False, 'error': 'Datos inválidos en la solicitud'}, status=400)
     except Tramites.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
     except Exception as e:
-        logger.error(f"Error al rechazar trámite {tramite_id}: {str(e)}")
+        logger.error(f"Error al procesar rechazo para trámite {tramite_id} por {request.user.username}: {str(e)}")
         return JsonResponse({
             'success': False,
             'error': 'Error interno al procesar el rechazo'
         }, status=500)
+
     
 @require_GET
 def documentos_tramite(request, tramite_id):
@@ -922,41 +965,110 @@ def obtener_motivo_rechazo(request, tramite_id):
 @csrf_exempt
 def validar_documento(request, documento_id):
     """
-    Vista para validar (aprobar/rechazar) un documento
+    Vista para validar (aprobar/rechazar) un documento por un administrativo.
     """
+    # 1. Verificar autenticación
+    if not request.user.is_authenticated:
+        logger.warning(f"Intento de validar documento {documento_id} por usuario anónimo.")
+        return JsonResponse({'success': False, 'error': 'Autenticación requerida'}, status=401)
+
+    # 2. Obtener el registro Administrativos asociado al usuario logueado
     try:
-        # Verificar que el documento exista
-        documento = Documentos.objects.get(id_documento=documento_id)
-        
-        # Parsear datos JSON
-        try:
-            data = json.loads(request.body)
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Datos JSON inválidos'}, status=400)
-        
-        # Validar acción
-        accion = data.get('accion')
-        if accion not in ['aceptado', 'rechazado']:
-            return JsonResponse({'success': False, 'error': 'Acción no válida'}, status=400)
-        
-        # Validar motivo si es rechazo
-        if accion == 'rechazado' and not data.get('comentario', '').strip():
-            return JsonResponse({
-                'success': False, 
-                'error': 'Se requiere un motivo para el rechazo'
-            }, status=400)
-        
-        # Actualizar documento
-        documento.estado_validacion = accion
-        documento.comentarios_validacion = data.get('comentario', '')
-        documento.fecha_validacion = timezone.now()
-        
-        # Registrar usuario que realiza la validación si está autenticado
-        if request.user.is_authenticated:
-            documento.validado_por = request.user
-        
-        documento.save()
-        
+        admin_email = request.user.email
+        if not admin_email:
+            logger.warning(f"Usuario {request.user.username} autenticado pero sin email para buscar en Administrativos.")
+            return JsonResponse({'success': False, 'error': 'Perfil de usuario sin email asociado.'}, status=400)
+
+        admin_obj = get_object_or_404(Administrativos, correo_electronico=admin_email)
+        logger.info(f"Validación por admin: {admin_obj.nombre} (ID: {admin_obj.id_administrativo}) para usuario Django: {request.user.username}")
+
+    except Administrativos.DoesNotExist:
+        logger.error(f"Usuario {request.user.username} (email: {admin_email}) no encontrado en tabla 'administrativos'.")
+        return JsonResponse({'success': False, 'error': 'Usuario no autorizado (no es administrativo registrado).'}, status=403)
+    except Exception as e:
+        logger.error(f"Error buscando administrativo para {request.user.username}: {str(e)}")
+        return JsonResponse({'success': False, 'error': 'Error interno al verificar permisos.'}, status=500)
+
+    # 3. Procesar la validación
+    try:
+        # Usar transaction.atomic para asegurar consistencia DB
+        with transaction.atomic():
+            # Obtener el documento y precargar datos relacionados para eficiencia
+            documento = Documentos.objects.select_related(
+                'id_tramite',
+                'id_tramite__id_sustentante' # Precargar sustentante a través del trámite
+            ).get(id_documento=documento_id)
+
+            # Parsear datos JSON
+            try:
+                data = json.loads(request.body)
+            except json.JSONDecodeError:
+                return JsonResponse({'success': False, 'error': 'Datos JSON inválidos'}, status=400)
+
+            # Validar acción
+            accion = data.get('accion')
+            if accion not in ['aceptado', 'rechazado']:
+                return JsonResponse({'success': False, 'error': 'Acción no válida (debe ser "aceptado" or "rechazado")'}, status=400)
+
+            comentario = data.get('comentario', '').strip()
+
+            # Validar motivo para rechazo
+            if accion == 'rechazado' and not comentario:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Se requiere un motivo para el rechazo'
+                }, status=400)
+
+            # Actualizar estado del documento
+            documento.estado_validacion = accion
+            documento.comentarios_validacion = comentario
+            documento.fecha_validacion = timezone.now()
+
+            # --- Asignar el administrativo correcto ---
+            # ASUNCIÓN: revisado_por y validado_por son FK a Administrativos
+            documento.revisado_por = admin_obj
+            documento.validado_por = admin_obj
+            # Si fueran FK a User, usarías:
+            # documento.revisado_por = request.user
+            # documento.validado_por = request.user
+
+            documento.save() # Guardar los cambios en el documento
+
+            # Enviar notificación SOLO si se RECHAZA
+            if accion == 'rechazado':
+                mensaje_notificacion = (
+                    f"Su documento '{documento.nombre_documento}' del trámite {documento.id_tramite.id_tramite} "
+                    f"ha sido rechazado. Motivo: {comentario}"
+                )
+
+                # Obtener IDs necesarios (ya precargados)
+                sustentante_id_pk = documento.id_tramite.id_sustentante.id_sustentante
+                admin_id_pk = admin_obj.id_administrativo # ID del modelo Administrativos
+
+                logger.info(f"Intentando enviar notificación de rechazo a sustentante ID: {sustentante_id_pk} por admin ID: {admin_id_pk}")
+
+                enviar_notificacion(
+                    sustentante_id=sustentante_id_pk,
+                    administrativo_id=admin_id_pk, # Pasamos el ID correcto
+                    mensaje=mensaje_notificacion,
+                    es_de_administrador=True
+                )
+
+            # Si la acción es 'aceptado', podrías opcionalmente enviar otra notificación
+            elif accion == 'aceptado':
+                 mensaje_notificacion_aceptado = (
+                    f"Su documento '{documento.nombre_documento}' del trámite {documento.id_tramite.id_tramite} "
+                    f"ha sido aceptado."
+                 )
+                 enviar_notificacion(
+                    sustentante_id=documento.id_tramite.id_sustentante.id_sustentante,
+                    administrativo_id=admin_obj.id_administrativo,
+                    mensaje=mensaje_notificacion_aceptado,
+                    es_de_administrador=True
+                 )
+
+
+        # Si todo va bien dentro de la transacción, se hace commit automático
         return JsonResponse({
             'success': True,
             'message': f'Documento {accion} correctamente',
@@ -967,15 +1079,16 @@ def validar_documento(request, documento_id):
 
     except Documentos.DoesNotExist:
         return JsonResponse({
-            'success': False, 
+            'success': False,
             'error': 'Documento no encontrado'
         }, status=404)
-        
+
     except Exception as e:
-        logger.error(f"Error al validar documento {documento_id}: {str(e)}")
+        # Captura errores durante la lógica principal o la transacción
+        logger.exception(f"Error al validar documento {documento_id} por {request.user.username}: {str(e)}") # Usar logger.exception para incluir traceback
         return JsonResponse({
-            'success': False, 
-            'error': 'Error interno del servidor'
+            'success': False,
+            'error': 'Error interno del servidor al procesar la validación.'
         }, status=500)
     
 def actualizar_estado_tramite(tramite):
@@ -1018,3 +1131,86 @@ def descargar_formato(request, nombre_archivo):
     if os.path.exists(file_path):
         return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=nombre_archivo)
     raise Http404("El archivo no existe")
+
+
+def enviar_notificacion(sustentante_id, administrativo_id, mensaje, es_de_administrador=False):
+    """
+    Crea una nueva notificación en la base de datos
+    
+    Args:
+        sustentante_id: ID del sustentante que recibirá la notificación
+        administrativo_id: ID del administrativo que envía la notificación
+        mensaje: Contenido de la notificación
+        es_de_administrador: Indica si la notificación es enviada por un administrador
+    """
+    try:
+        Notificaciones.objects.create(
+            id_sustentante_id=sustentante_id,
+            id_administrativo_id=administrativo_id,
+            mensaje=mensaje,
+            fecha_envio=timezone.now().date(),
+            estado_lectura=False,
+            es_de_administrador=es_de_administrador
+        )
+        return True
+    except Exception as e:
+        print(f"Error al crear notificación: {str(e)}")
+        return False
+    
+@require_GET
+def obtener_notificaciones(request, sustentante_id):
+    """
+    Obtiene las notificaciones no leídas de un sustentante
+    """
+    try:
+        notificaciones = Notificaciones.objects.filter(
+            id_sustentante_id=sustentante_id,
+            estado_lectura=False
+        ).order_by('-fecha_envio')[:10]  # Últimas 10 no leídas
+
+        resultados = [{
+            'id': n.id_notificacion,
+            'mensaje': n.mensaje,
+            'fecha': n.fecha_envio.strftime('%Y-%m-%d'),
+            'es_de_administrador': n.es_de_administrador,
+            'administrativo': n.id_administrativo.nombre if n.id_administrativo else 'Sistema'
+        } for n in notificaciones]
+
+        return JsonResponse({
+            'success': True,
+            'notificaciones': resultados,
+            'total': len(resultados)
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            'success': False, 
+            'error': str(e)
+        }, status=500)
+    
+@require_POST
+@csrf_exempt
+def marcar_leida(request, notificacion_id):
+    """
+    Marca una notificación como leída
+    """
+    try:
+        notificacion = Notificaciones.objects.get(
+            id_notificacion=notificacion_id,
+            id_sustentante_id=request.user.id  # Asegura que solo el dueño puede marcarla
+        )
+        notificacion.estado_lectura = True
+        notificacion.save()
+        
+        return JsonResponse({'success': True})
+
+    except Notificaciones.DoesNotExist:
+        return JsonResponse({
+            'success': False, 
+            'error': 'Notificación no encontrada'
+        }, status=404)
+    except Exception as e:
+        return JsonResponse({
+            'success': False, 
+            'error': str(e)
+        }, status=500)

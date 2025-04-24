@@ -400,7 +400,7 @@ function handleFileChange(requisito) {
         const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
         if (file.size > maxSizeBytes) {
-            mostrarModal(`El archivo es demasiado grande. El tamaño máximo permitido es ${maxSize3MB} 3MB.`, 'errorModal');
+            mostrarModal(`El archivo es demasiado grande. El tamaño máximo permitido es 3MB.`, 'errorModal');
             fileInput.value = '';
             return;
         }

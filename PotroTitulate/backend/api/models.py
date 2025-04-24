@@ -2,20 +2,27 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
+from django.contrib.auth.models import User
+
 
 
 
 class Administrativos(models.Model):
+    # Mantén tu campo ID original
     id_administrativo = models.AutoField(primary_key=True)
+    
+    # Relación OneToOne con el User de Django
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='administrativo_profile')
+    
+    # Campos adicionales (opcional, puedes mover algunos a User)
     nombre = models.CharField(max_length=100)
     correo_electronico = models.CharField(unique=True, max_length=100)
-    contrasena = models.CharField(max_length=100)
-   # rol = models.CharField(max_length=50)
-
-    class Meta:
-        managed = False
-        db_table = 'administrativos'
     
+    # Elimina el campo de contraseña (se usará la de User)
+    # contrasena = models.CharField(max_length=100)  # ¡Eliminar este campo!
+    
+    class Meta:
+        db_table = 'administrativos'
 
 class Documentos(models.Model):
     id_documento = models.AutoField(primary_key=True)

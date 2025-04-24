@@ -8,6 +8,8 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.contrib.auth import authenticate
+
 
 from .models import Sustentante, OpcionTitulacion
 
@@ -103,18 +105,23 @@ class AdministradorLoginSerializer(serializers.Serializer):
     contrasena = serializers.CharField(write_only=True)
 
     def validate(self, data):
+        # Autenticar con el sistema de Django
+        user = authenticate(
+            username=data['correo_electronico'],
+            password=data['contrasena']
+        )
+        
+        if user is None:
+            raise serializers.ValidationError("Credenciales incorrectas")
+        
         try:
-            administrador = Administrativos.objects.get(correo_electronico=data['correo_electronico'])
-        except Administrativos.DoesNotExist:
-            raise serializers.ValidationError("Correo electrónico o contraseña incorrectos.")
+            # Verificar que tenga perfil administrativo
+            administrativo = user.administrativo_profile
+        except AttributeError:
+            raise serializers.ValidationError("El usuario no tiene permisos de administrador")
         
-        # Verifica si la contraseña es correcta
-        if not check_password(data['contrasena'], administrador.contrasena):
-            raise serializers.ValidationError("Correo electrónico o contraseña incorrectos.")
-        
-        # Devuelve datos del administrador, pero sin la contraseña
         return {
-            'id_administrador': administrador.id_administrativo,
-            'nombre': administrador.nombre,
-            'correo_electronico': administrador.correo_electronico
+            'id_administrador': administrativo.id_administrativo,
+            'nombre': administrativo.nombre,
+            'correo_electronico': user.email
         }
