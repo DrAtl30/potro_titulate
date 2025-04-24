@@ -6125,3 +6125,144 @@ Traceback (most recent call last):
              ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
 KeyError: 'username'
 "POST /api/login/administrador/ HTTP/1.1" 500 95984
+Internal Server Error: /administrador/
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 35, in __call__
+    if sustentante.session_key and sustentante.session_key != request.session.session_key:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'session_key'
+"GET /administrador/ HTTP/1.1" 500 66696
+Internal Server Error: /api/verificarSesion/
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 35, in __call__
+    if sustentante.session_key and sustentante.session_key != request.session.session_key:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'session_key'
+"GET /api/verificarSesion/ HTTP/1.1" 500 66318
+Internal Server Error: /api/verificarSesion/
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 35, in __call__
+    if sustentante.session_key and sustentante.session_key != request.session.session_key:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'session_key'
+"GET /api/verificarSesion/ HTTP/1.1" 500 66318
+Internal Server Error: /api/verificarSesion/
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 35, in __call__
+    if sustentante.session_key and sustentante.session_key != request.session.session_key:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'session_key'
+"GET /api/verificarSesion/ HTTP/1.1" 500 66318
+Internal Server Error: /api/verificarSesion/
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 35, in __call__
+    if sustentante.session_key and sustentante.session_key != request.session.session_key:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'session_key'
+"GET /api/verificarSesion/ HTTP/1.1" 500 66318
+Internal Server Error: /api/verificarSesion/
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 35, in __call__
+    if sustentante.session_key and sustentante.session_key != request.session.session_key:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'session_key'
+"GET /api/verificarSesion/ HTTP/1.1" 500 66318
+Internal Server Error: /api/verificarSesion/
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 35, in __call__
+    if sustentante.session_key and sustentante.session_key != request.session.session_key:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'session_key'
+"GET /api/verificarSesion/ HTTP/1.1" 500 66318
+Internal Server Error: /inicioSesionAdmin/
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 35, in __call__
+    if sustentante.session_key and sustentante.session_key != request.session.session_key:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'session_key'
+"GET /inicioSesionAdmin/ HTTP/1.1" 500 66554
+Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 35, in __call__
+    if sustentante.session_key and sustentante.session_key != request.session.session_key:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'session_key'
+"GET / HTTP/1.1" 500 66387
+Internal Server Error: /inicioSesionAdmin
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 35, in __call__
+    if sustentante.session_key and sustentante.session_key != request.session.session_key:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'session_key'
+"GET /inicioSesionAdmin HTTP/1.1" 500 66721
+Internal Server Error: /inicioSesionAdmin
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 35, in __call__
+    if sustentante.session_key and sustentante.session_key != request.session.session_key:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/utils/functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'session_key'
+"GET /inicioSesionAdmin HTTP/1.1" 500 66447
+Internal Server Error: /api/notificaciones/49/
+"GET /api/notificaciones/49/ HTTP/1.1" 500 77
+Internal Server Error: /api/notificaciones/49/
+"GET /api/notificaciones/49/ HTTP/1.1" 500 77
+Internal Server Error: /api/notificaciones/49/
+"GET /api/notificaciones/49/ HTTP/1.1" 500 77
+Internal Server Error: /api/notificaciones/49/
+"GET /api/notificaciones/49/ HTTP/1.1" 500 77
+Internal Server Error: /api/notificaciones/49/
+"GET /api/notificaciones/49/ HTTP/1.1" 500 77
+Internal Server Error: /api/notificaciones/49/
+"GET /api/notificaciones/49/ HTTP/1.1" 500 77
+Internal Server Error: /api/notificaciones/49/
+"GET /api/notificaciones/49/ HTTP/1.1" 500 77
+Internal Server Error: /api/notificaciones/49/
+"GET /api/notificaciones/49/ HTTP/1.1" 500 77
+Internal Server Error: /api/notificaciones/49/
+"GET /api/notificaciones/49/ HTTP/1.1" 500 77
+Internal Server Error: /api/validar_documento/76/
+"POST /api/validar_documento/76/ HTTP/1.1" 500 57

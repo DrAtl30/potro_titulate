@@ -8,19 +8,17 @@ from django.contrib.auth.models import User
 
 
 class Administrativos(models.Model):
-    # Mantén tu campo ID original
     id_administrativo = models.AutoField(primary_key=True)
-    
-    # Relación OneToOne con el User de Django
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='administrativo_profile')
-    
-    # Campos adicionales (opcional, puedes mover algunos a User)
     nombre = models.CharField(max_length=100)
     correo_electronico = models.CharField(unique=True, max_length=100)
+    # ELIMINAR el campo contrasena (ya no es necesario)
     
-    # Elimina el campo de contraseña (se usará la de User)
-    # contrasena = models.CharField(max_length=100)  # ¡Eliminar este campo!
-    
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='administrativo_profile'
+    )
+
     class Meta:
         db_table = 'administrativos'
 

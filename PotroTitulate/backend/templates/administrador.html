@@ -23,10 +23,10 @@
     <div class="header-right" style="display: flex; align-items: center; gap: 2rem;">
       <!-- Se muestra el nombre del administrador directamente desde el contexto -->
       <span style="color: white; font-size: 1.2rem;">
-        {% if admin_obj %}
-          Bienvenido, {{ admin_obj.nombre }}
+        {% if user.is_authenticated %}
+          Bienvenido, {{ user.administrativo_profile.nombre }}
         {% else %}
-          Bienvenido
+        <a href="{% url 'inicioSesionAdmin' %}">Login</a>
         {% endif %}
       </span>
       <!-- Enlace para Cerrar sesión (redirige a la vista de inicio de sesión) -->
