@@ -1064,6 +1064,7 @@ FORMATOS_PERMITIDOS = {
     'formato_8_11.docx' : '8.11 Cesión de Derechos',
 }
 def descargar_formato(request, nombre_archivo):
+    """Vista para descargar formatos oficiales"""
 
     formatos_dir = os.path.join(settings.STATICFILES_DIRS[0], 'formatos')
     archivos_disponibles = os.listdir(formatos_dir)
@@ -1074,11 +1075,15 @@ def descargar_formato(request, nombre_archivo):
     # Construye la ruta relativa a tu carpeta 'formatos'
     file_path = os.path.join(settings.STATICFILES_DIRS[0], 'formatos', nombre_archivo)
     
-    
-
     if os.path.exists(file_path):
         return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=nombre_archivo)
     raise Http404("El archivo no existe")
+
+
+def preguntas_frecuentes(request):
+    """Vista para renderizar página de Preguntas Frecuentes"""
+    pre_freS = PreguntasFrecuentes.objects.all()
+    return render(request, "preguntasFrecuentesIndex.html", {'pre_freS' : pre_freS})
 
 
 def enviar_notificacion(sustentante_id, administrativo_id=None, mensaje="", es_de_administrador=False):

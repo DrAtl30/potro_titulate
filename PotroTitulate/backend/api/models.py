@@ -244,11 +244,20 @@ class HistorialTramite(models.Model):
     
 
 
-    class Formatos(models.Model):
-        nombre = models.CharField(max_length=200)
-        archivo = models.FileField(upload_to="formatos/")
-        codigo = models.CharField(max_length=20, unique=True)
+class Formatos(models.Model):
+    nombre = models.CharField(max_length=200)
+    archivo = models.FileField(upload_to="formatos/")
+    codigo = models.CharField(max_length=20, unique=True)
 
-        def __str__(self):
-            return f"{self.codigo} - {self.nombre}"
-    
+    def __str__(self):
+        return f"{self.codigo} - {self.nombre}"
+
+
+class PreguntasFrecuentes(models.Model):
+    """Registro de la preguntas y respuestas"""
+    pregunta = models.CharField(max_length=500)
+    respuesta  = models.CharField(max_length=2000)
+
+    def __str__(self):
+        return self.pregunta
+
