@@ -23,7 +23,7 @@ const requisitos = {
         'Evaluación Profesional: Formato 8.6',
         'Evaluación Profesional: Formato 8.8'
     ],
-    'Artículo Especializado para la Publicación en una Revista Indexada': [
+    'Artículo especializado para publicar en revista indizada': [
         'Formato 8.1 con sus firmas',
         'Aviso Firmado de Privacidad de la UAEM',
         'Certificado de 100% de plan de estudios',

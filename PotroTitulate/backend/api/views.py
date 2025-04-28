@@ -65,6 +65,7 @@ def perfilUsuario(request):
             'aprobado' : aprobado
 
         })
+    
     except Sustentante.DoesNotExist:
         return redirect('login')
         

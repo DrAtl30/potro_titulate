@@ -6266,3 +6266,14 @@ Internal Server Error: /api/notificaciones/49/
 "GET /api/notificaciones/49/ HTTP/1.1" 500 77
 Internal Server Error: /api/validar_documento/76/
 "POST /api/validar_documento/76/ HTTP/1.1" 500 57
+Internal Server Error: /perfilUsuario/
+Traceback (most recent call last):
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/enriquemap/Documentos/potro_titulate/PotroTitulate/backend/api/views.py", line 46, in perfilUsuario
+    print(f"Opcion de titulación: {opcion_titulacion}")
+                                   ^^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'opcion_titulacion' where it is not associated with a value
+"GET /perfilUsuario/ HTTP/1.1" 500 68106
