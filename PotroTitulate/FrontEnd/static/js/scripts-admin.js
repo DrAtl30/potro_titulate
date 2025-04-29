@@ -122,13 +122,13 @@ document.addEventListener("DOMContentLoaded", function() {
         
         // Configurar según el tipo de acción
         if (accion === 'rechazar') {
-            document.getElementById('modalTitle').textContent = 'Confirmar rechazo';
-            document.getElementById('modalMessage').textContent = '¿Estás seguro de rechazar este trámite?';
+            document.getElementById('modalTitle').textContent = 'Confirmar rechazo de solicitud';
+            document.getElementById('modalMessage').textContent = '¿Estás seguro de rechazar esta solicitud?';
             motivoContainer.style.display = 'block';
             motivoInput.value = motivoActual || 'No cumple con los requisitos establecidos';
         } else {
-            document.getElementById('modalTitle').textContent = 'Confirmar aprobación';
-            document.getElementById('modalMessage').textContent = '¿Estás seguro de aprobar este trámite?';
+            document.getElementById('modalTitle').textContent = 'Confirmar solicitud';
+            document.getElementById('modalMessage').textContent = '¿Estás seguro de aprobar esta solicitud?';
             motivoContainer.style.display = 'none';
         }
 
@@ -617,8 +617,123 @@ document.addEventListener("DOMContentLoaded", function() {
         return `<span class="${clase}">${texto}</span>`;
     }
 
+
+    function mostrarConfirmacionDocumento(documentoId, tramiteId){
+        const modal = document.createElement('div')
+        modal.className = 'modal fade'
+                            // en el botón de "Cancelar" se optó por utilizar el objeto declarado arriba ModalManager, en vez de data-dismiss de Bootstrap
+        modal.innerHTML = `
+            <div class="modal-dialog">
+                <div class= "modal-content">
+                    <div class = "modal-header">
+                        <h5 class= "modal-title"> Confirmar aprobación</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p> ¿Estas seguro que seguro que deseas aprobar este documnto?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="cancelarAccion" class="btn btn-secondary">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="confirmarAprobacion">Confirmar</button>
+                    </div>
+                </div>
+            </div>    
+        `
+        document.body.appendChild(modal)
+
+        ModalManager.show(modal)
+        ModalManager.setupModalEvents(modal)   // cierra correctamente el modal al selecionar "Cancelar"
+
+        document.getElementById('confirmarAprobacion').onclick = async () => {
+            try{
+                $(modal).modal('hide')
+                const botones = document.querySelectorAll(`[onclick*="validarDocumento(${documentoId}, 'aceptado', ${tramiteId})"]`)
+                botones.forEach(boton => {
+                    boton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'
+                    boton.disabled = true;
+                })
+                const response = await fetch(`/api/validar_documento/${documentoId}/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    body: JSON.stringify({ 
+                        accion: 'aceptado',
+                        comentario: '' 
+                    })
+                })
+
+                botones.forEach(boton => {
+                    boton.innerHTML = '<i class="fas fa-check"></i>'
+                    boton.disabled = false
+                })
+
+                if (!response.ok){
+                    throw new Error('Error al aprobar el documento...')
+                }
+                
+                const data = await response.json()
+
+                if(!data.success){
+                    throw new Error(data.error || 'Error al aprobar documento')
+                }
+                mostrarToast('Docummento aprobado correctamente', 'success')
+                
+                const tramiteItem = document.querySelector(`.tramite-item[data-id="${tramiteId}"]`)
+
+
+                if (tramiteItem){
+                    const sustentanteId = tramiteItem.getAttribute('data-sustentante');
+                    const documentosContainer = tramiteItem.querySelector('.documentos-container');
+                    if (documentosContainer && documentosContainer.style.display === 'block'){
+                        await cargarDocumentosTramite(tramiteId, sustentanteId, tramiteItem);
+                    }
+                }
+
+
+
+            } catch (error){
+                mostrarToast(`Error: ${error.message}`, 'error')
+            } finally {
+                ModalManager.hide()
+                setTimeout(() => {
+                    if (modal.parentNode){
+                        modal.parentNode.removeChild(modal)
+                    }
+                },500)
+            }
+        }
+        modal.querySelector('.close').addEventListener('click', () => {
+            ModalManager.hide();
+            setTimeout(() => {
+                if (modal.parentNode) {
+                    modal.parentNode.removeChild(modal);
+                }
+            }, 500)
+        })
+
+
+        modal.querySelector('#cancelarAprobacion').addEventListener('click', () => {
+            ModalManager.hide();
+            setTimeout(() => {
+                if (modal.parentNode) {
+                    modal.parentNode.removeChild(modal);
+                }
+            }, 500);
+        })
+}
+
+
+
     // Función para validar documentos
     window.validarDocumento = async function(documentoId, accion, tramiteId) {
+
+        if (accion === 'aceptado'){
+            mostrarConfirmacionDocumento(documentoId, tramiteId)
+            return
+        }
+
         try {
             let comentario = '';
             
@@ -626,12 +741,12 @@ document.addEventListener("DOMContentLoaded", function() {
             if (accion === 'rechazado') {
                 comentario = await new Promise((resolve) => {
                     const modal = document.createElement('div');
-                    modal.className = 'modal fade';
+                    modal.className = 'modal fade'; //Quitar data-dismiss y usar el objeto ModalManager declarado anteriormente : cómo estaba: <button type="button" class="btn btn-secondary" data-dismiss="modal">
                     modal.innerHTML = `
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Motivo del rechazo</h5>
+                                    <h5 class="modal-title">Motivo de rechazo del documento</h5>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 </div>
                                 <div class="modal-body">
@@ -639,7 +754,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                             placeholder="Ingrese el motivo del rechazo"></textarea>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button id="cancelarAccion" class="btn btn-secondary">Cancelar</button> 
                                     <button type="button" class="btn btn-primary" id="confirmarMotivo">Confirmar</button>
                                 </div>
                             </div>
@@ -647,19 +762,25 @@ document.addEventListener("DOMContentLoaded", function() {
                     `;
                     
                     document.body.appendChild(modal);
-                    $(modal).modal('show');
+                    // utilizar el ModalManager  y los eventos que se activan al seleccionar los botones "Cancalar" y "Confirmar"
+                    ModalManager.show(modal)  
+                    ModalManager.setupModalEvents(modal)
                     
                     document.getElementById('confirmarMotivo').onclick = () => {
                         const motivo = document.getElementById('motivoRechazo').value.trim();
-                        $(modal).modal('hide');
-                        setTimeout(() => modal.remove(), 500);
-                        resolve(motivo);
+                        ModalManager.hide()
+                        setTimeout(() => {
+                            if (modal.parentNode) modal.parentNode.removeChild(modal)
+                                resolve(motivo)
+                        }, 500)
                     };
                     
                     modal.querySelector('.close').onclick = () => {
-                        $(modal).modal('hide');
-                        setTimeout(() => modal.remove(), 500);
-                        resolve(null);
+                        ModalManager.hide()
+                        setTimeout(() => {
+                            if (modal.parentNode) modal.parentNode.removeChild(modal)
+                                resolve(null)
+                        }, 500)
                     };
                 });
                 
