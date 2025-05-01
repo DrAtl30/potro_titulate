@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/estilos2.css' %}">
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+    <link rel="stylesheet" href= "{% static 'css/mensajes.css'%}">
     <style>
 
         /* Estilos para el contenedor de notificaciones (puedes ajustar) */
@@ -59,14 +60,35 @@
             <button id="botonMensajes" data-sustentante-id="{{ id_sustentante }}" class="btn btn-info"> Ver mensajes
             </button>    
             
-            <!-- Contenedor de mensajes, oculto inicialmente -->
-        <div id="zonaMensajes" class="zona-mensajes" style="display: none; position: fixed; top: 20%; left: 50%; transform: translateX(-50%); width: 80%; max-width: 500px; background: #fff; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
-            <h3 class="fw-bold text-dark text-center mb-3">Mensajes</h3>
-            <ul id="listaMensajes" class="list-group">
-                <!-- Los mensajes se insertarán aquí mediante JavaScript -->
-            </ul>
-            <button id="cerrarMensajes">Cerrar</button>
-        </div>
+            <!-- Contenedor del modal para zona de mensajes -->
+            <div id="zonaMensajes" class="zona-mensajes">
+                <div class="zona-mensajes-interno">
+                    <!-- Barra lateral  -->
+                    <div class="sidebar-mensajes">
+                        <h5>Mensajes Recibidos</h5>
+                        <ul id="listaResumenMensajes" class="lista-resumen-mensajes">
+                            <!-- Los resúmenes contabilizados de los mensajes aparecen aquí-->
+                        </ul>
+                    </div>
+                    
+                    <!-- Área principal para los mensajes -->
+                    <div class="contenedor-principal-mensajes">
+                        <div class="encabezado-mensajes">
+                            <h3>Detalle de Mensajes</h3>
+                            <button id="cerrarMensajes" class="boton-cerrar-mensajes" aria-label="Cerrar mensajes">
+                                &times;
+                            </button>
+                        </div>
+                        
+                        <!-- Contenedor con scroll para mensajes -->
+                        <div class="lista-mensajes-contenedor">
+                            <ul id="listaMensajes" class="lista-mensajes">
+                                <!-- el acumulado de todos los mensajes van aquí-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
 
 
