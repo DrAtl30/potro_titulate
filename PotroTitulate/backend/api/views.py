@@ -541,21 +541,25 @@ def enviar_mensaje_admin(request, id_sustentante):
     Espera un JSON con: {"mensaje": "texto"}
     """
     if request.method == 'POST':
+        # Obtener el ID del admin desde el perfil administrativo
         try:
-            # Obtener el ID del admin desde la sesión
-            id_administrativo = request.session.get('admin_id')
-            if not id_administrativo:
-                return JsonResponse({'success': False, 'error': 'Administrador no autenticado'}, status=401)
+            # verificar que se un usuario, es decir, validación general. 
+            if not request.user.is_authenticated:
+                return JsonResponse({'success': False, 'error': 'Usuario no autenticado'}, status=401)
+            # validación del perfil administrativo
+            try:
+                admin_profile = request.user.administrativo_profile
+            except AttributeError:
+                return JsonResponse({'success': False, 'error': 'Lo siento, el usuario no tiene un perfil de administrativo'}, status=403)
 
             data = json.loads(request.body)
             mensaje_texto = data.get('mensaje')
 
             if not mensaje_texto:
-                return JsonResponse({'success': False, 'error': 'Datos incompletos'}, status=400)
+                return JsonResponse({'success': False, 'error': 'Datos incompletos, sin mensaje'}, status=400)
 
-            # Recuperar objetos Sustentante y Administrativos
+            # Recuperar objetos Sustentante
             sustentante = get_object_or_404(Sustentante, id_sustentante=id_sustentante)
-            administrativo = get_object_or_404(Administrativos, id_administrativo=id_administrativo)
 
             # Crear el mensaje en la tabla Notificaciones
             Notificaciones.objects.create(
@@ -564,14 +568,14 @@ def enviar_mensaje_admin(request, id_sustentante):
                 fecha_envio=timezone.now(),
                 estado_lectura=False,  # False para "No leído", True para "Leído"
                 es_de_administrador=True,  # Indica que lo manda el admin
-                id_administrativo=administrativo
+                id_administrativo=admin_profile
             )
 
             return JsonResponse({'success': True, 'message': 'Mensaje enviado correctamente'}, status=200)
         
         except Exception as e:
             print(f"Error: {str(e)}")
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+            return JsonResponse({'success': False, 'error interno': str(e)}, status=500)
     print("Error: Método no permitido")
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
