@@ -1,0 +1,263 @@
+            /*Acordeón*/
+
+.accordion-scroll-container {
+    max-height: calc(10 * 60px + 10px);
+    overflow-y: auto !important;
+    scrollbar-width: thin;
+    margin-bottom: 20px;
+}
+
+.accordion-scroll-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.accordion-scroll-container::-webkit-scrollbar-thumb {
+    background: #db6018;
+    border-radius: 10px;
+}
+
+.accordion-item {
+    min-height: 60px;
+}
+
+/*estilos personalizados acordeón*/
+
+.custom-accordion-item {
+    border: 1px solid #dee2e6;
+    margin-bottom: 8px;
+    border-radius: 5px !important;
+    overflow: hidden;
+}
+
+.custom-accordion-button {
+    background-color: #679370 !important; /* Verde oscuro */
+    color: white !important;
+    font-weight: 600;
+    padding: 15px 20px;
+    font-family: 'Times New Roman', Times, serif !important;
+    font-size: 1.25rem !important;
+    letter-spacing: 0.3px;
+    line-height: 1.4;
+}
+
+.custom-accordion-button:not(.collapsed) {
+    background-color: #bea52a !important; /* Verde un poco más claro */
+    color: white !important;
+    box-shadow: none;
+}
+
+.custom-accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(44, 82, 52, 0.25); /* Sombra verde */
+}
+
+.custom-accordion-body {
+    background-color: #f8f9fa;
+    border-top: 1px solid #ffffff;
+    padding: 20px;
+}
+
+/* Efecto hover */
+.custom-accordion-button:hover {
+    background-color: #bea52a !important;
+}
+
+
+
+
+
+              /*Títulos */
+.body-titles {
+    color: #9C8412;
+    font-family: 'Times New Roman', serif;
+    font-size: 2.5rem;
+    text-align: center;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2); 
+    letter-spacing: 0.5px; 
+    margin: 0 20px 15px 0; 
+    transition: all 0.3s ease; 
+}
+
+.body-titles:hover {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+             /* header */
+.header-custom {
+    background-color: #2C5234;  /* Verde universitario */
+    padding: 10px 0;
+    border-bottom: 3px solid #9C8412;  /* Línea dorada */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    min-height: 80px;
+}
+
+/* Contenedor del escudo */
+.escudo-universidad {
+    height: 100%;
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+/* Escudo universitario */
+.escudo-universidad img {
+    height: 70px; /* Altura fija */
+    width: auto; /* Ancho proporcional */
+    object-fit: contain;
+    filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
+    transition: transform 0.3s;
+}
+
+.escudo-universidad img:hover {
+    transform: scale(1.05);
+}
+
+/* Texto header izquierda */
+.header-titulo {
+    color: white;
+    font-family: 'Times New Roman', serif;
+    font-size: 1.2rem;
+    margin-right: 20px;
+
+    text-align: right;
+    flex-grow: 1;
+    padding-right: 20px;
+    font-weight: 550;
+}
+.header-titulo:hover {
+    text-shadow: 2px 2px 4px rgba(156, 132, 18, 1.0);
+}
+
+
+
+
+               /* FOOTER   */
+.footer-custom {
+    position: fixed; 
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 12.5vh; 
+    overflow: hidden; 
+    margin: 0;
+    padding: 0;
+    z-index: 1000;  
+}
+
+.footer-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: center bottom; 
+    display: block;
+    margin: 0;
+    padding: 0;   
+}
+
+.footer-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    background-color: #9C8412;
+    padding: 8px 0;
+    margin: 0;
+}
+
+body {
+    padding-bottom: 12.5vh; 
+    margin: 0;
+}
+
+.footer-text:hover {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+
+
+
+
+                  /* flecha de regreso*/
+.back-arrow-container {
+    padding: 15px 0 5px 25px; 
+    background-color: white; 
+    border-bottom: 1px solid #e0e0e0; 
+    position: relative; 
+}
+
+.back-arrow {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 1.1rem;
+    color: #5a7561;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.back-arrow i {
+    font-size: 1.3rem;
+}
+
+.back-arrow:hover {
+    color: #2C5234;
+    text-decoration: underline;
+}
+
+
+
+
+
+
+                       /* deseño responsivo */
+@media (max-width: 768px) {
+    .header-logo {
+        max-height: 60px;
+    }
+    
+    .accordion-scroll-container {
+        max-height: 300px;
+    }
+    
+    .footer-text {
+        font-size: 14px;
+        bottom: 10px;
+    }
+    .footer-custom {
+        height: 15vh; /* Un poco más alto en móviles */
+    }
+    body {
+        padding-bottom: 15vh; /* Ajusta igual que el footer */
+    }
+
+    .escudo-universidad img {
+        height: 50px;
+    }
+    .header-titulo {
+        font-size: 0.9rem;
+        padding-right: 10px;
+    }
+    .body-titles {
+        font-size: 2rem;
+        font-weight: 600;
+    }
+    .custom-accordion-button{
+        padding: 12px 15px;
+        font-size: 1rem !important;
+    }
+    .back-arrow-container {
+        padding: 10px 0 5px 15px;
+    }
+    .back-arrow {
+        font-size: 1rem;
+    }
+    .back-arrow i {
+        font-size: 1.1rem;
+    }
+}

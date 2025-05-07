@@ -8,261 +8,184 @@ body, html {
     display: flex;
     flex-direction: column;
 }
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #5a7561;
-    padding: 10px 20px;
-    color: white;
-}
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px; 
-}
-.header-right {
-    display: flex;
-    gap: 15px; 
+
+.registro-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-header img {
-    max-height: 90px;
+.registro-header {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-header nav {
-    display: flex;
-    gap: 20px; 
-}
-
-header nav a, .header-right a {
-    color: white;
-    text-decoration: none;
-    padding: 5px 8px;
-}
-
-header nav a:hover, .header-right a:hover {
-    text-decoration: underline;
-}
-
-
-body {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #5a7561;
-    padding: 10px 20px;
-    color: white;
-}
-
-header img {
-    max-height: 90px;
-}
-
-nav {
-    display: flex;
-    align-items: center;
-}
-
-nav .dropdown {
-    position: relative;
-}
-
-nav .dropdown-menu {
-    display: none;
-    position: absolute;
-    background-color: #fff;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-}
-
-nav .dropdown:hover .dropdown-menu {
-    display: block;
-}
-
-nav .dropdown-menu a {
-    color: #333;
-    padding: 8px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-nav .dropdown-menu a:hover {
-    background-color: #f1f1f1;
-}
-
-header div a {
-    margin-left: 15px;
-    color: white;
-    text-decoration: none;
-}
-
-header div a:hover {
-    text-decoration: underline;
-}
-
-main {
-    flex: 1;
-}
-
-/* Carrusel */
-.carousel-inner {
-    height: 500px; 
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    overflow: hidden;
-}
-
-.carousel-inner .carousel-item {
-    height: 100%;
-    position: relative;
-}
-
-.carousel-inner img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    background-color: #333; 
-    border-radius: 50%;
-}
-
-/* Estilos generales para el footer */
-footer {
-    position: relative;
-    background-color: #6e7b68;
-    padding: 20px; /* Ajusta el padding para que el contenido esté bien posicionado */
-    text-align: left; /* Asegura que el texto esté alineado a la izquierda */
-    margin-top: auto;
-    height: auto; /* Asegura que la altura se ajuste al contenido */
-    min-height: 200px; /* Ajusta la altura mínima para asegurar que todo el contenido sea visible */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Alinea el contenido a la izquierda */
-    justify-content: flex-start; /* Alinea el contenido a la izquierda */
-    color: white;
-    overflow: visible; /* Cambia a visible para asegurar que todo el contenido se muestre */
-    width: 100%; /* Asegura que el footer ocupe todo el ancho */
-}
-
-footer img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 1; /* Asegura que la imagen esté detrás del contenido */
-    filter: blur(1px);
-}
-
-.footer-content {
-    position: relative;
-    z-index: 2; 
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start; /* Alinea el contenido a la izquierda */
-    align-items: flex-start; /* Alinea el contenido a la izquierda */
-    width: 100%;
-    max-width: 1200px;
-    margin: 0; /* Elimina el margen automático para evitar centrado */
-    padding: 0; /* Elimina el padding para evitar que se mueva hacia abajo */
-}
-
-.footer-text,
-.footer-contact,
-.footer-social {
-    flex: 1;
-    margin: 10px;
-    text-align: left; /* Asegura que el texto esté alineado a la izquierda */
-    max-width: 300px;
-}
-
-.footer-text p {
-    margin: 0;
-    font-size: 16px;
-}
-
-.footer-contact h4,
-.footer-social h4 {
-    margin-bottom: 15px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.footer-contact ul,
-.footer-social ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-contact ul li,
-.footer-social ul li {
+.registro-header img {
+    max-width: 100px;
     margin-bottom: 10px;
+}
+
+.registro-form .form-control {
+    border-radius: 50px;
+    border: 1px solid #5a7561;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.registro-form button {
+    width: 100%;
+    background-color: #5a7561;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.back-arrow {
+    font-size: 24px;
+    color: #5a7561;
+    text-decoration: none;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.back-arrow:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para los requisitos de contraseña */
+.password-requirements {
+    display: none;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.password-requirements p {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.requirement {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
     font-size: 14px;
 }
 
-.footer-contact ul li strong {
-    font-weight: bold;
+.requirement-icon {
+    margin-right: 8px;
+    font-size: 16px;
 }
 
-.footer-social ul li a {
-    color: white;
-    text-decoration: none;
+.valid {
+    color: #28a745;
 }
 
-.footer-social ul li a:hover {
-    text-decoration: underline;
+.invalid {
+    color: #dc3545;
 }
 
-/* --- Estilos para el Modal --- */
+.tooltip-container {
+    position: relative;
+    width: 100%;
+}
+
+.tooltip-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #5a7561;
+    font-size: 18px;
+}
+
+#password-match {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+/* Modales */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    display: none; /* Se mostrará cuando se asigne display: flex desde JS */
-    align-items: center;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
     justify-content: center;
-    background-color: rgba(0,0,0,0.5); /* Fondo semitransparente */
-    z-index: 9999; /* Asegura que esté por encima de otros elementos */
-  }
-  
-  .modalContent {
-    background-color: #fff;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
     padding: 20px;
     border-radius: 8px;
-    max-width: 500px;
-    max-height: 80%;
-    overflow-y: auto;
+    min-width: 300px;
+    text-align: center;
     position: relative;
-  }
-  
-  .modalContent .close {
+}
+
+.close {
     position: absolute;
     top: 10px;
     right: 15px;
-    font-size: 20px;
+    font-size: 24px;
+    color: #aaa;
     cursor: pointer;
-  }
-  
-  .modalMessage {
-    margin-top: 20px;
-    font-size: 16px;
-  }
-  
+}
+
+.close:hover {
+    color: #333;
+}
+
+/* Footer */
+footer {
+    position: relative;
+    background-color: #6e7b68;
+    text-align: center;
+    margin-top: auto;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+}
+
+footer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.footer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-text p {
+    color: white;
+    font-size: 1rem;
+    margin: 0;
+}

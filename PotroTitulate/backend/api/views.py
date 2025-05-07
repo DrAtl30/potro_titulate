@@ -1,12 +1,18 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+<<<<<<< HEAD
 from django.http import Http404, HttpResponse, JsonResponse, HttpResponseRedirect
 from rest_framework import status
 from .serializers import AdministradorLoginSerializer, SustentanteRegistroSerializer
 from .serializers import SustentanteLoginSerializer
 from django.contrib.auth import login
+=======
+from django.contrib.auth import login, authenticate
+from django.views import View
+>>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_GET, require_POST
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse, Http404, HttpResponse
 from rest_framework import status
@@ -33,8 +39,14 @@ from django.urls import reverse
 
 
 from django.conf import settings
+from django.db import transaction
+import logging
+logger = logging.getLogger(__name__)  
 import json
 import os
+from django.http import FileResponse
+from django.core.exceptions import ObjectDoesNotExist
+
 
 def index(request):
     timestamp = datetime.now().timestamp
@@ -79,7 +91,6 @@ def perfilUsuario(request):
         opcion_titulacion = tramite.id_opcion.nombre_opcion if tramite and tramite.id_opcion else None
         documentos = Documentos.objects.filter(id_sustentante=sustentante)
         opciones_titulacion = OpcionTitulacion.objects.all()
-        progreso = tramite.progreso if tramite else 0
         aprobado = tramite.aprobado if tramite else False
 
         return render(request, 'perfilDeUsuario.html', {
@@ -88,12 +99,12 @@ def perfilUsuario(request):
             'documentos': documentos,
             'opcion_titulacion': opcion_titulacion,
             'opciones_titulacion': opciones_titulacion,
-            'progreso': progreso,
             'id_tramite': tramite.id_tramite if tramite else None, # Aquí pasamos el id_tramite
             'id_sustentante': sustentante_id, 
             'aprobado' : aprobado
 
         })
+    
     except Sustentante.DoesNotExist:
         return redirect('login')
         
@@ -164,12 +175,8 @@ def verificar_tramite_en_progreso(request, id_sustentante):
 def enviar_solicitud(request):
     if request.method == 'POST':
         try:
-            # Print raw request body for debugging
-            print("Raw Body:", request.body)
-            
             # Parse JSON data from the request body
             data = json.loads(request.body)
-            print("Parsed Data:", data)
 
             # Extract id_sustentante and id_opcion from the request data
             id_sustentante = data.get('id_sustentante')
@@ -179,22 +186,15 @@ def enviar_solicitud(request):
             if not id_sustentante or not id_opcion:
                 return JsonResponse({'error': 'Datos incompletos'}, status=400)
 
-            # Fetch the Sustentante and OpcionTitulacion objects
-            print(f"Buscando Sustentante con ID: {id_sustentante}")
-            print(f"Buscando Opción de Titulación con ID: {id_opcion}")
-
             sustentante = get_object_or_404(Sustentante, id_sustentante=id_sustentante)
             opcion_titulacion = get_object_or_404(OpcionTitulacion, id_opcion=id_opcion)
 
-            # Create a new Tramites record
-            print("Creando trámite...")
             Tramites.objects.create(
                 id_sustentante=sustentante,
                 id_opcion=opcion_titulacion,
                 estado_actual='Pendiente',
                 fecha_inicio=timezone.now(),
                 fecha_actualizacion=timezone.now(),
-                progreso=0
             )
 
             sustentante.id_opcion = opcion_titulacion
@@ -304,17 +304,17 @@ def checkSession(request):
     return JsonResponse({'is_authenticated': is_authenticated})
     
 class AdministradorLoginView(APIView):
-    
     def post(self, request):
-        serializer = AdministradorLoginSerializer(data=request.data)
+        serializer = AdministradorLoginSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            # Guardar el ID del administrador en la sesión
-            request.session['admin_id'] = serializer.validated_data['id_administrador']
-
+            user = serializer.context.get('user') or User.objects.get(
+                email=serializer.validated_data['correo_electronico']
+            )
+            login(request, user)
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+<<<<<<< HEAD
 class AdministradorLoginView(APIView):
     
     def post(self, request):
@@ -323,6 +323,8 @@ class AdministradorLoginView(APIView):
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+=======
+>>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
 class RecuperarContraseñaView(APIView):
     def post(self, request, format=None):
         correo = request.data.get('correo_electronico')
@@ -620,22 +622,25 @@ def enviar_mensaje_admin(request, id_sustentante):
     Espera un JSON con: {"mensaje": "texto"}
     """
     if request.method == 'POST':
+        # Obtener el ID del admin desde el perfil administrativo
         try:
-            # Obtener el ID del admin desde la sesión
-            id_administrativo = request.session.get('admin_id')
-            if not id_administrativo:
-                return JsonResponse({'success': False, 'error': 'Administrador no autenticado'}, status=401)
+            # verificar que se un usuario, es decir, validación general. 
+            if not request.user.is_authenticated:
+                return JsonResponse({'success': False, 'error': 'Usuario no autenticado'}, status=401)
+            # validación del perfil administrativo
+            try:
+                admin_profile = request.user.administrativo_profile
+            except AttributeError:
+                return JsonResponse({'success': False, 'error': 'Lo siento, el usuario no tiene un perfil de administrativo'}, status=403)
 
             data = json.loads(request.body)
-            print(f"Datos recibidos: {data}")
             mensaje_texto = data.get('mensaje')
 
             if not mensaje_texto:
-                return JsonResponse({'success': False, 'error': 'Datos incompletos'}, status=400)
+                return JsonResponse({'success': False, 'error': 'Datos incompletos, sin mensaje'}, status=400)
 
-            # Recuperar objetos Sustentante y Administrativos
+            # Recuperar objetos Sustentante
             sustentante = get_object_or_404(Sustentante, id_sustentante=id_sustentante)
-            administrativo = get_object_or_404(Administrativos, id_administrativo=id_administrativo)
 
             # Crear el mensaje en la tabla Notificaciones
 
@@ -645,8 +650,12 @@ def enviar_mensaje_admin(request, id_sustentante):
                 fecha_envio=timezone.now(),
                 estado_lectura = False,  # False para "No leído", True para "Leído"
                 es_de_administrador=True,  # Indica que lo manda el admin
+<<<<<<< HEAD
                 id_administrativo=administrativo
 
+=======
+                id_administrativo=admin_profile
+>>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
             )
 
             return JsonResponse({'success': True, 'message': 'Mensaje enviado correctamente'}, status=200)
@@ -657,7 +666,7 @@ def enviar_mensaje_admin(request, id_sustentante):
 
 
             print(f"Error: {str(e)}")
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+            return JsonResponse({'success': False, 'error interno': str(e)}, status=500)
     print("Error: Método no permitido")
 
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
@@ -688,7 +697,9 @@ def enviar_mensaje_sustentante(request):
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
 
+@login_required  # Este decorador asegura que solo usuarios logueados accedan
 def perfilAdministrador(request):
+<<<<<<< HEAD
 
     # 1) Verificar si hay un administrador loggeado en la sesión
     admin_id = request.session.get('admin_id')
@@ -705,29 +716,27 @@ def perfilAdministrador(request):
         return redirect('inicioSesionAdmin')  # o la ruta de tu login de administrador
 
     
+=======
+>>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
     try:
-        # 2) Obtener el objeto del Admin
-        admin_obj = Administrativos.objects.get(id_administrativo=admin_id)
+        # Accedemos al perfil administrativo a través de la relación inversa
+        admin = request.user.administrativo_profile
+        
+        # Obtenemos las notificaciones más recientes (últimas 10)
+        notificaciones = Notificaciones.objects.select_related(
+            'id_sustentante', 
+            'id_administrativo'
+        ).order_by('-fecha_envio')[:10]
 
-        # 3) Consultar la tabla de notificaciones
-        #    Si quieres TODAS las notificaciones, haces:
-        #    notificaciones = Notificaciones.objects.all()
-
-        #    Si solo quieres las que correspondan a cierto criterio, por ejemplo:
-        #    - Notificaciones vinculadas a este admin
-        #    - Notificaciones más recientes, etc.
-        #    Aquí un ejemplo de TODAS, ordenadas por fecha_envio desc:
-        notificaciones = Notificaciones.objects.select_related('id_sustentante', 'id_administrativo').order_by('-fecha_envio')
-
-        # 4) Preparar el contexto para la plantilla
-        context = {
-            'admin_obj': admin_obj,
+        return render(request, 'administrador.html', {
+            'admin': admin,
             'notificaciones': notificaciones,
-            'timestamp': datetime.now().timestamp()
-        }
+            'timestamp': timezone.now().timestamp()
+        })
 
-        # 5) Renderizar la plantilla de administrador (por ejemplo, "administrador.html")
-        return render(request, 'administrador.html', context)
+    except Administrativos.DoesNotExist:
+        # Si el usuario no tiene perfil administrativo, lo redirigimos al login
+        return redirect('inicioSesionAdmin')
 
     except Administrativos.DoesNotExist:
 
@@ -743,7 +752,9 @@ def lista_sustentantes(request):
         for s in sustentantes:
             lista.append({
                 'id_sustentante': s.id_sustentante,
-                'nombre': s.nombre
+                'nombre': s.nombre,
+                'numero_cuenta': s.numero_cuenta,  # Agregar número de cuenta
+                'correo': s.correo_electronico     # Agregar correo electrónico
             })
         return JsonResponse({'success': True, 'sustentantes': lista})
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
@@ -753,9 +764,6 @@ def lista_sustentantes(request):
 def verificar_sesion(request):
     session_key = request.COOKIES.get('session_key')
     sustentante_id = request.session.get('sustentante_id')
-
-    print(f"Session key from cookies: {session_key}")  # Depuración
-    print(f"Sustentante ID from session: {sustentante_id}")  # Depuración
 
     # Si no hay session_key, devolver un 200 con un mensaje indicando que no hay sesión
     if not session_key:
@@ -802,3 +810,419 @@ def obtener_mensajes_sustentante(request):
         return JsonResponse({'success': True, 'mensajes': mensajes_data}, status=200)
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
+<<<<<<< HEAD
+=======
+class SpecialLogoutView(View):
+    """
+    Vista especial para cerrar sesión sin eliminar el sustentante_id.
+    """
+    def post(self, request, *args, **kwargs):
+        # No eliminar el sustentante_id de la sesión
+        # Solo limpiar la cookie de session_key
+        response = redirect('/iniciosesion/')
+        response.delete_cookie('session_key')
+        return response
+    
+
+@require_GET
+def tramites_espera(request):
+    """
+    Vista para obtener trámites en estado de espera
+    """
+    try:
+        # Filtrar trámites con estado "Pendiente" y no aprobados
+        tramites = Tramites.objects.filter(
+            estado_actual='Pendiente',
+            aprobado=False
+        ).select_related('id_sustentante', 'id_opcion')
+
+        resultados = []
+        for tramite in tramites:
+            sustentante = tramite.id_sustentante
+            nombre_opcion = tramite.id_opcion.nombre_opcion if tramite.id_opcion else "Sin opción especificada"
+            
+            resultados.append({
+                'id_tramite': tramite.id_tramite,
+                'sustentante': f"{sustentante.nombre} {sustentante.apellido}",
+                'nombre_completo': f"{sustentante.nombre} {sustentante.apellido}",  # Nombre completo
+                'numero_cuenta': sustentante.numero_cuenta,  # Número de cuenta
+                'correo': sustentante.correo_electronico,    # Correo electrónico
+                'nombre': f"Trámite {tramite.id_tramite} - {tramite.estado_actual}",
+                'fecha_inicio': tramite.fecha_inicio.strftime('%Y-%m-%d'),
+                'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,
+                'nombre_opcion': nombre_opcion
+            })
+
+        return JsonResponse({
+            'success': True,
+            'tramites': resultados
+        })
+        
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+@require_GET
+def tramites_progreso(request):
+    """
+    Vista para obtener trámites en proceso (aprobados y en progreso)
+    """
+    try:
+        tramites = Tramites.objects.filter(
+            aprobado=True,
+            estado_actual='en progreso'
+        ).select_related('id_sustentante', 'id_opcion')
+
+        resultados = []
+        for tramite in tramites:
+            sustentante = tramite.id_sustentante
+            nombre_opcion = tramite.id_opcion.nombre_opcion if tramite.id_opcion else "Sin opción especificada"
+            
+            resultados.append({
+                'id_tramite': tramite.id_tramite,
+                'sustentante': f"{sustentante.nombre} {sustentante.apellido}",
+                'nombre_completo': f"{sustentante.nombre} {sustentante.apellido}",  # Nombre completo
+                'numero_cuenta': sustentante.numero_cuenta,  # Número de cuenta
+                'correo': sustentante.correo_electronico,    # Correo electrónico
+                'nombre': f"Trámite {tramite.id_tramite} - En Progreso",
+                'fecha_actualizacion': tramite.fecha_actualizacion.strftime('%Y-%m-%d') if tramite.fecha_actualizacion else None,
+                'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,
+                'nombre_opcion': nombre_opcion,
+                'estado_actual': tramite.estado_actual  # Agregar estado actual
+            })
+
+        return JsonResponse({
+            'success': True,
+            'tramites': resultados
+        })
+
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+@login_required
+def aprobar_tramite(request, tramite_id):
+    if request.method == 'POST':
+        try:
+            administrativo = Administrativos.objects.get(user=request.user)
+        except Administrativos.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Usuario no autorizado'}, status=403)
+
+        try:
+            tramite = Tramites.objects.get(id_tramite=tramite_id)
+
+            tramite.estado_actual = 'en progreso'
+            tramite.aprobado = True
+            tramite.fecha_actualizacion = timezone.now().date()
+            tramite.ultima_actualizacion = timezone.now()
+            tramite.save()
+
+            return JsonResponse({'success': True})
+        except Tramites.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': 'Error interno al procesar la aprobación'}, status=500)
+
+@csrf_exempt
+@login_required
+def rechazar_tramite(request, tramite_id):
+    if request.method == 'POST':
+        try:
+            administrativo = Administrativos.objects.get(user=request.user)
+        except Administrativos.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Usuario no autorizado'}, status=403)
+
+        try:
+            tramite = Tramites.objects.get(id_tramite=tramite_id)
+            data = json.loads(request.body)
+            motivo_rechazo = data.get('motivo_rechazo', '')
+
+            tramite.estado_actual = 'Rechazado'
+            tramite.aprobado = False
+            tramite.motivo_rechazo = motivo_rechazo
+            tramite.fecha_rechazo = timezone.now()
+            tramite.rechazado_por = request.user
+            tramite.fecha_actualizacion = timezone.now().date()
+            tramite.ultima_actualizacion = timezone.now()
+            tramite.save()
+
+            return JsonResponse({'success': True})
+        except Tramites.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': 'Error interno al procesar el rechazo'}, status=500)
+
+@csrf_exempt
+@require_POST
+def validar_documento(request, documento_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Autenticación requerida'}, status=401)
+
+    try:
+        admin_profile = request.user.administrativo_profile
+    except AttributeError:
+        return JsonResponse({'success': False, 'error': 'No tienes permisos de administrador'}, status=403)
+
+    try:
+        with transaction.atomic():
+            documento = Documentos.objects.select_related('id_tramite', 'id_tramite__id_sustentante').get(id_documento=documento_id)
+
+            try:
+                data = json.loads(request.body)
+            except json.JSONDecodeError:
+                return JsonResponse({'success': False, 'error': 'Datos JSON inválidos'}, status=400)
+
+            accion = data.get('accion')
+            if accion not in ['aceptado', 'rechazado']:
+                return JsonResponse({'success': False, 'error': 'Acción no válida'}, status=400)
+
+            comentario = data.get('comentario', '').strip()
+            if accion == 'rechazado' and not comentario:
+                return JsonResponse({'success': False, 'error': 'Se requiere un motivo para el rechazo'}, status=400)
+
+            documento.estado_validacion = accion
+            documento.comentarios_validacion = comentario
+            documento.fecha_validacion = timezone.now()
+            documento.revisado_por = request.user
+            documento.validado_por = request.user
+            documento.save()
+
+            mensaje = (
+                f"Su documento '{documento.nombre_documento}' del trámite {documento.id_tramite.id_tramite} "
+                f"ha sido {'aceptado' if accion == 'aceptado' else 'rechazado'}"
+            )
+            if accion == 'rechazado':
+                mensaje += f". Motivo: {comentario}"
+
+            enviar_notificacion(
+                sustentante_id=documento.id_tramite.id_sustentante.id_sustentante,
+                administrativo_id=admin_profile.id_administrativo,
+                mensaje=mensaje,
+                es_de_administrador=True
+            )
+
+            return JsonResponse({
+                'success': True,
+                'message': f'Documento {accion} correctamente',
+                'tramite_id': documento.id_tramite.id_tramite,
+                'documento_id': documento.id_documento,
+                'nuevo_estado': documento.estado_validacion
+            })
+
+    except Documentos.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Documento no encontrado'}, status=404)
+    except Exception as e:
+        logger.exception(f"Error al validar documento {documento_id}")
+        return JsonResponse({'success': False, 'error': 'Error interno del servidor'}, status=500)
+
+@require_GET
+def documentos_tramite(request, tramite_id):
+    """
+    Vista para obtener documentos asociados a un trámite
+    """
+    try:
+        documentos = Documentos.objects.filter(id_tramite=tramite_id)
+
+        resultados = []
+        for doc in documentos:
+            resultados.append({
+                'id': doc.id_documento,
+                'nombre': doc.nombre_documento,
+                'tipo': doc.tipo_documento,
+                'estado': doc.estado_validacion,
+                'fecha_subida': doc.fecha_subida.strftime('%Y-%m-%d') if doc.fecha_subida else None,
+                'comentarios': doc.comentarios_validacion or '',
+                'archivo_url': doc.archivo.url if doc.archivo and hasattr(doc.archivo, 'url') else None
+            })
+
+        return JsonResponse({
+            'success': True,
+            'documentos': resultados
+        })
+
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())  # Depuración en consola
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@require_GET
+def obtener_motivo_rechazo(request, tramite_id):
+    try:
+        tramite = Tramites.objects.get(id_tramite=tramite_id)
+        return JsonResponse({
+            'success': True,
+            'motivo': tramite.motivo_rechazo if tramite.motivo_rechazo else ""
+        })
+    except Tramites.DoesNotExist:
+        return JsonResponse({'success': False}, status=404)
+
+    
+def actualizar_estado_tramite(tramite):
+    """
+    Función auxiliar para actualizar estado del trámite
+    según sus documentos
+    """
+    documentos = tramite.documentos_set.all()
+    
+    if all(doc.estado_validacion == 'aceptado' for doc in documentos):
+        tramite.estado_actual = 'Documentación completa'
+    elif any(doc.estado_validacion == 'rechazado' for doc in documentos):
+        tramite.estado_actual = 'Documentación incompleta'
+    
+    tramite.save()
+
+
+
+FORMATOS_PERMITIDOS = {
+    'formato_8_1.docx' : '8.1 Solicitud y Registro',
+    'formato_8_3.docx' : '8.3 Dictamen',
+    'formato_8_5.docx' : '8.5 Voto Aprobatorio',
+    'formato_8_7.docx' : '8.7 Evaluación Profesional',
+    'formato_8_10.docx' : '8.10 Revocación',
+    'formato_8_11.docx' : '8.11 Cesión de Derechos',
+}
+def descargar_formato(request, nombre_archivo):
+    """Vista para descargar formatos oficiales"""
+
+    formatos_dir = os.path.join(settings.STATICFILES_DIRS[0], 'formatos')
+    archivos_disponibles = os.listdir(formatos_dir)
+    print(f"Archivos en 'formatos': {archivos_disponibles}")  
+
+    if nombre_archivo not in FORMATOS_PERMITIDOS:
+        raise Http404("Formato no válido")
+    # Construye la ruta relativa a tu carpeta 'formatos'
+    file_path = os.path.join(settings.STATICFILES_DIRS[0], 'formatos', nombre_archivo)
+    
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=nombre_archivo)
+    raise Http404("El archivo no existe")
+
+
+def preguntas_frecuentes(request):
+    """Vista para renderizar página de Preguntas Frecuentes"""
+    pre_freS = PreguntasFrecuentes.objects.all()
+    return render(request, "preguntasFrecuentesIndex.html", {'pre_freS' : pre_freS})
+
+
+def enviar_notificacion(sustentante_id, administrativo_id=None, mensaje="", es_de_administrador=False):
+    """
+    Versión mejorada para enviar notificaciones
+    """
+    try:
+        # Validación básica
+        if not mensaje or not sustentante_id:
+            raise ValueError("Datos incompletos para la notificación")
+        
+        # Crear la notificación
+        Notificaciones.objects.create(
+            id_sustentante_id=sustentante_id,
+            id_administrativo_id=administrativo_id,  # Puede ser None (notificaciones del sistema)
+            mensaje=mensaje,
+            fecha_envio=timezone.now(),
+            estado_lectura=False,
+            es_de_administrador=es_de_administrador
+        )
+        return True
+    
+    except Exception as e:
+        # Loggear el error adecuadamente en producción
+        print(f"[Error] Notificación no enviada: {str(e)}")
+        return False
+    
+@require_GET
+def obtener_notificaciones(request, sustentante_id):
+    """
+    Obtiene las notificaciones de un sustentante
+    """
+    try:
+        # Verificar que el sustentante existe
+        Sustentante.objects.get(id_sustentante=sustentante_id)
+        
+        # Obtener notificaciones no leídas
+        notificaciones = Notificaciones.objects.filter(
+            id_sustentante_id=sustentante_id,
+            estado_lectura=False
+        ).select_related('id_administrativo').order_by('-fecha_envio')[:10]
+
+        resultados = []
+        for n in notificaciones:
+            resultado = {
+                'id': n.id_notificacion,
+                'mensaje': n.mensaje,
+                'fecha': n.fecha_envio.strftime('%Y-%m-%d %H:%M'),
+                'es_de_administrador': n.es_de_administrador,
+            }
+            
+            # Manejar caso cuando no hay administrativo (notificaciones del sistema)
+            if n.id_administrativo:
+                resultado['administrativo'] = n.id_administrativo.nombre
+            else:
+                resultado['administrativo'] = 'Sistema'
+                
+            resultados.append(resultado)
+
+        return JsonResponse({
+            'success': True,
+            'notificaciones': resultados,
+            'total': len(resultados)
+        })
+
+    except Sustentante.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': 'Sustentante no encontrado'
+        }, status=404)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error al obtener notificaciones: {str(e)}'
+        }, status=500)
+    
+@require_POST
+@csrf_exempt
+def marcar_leida(request, notificacion_id):
+    """
+    Marca una notificación como leída
+    """
+    try:
+        # Obtener sustentante_id de la sesión
+        sustentante_id = request.session.get('sustentante_id')
+        if not sustentante_id:
+            return JsonResponse({
+                'success': False,
+                'error': 'No autenticado'
+            }, status=401)
+
+        # Obtener y actualizar la notificación
+        notificacion = Notificaciones.objects.get(
+            id_notificacion=notificacion_id,
+            id_sustentante_id=sustentante_id  # Solo el dueño puede marcarla
+        )
+        
+        notificacion.estado_lectura = True
+        notificacion.fecha_lectura = timezone.now()
+        notificacion.save()
+        
+        return JsonResponse({'success': True})
+
+    except Notificaciones.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': 'Notificación no encontrada o no tienes permiso'
+        }, status=404)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error al marcar como leída: {str(e)}'
+        }, status=500)
+>>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4

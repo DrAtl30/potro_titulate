@@ -1,6 +1,9 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
+from django.contrib.auth.models import User
+
 
 
 
@@ -8,13 +11,15 @@ class Administrativos(models.Model):
     id_administrativo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     correo_electronico = models.CharField(unique=True, max_length=100)
-    contrasena = models.CharField(max_length=100)
-   # rol = models.CharField(max_length=50)
+    
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='administrativo_profile'
+    )
 
     class Meta:
-        managed = False
         db_table = 'administrativos'
-    
 
 class Documentos(models.Model):
     id_documento = models.AutoField(primary_key=True)
@@ -26,6 +31,19 @@ class Documentos(models.Model):
     estado_validacion = models.CharField(max_length=50)
     comentarios_validacion = models.TextField(blank=True, null=True)
     archivo = models.FileField(upload_to='documentos/', null=True, blank=True)
+    # Campos nuevos para rechazo de documentos
+    motivo_rechazo = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name="Motivo de rechazo del documento"
+    )
+    revisado_por = models.ForeignKey(
+        'auth.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='documentos_revisados'
+    )
 
 
     class Meta:
@@ -160,12 +178,36 @@ class Tramites(models.Model):
     estado_actual = models.CharField(max_length=50)
     fecha_inicio = models.DateField()
     fecha_actualizacion = models.DateField()
-    progreso = models.IntegerField()
     aprobado = models.BooleanField(default=False)
+    # Campos nuevos para rechazo
+    motivo_rechazo = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name="Motivo de rechazo"
+    )
+    fecha_rechazo = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Fecha de rechazo"
+    )
+    rechazado_por = models.ForeignKey(
+        'auth.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='tramites_rechazados'
+    )
+    
+    # Campos para seguimiento
+    ultima_actualizacion = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Última actualización"
+    )
 
     class Meta:
         managed = False
         db_table = 'tramites'
+<<<<<<< HEAD
         
         
 class Notificaciones(models.Model):
@@ -182,3 +224,60 @@ class Notificaciones(models.Model):
 
     def __str__(self):
         return f"Notificación #{self.id_notificacion} | Admin? {self.es_de_administrador}"
+=======
+        indexes = [
+            models.Index(fields=['estado_actual']),
+            models.Index(fields=['aprobado']),
+            models.Index(fields=['fecha_rechazo']),
+        ]
+
+class HistorialTramite(models.Model):
+    """
+    Registro detallado de todas las acciones importantes realizadas sobre un trámite
+    """
+    id_historial = models.AutoField(primary_key=True)
+    id_tramite = models.ForeignKey(
+        'Tramites', 
+        on_delete=models.CASCADE,
+        related_name='historial'
+    )
+    accion = models.CharField(max_length=50)  # Ej: "Aprobado", "Rechazado", "Corrección"
+    detalles = models.TextField()
+    fecha_accion = models.DateTimeField(default=timezone.now)
+    usuario = models.ForeignKey(
+        'auth.User',  # Asume que usas el modelo User de Django
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        managed = False
+        db_table = 'historial_tramites'
+        ordering = ['-fecha_accion']
+        verbose_name = 'Historial de Trámite'
+        verbose_name_plural = 'Historial de Trámites'
+
+    def __str__(self):
+        return f"{self.id_tramite} - {self.accion} ({self.fecha_accion.strftime('%Y-%m-%d')})"
+    
+
+
+class Formatos(models.Model):
+    nombre = models.CharField(max_length=200)
+    archivo = models.FileField(upload_to="formatos/")
+    codigo = models.CharField(max_length=20, unique=True)
+
+    def __str__(self):
+        return f"{self.codigo} - {self.nombre}"
+
+
+class PreguntasFrecuentes(models.Model):
+    """Registro de la preguntas y respuestas"""
+    pregunta = models.CharField(max_length=500)
+    respuesta  = models.CharField(max_length=2000)
+
+    def __str__(self):
+        return self.pregunta
+
+>>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4

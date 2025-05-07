@@ -1,5 +1,4 @@
 let currentSessionKey = getCookie('session_key');
-console.log('Valor de currentSessionKey:', currentSessionKey); // Depuración
 let forcedReload = false;
 
 function getCookie(name) {
@@ -25,7 +24,6 @@ async function checkSession() {
 
             // Si no hay sesión activa, no hacer nada
             if (data.mensaje === 'No hay sesión activa') {
-                console.log('No hay sesión activa. No hacer nada.');
                 return;
             }
 
@@ -36,11 +34,9 @@ async function checkSession() {
                 if (newSessionKey) {
                     // Si la sesión es diferente
                     if (newSessionKey !== currentSessionKey) {
-                        console.log('Nueva sesión detectada. Cerrando la sesión anterior...');
                         alert('Se ha detectado un nuevo inicio de sesión. Redirigiendo...');
                         cerrarSesion(); // Si hay una sesión nueva, cierra la anterior
                     } else {
-                        console.log('La misma sesión detectada. No hacer nada.');
                     }
 
                     currentSessionKey = newSessionKey;  // Actualiza currentSessionKey para futuras comparaciones
@@ -49,11 +45,9 @@ async function checkSession() {
         } else if (response.status === 401) {
             // Solo cerrar la sesión si hay una sesión activa
             if (currentSessionKey !== null) {
-                console.log('Sesión cerrada detectada. Cerrando sesión...');
                 alert('Tu sesión ha expirado o ha sido cerrada en otro dispositivo.');
                 cerrarSesion(); // Cierra la sesión automáticamente
             } else {
-                console.log('No hay sesión activa. Ignorando error 401.');
             }
         }
     } catch (error) {
@@ -62,35 +56,48 @@ async function checkSession() {
 }
 
 function cerrarSesion() {
+    // Guardar el id_sustentante de la nueva sesión
+    const idSustentante = sessionStorage.getItem('id_sustentante');
+
+    // Limpiar solo los datos innecesarios del sessionStorage
+    Object.keys(sessionStorage).forEach(key => {
+        if (key !== 'id_sustentante') {
+            sessionStorage.removeItem(key);
+        }
+    });
+
+    // Limpiar localStorage si es necesario
+    localStorage.clear();
+
+    // Restaurar el id_sustentante en sessionStorage (por si acaso)
+    if (idSustentante) {
+        sessionStorage.setItem('id_sustentante', idSustentante);
+    }
+
     // Crear un formulario oculto para enviar la solicitud de cierre de sesión
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/logout/';
+    form.action = '/specialLogout/';  // Usar la nueva vista especial
 
     // Obtener CSRF desde el DOM o cookies
     let csrfTokenElement = document.querySelector('input[name="csrfmiddlewaretoken"]');
     let csrfToken = csrfTokenElement ? csrfTokenElement.value : getCookie('csrftoken');
 
-    if (csrfToken) {
-        let csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = 'csrfmiddlewaretoken';
-        csrfInput.value = csrfToken;
-        form.appendChild(csrfInput);
+    if (!csrfToken) {
+        console.error('No se pudo obtener el token CSRF.');
+        return;
     }
 
-    // Limpiar localStorage y sessionStorage
-    sessionStorage.clear();
-    localStorage.clear();
+    // Agregar el token CSRF al formulario
+    let csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
 
     // Añadir el formulario al body y enviarlo
     document.body.appendChild(form);
     form.submit();
-
-    // Redirigir al usuario a la página principal después de un breve retraso
-    setTimeout(() => {
-        window.location.href = '/';
-    }, 100);
 }
 
 // Evento para cerrar sesión en otras pestañas
@@ -107,6 +114,5 @@ setInterval(checkSession, 5000);
 
 // Llamar al script al cargar la página
 window.addEventListener('load', () => {
-    console.log('Session Key al cargar: ', currentSessionKey);  // Verifica si currentSessionKey tiene valor
     checkSession();
 });

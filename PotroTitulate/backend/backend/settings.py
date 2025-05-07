@@ -55,8 +55,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'backend.middleware.NoCacheMiddleware',
-    'backend.middleware.OneSessionPerUserMiddleware',
-    'backend.middleware.SingleSessionPerBrowserMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -180,4 +178,29 @@ SESSION_COOKIE_AGE = 3600 * 24 * 1  # 1 dia
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 FRONTEND_URL = "http://127.0.0.1:8000"
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 

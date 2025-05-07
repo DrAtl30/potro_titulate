@@ -23,7 +23,7 @@ const requisitos = {
         'Evaluación Profesional: Formato 8.6',
         'Evaluación Profesional: Formato 8.8'
     ],
-    'Artículo Especializado para la Publicación en una Revista Indexada': [
+    'Artículo especializado para publicar en revista indizada': [
         'Formato 8.1 con sus firmas',
         'Aviso Firmado de Privacidad de la UAEM',
         'Certificado de 100% de plan de estudios',
@@ -217,12 +217,15 @@ const requisitos = {
     ]
 };
 
-document.addEventListener("DOMContentLoaded", function() {    // Obtener la opción de titulación desde el HTML
+
+// Variables globales
+let aprobado = false;
+let opcionTitulacion = '';
+let totalSteps = 0;
+
+document.addEventListener("DOMContentLoaded", function() {
     const idSustentante = document.getElementById("idSustentante")?.value;
     const idTramite = document.getElementById("idTramite")?.value;
-    //const opcionTitulacion = document.getElementById("opcionTitulacionData").dataset.opcion;
-
-    
 
     if (!idSustentante) {
         console.error('ID del sustentante no encontrado.');
@@ -233,13 +236,12 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
     .then(response => response.ok ? response.json() : Promise.reject(response))
     .then(data => {
         if (data.tramiteEnProgreso) {
-            aprobado = data.aprobado; // Set the aprobado variable
-            opcionTitulacion = data.opcionTitulacion; // Set the opcionTitulacion variable
-            console.log("Opcion de titulacion", opcionTitulacion)
+            aprobado = data.aprobado;
+            opcionTitulacion = data.opcionTitulacion;
             if (!aprobado) {
                 mostrarMensajeTramiteEnProceso();
             }
-            showRequirements(opcionTitulacion); // Show the requisitos for the selected option
+            showRequirements(opcionTitulacion);
         } else {
             window.location.href = '/opcionesTitulacion/';
         }
@@ -252,59 +254,53 @@ document.addEventListener("DOMContentLoaded", function() {    // Obtener la opci
         mensaje.textContent = 'Ya tienes un trámite en proceso. Por favor, espera a que sea aprobado por un admin.';
         document.body.appendChild(mensaje);
     }
+});
+
+function showRequirements(option) {
+    const requisitosContainer = document.getElementById('requisitosContainer');
+    requisitosContainer.innerHTML = '';
+
+    if (!requisitos[option]) {
+        mostrarModal('No hay requisitos definidos para esta opción de titulación.', 'errorModal');
+        return;
+    }
+
+    const ul = document.createElement('ul');
+    totalSteps = requisitos[option].length;
+
+    requisitos[option].forEach(requisito => {
+        const li = document.createElement('li');
+        li.classList.add('requisito-item');
+
+        let contenido = `
+            <span class="requisito-texto">${requisito}</span>
+            <div class="semaforo">
+                <span class="estado pendiente" id="estado-${requisito}-pendiente" style="opacity: 0.3;"></span>
+                <span class="estado aceptado" id="estado-${requisito}-aceptado" style="opacity: 0.3;"></span>
+                <span class="estado rechazado" id="estado-${requisito}-rechazado" style="opacity: 0.3;"></span>
+            </div>
+        `;
+
+        if (option === opcionTitulacion && aprobado) {
+            contenido += `
+                <button class="btn btn-link" onclick="uploadFile('${requisito}')">Subir</button>
+                <input type="file" id="file-${requisito}" style="display:none;" onchange="handleFileChange('${requisito}')" accept=".pdf">
+            `;
+        } else if (!aprobado) {
+            contenido += `<span class="label label-warning">Trámite no aprobado</span>`;
+        }
+
+        li.innerHTML = contenido;
+        ul.appendChild(li);
     });
 
+    requisitosContainer.appendChild(ul);
 
-    function showRequirements(option) {
-        const requisitosContainer = document.getElementById('requisitosContainer');
-        requisitosContainer.innerHTML = '';
-    
-        if (!requisitos[option]) {
-            mostrarModal('No hay requisitos definidos para esta opción de titulación.', 'errorModal');
-            return;
-        }
-    
-        const ul = document.createElement('ul');
-        totalSteps = requisitos[option].length;
-    
-        requisitos[option].forEach(requisito => {
-            const li = document.createElement('li');
-            li.classList.add('requisito-item');
-    
-            let contenido = `
-                <span class="requisito-texto">${requisito}</span>
-                <div class="semaforo">
-                    <span class="estado no-entregado" id="estado-${requisito}-no-entregado"></span>
-                    <span class="estado pendiente" id="estado-${requisito}-pendiente" style="opacity: 0.3;"></span>
-                    <span class="estado aceptado" id="estado-${requisito}-aceptado" style="opacity: 0.3;"></span>
-                    <span class="estado rechazado" id="estado-${requisito}-rechazado" style="opacity: 0.3;"></span>
-                </div>
-            `;
-    
-            // Check if the trámite is approved and the option matches
-            if (option === opcionTitulacion && aprobado) {
-                contenido += `
-                    <button class="btn btn-link" onclick="uploadFile('${requisito}')">Subir</button>
-                    <input type="file" id="file-${requisito}" style="display:none;" onchange="handleFileChange('${requisito}')">
-                `;
-            } else if (!aprobado) {
-                contenido += `<span class="label label-warning">Trámite no aprobado</span>`;
-            }
-    
-            li.innerHTML = contenido;
-            ul.appendChild(li);
-        });
-    
-        requisitosContainer.appendChild(ul);
-    
-        // Load the states of the requisitos if there is a selected trámite
-        const tramite_id = obtenerTramiteSeleccionado();
-        if (tramite_id) {
-            cargarEstados(tramite_id);
-        }
+    const tramite_id = obtenerTramiteSeleccionado();
+    if (tramite_id) {
+        cargarEstados(tramite_id);
     }
-    
-
+}
 
 function obtenerIdTramite() {
     const idTramiteElement = document.getElementById('idTramite');
@@ -316,7 +312,6 @@ function obtenerIdTramite() {
     }
 }
 
-// Función para obtener el ID del trámite
 function obtenerTramiteSeleccionado() {
     const idTramiteElement = document.getElementById('idTramite');
     if (idTramiteElement) {
@@ -327,18 +322,17 @@ function obtenerTramiteSeleccionado() {
     }
 }
 
-// Función para cargar los estados de los requisitos
 function cargarEstados(tramite_id) {
     fetch(`/obtenerEstados/${tramite_id}/`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 Object.entries(data.estados).forEach(([requisito, estado]) => {
-                    updateEstado(requisito, estado); // Update the semáforo with the correct state
+                    updateEstado(requisito, estado);
                     if (estado === 'pendiente' || estado === 'aceptado' || !aprobado) {
                         const boton = document.querySelector(`button[onclick="uploadFile('${requisito}')"]`);
                         if (boton) {
-                            boton.disabled = true; // Disable the upload button
+                            boton.disabled = true;
                         } else {
                             console.warn(`No se encontró el botón para el requisito: ${requisito}`);
                         }
@@ -349,9 +343,8 @@ function cargarEstados(tramite_id) {
         .catch(error => console.error('Error al obtener estados:', error));
 }
 
-
 function updateEstado(requisito, nuevoEstado) {
-    const estados = ['no-entregado', 'pendiente', 'aceptado', 'rechazado'];
+    const estados = ['pendiente', 'aceptado', 'rechazado'];
 
     estados.forEach(estado => {
         const elemento = document.getElementById(`estado-${requisito}-${estado}`);
@@ -366,7 +359,6 @@ function updateEstado(requisito, nuevoEstado) {
     }
 
     if (nuevoEstado === 'aceptado') {
-        actualizarProgresoBackend();
     }
 
     guardarEstado(requisito, nuevoEstado);
@@ -394,19 +386,28 @@ function handleFileChange(requisito) {
     const file = fileInput.files[0];
 
     if (file) {
-        const allowedExtensions = ['.pdf', '.docx', '.odt'];
+        // Solo permitir archivos PDF
+        const allowedExtensions = ['pdf'];
         const fileExtension = file.name.split('.').pop().toLowerCase();
 
-        if (!allowedExtensions.includes(`.${fileExtension}`)) {
-            mostrarModal(`Formato no permitido. Solo se aceptan archivos: ${allowedExtensions.join(', ')}`, 'errorModal');
-            fileInput.value = ''; // Limpiar el input para evitar que se suba un archivo no válido
+        if (!allowedExtensions.includes(fileExtension)) {
+            mostrarModal('Formato no permitido. Solo se aceptan archivos PDF.', 'errorModal');
+            fileInput.value = '';
             return;
         }
 
-        // Mostrar mensaje de confirmación antes de subir el archivo
+        const maxSizeMB = 3;
+        const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+        if (file.size > maxSizeBytes) {
+            mostrarModal(`El archivo es demasiado grande. El tamaño máximo permitido es 3MB.`, 'errorModal');
+            fileInput.value = '';
+            return;
+        }
+
         const confirmacion = confirm(`¿Estás seguro de que deseas subir el archivo "${file.name}"?`);
         if (!confirmacion) {
-            return; // Si el usuario cancela, no se sube el archivo
+            return;
         }
 
         const formData = new FormData();
@@ -422,8 +423,8 @@ function handleFileChange(requisito) {
         .then(data => {
             if (data.success) {
                 mostrarModal(`Archivo "${file.name}" subido correctamente para ${requisito}`, 'successModal');
-                updateEstado(requisito, 'pendiente'); // Cambia el estado a "pendiente"
-                document.querySelector(`button[onclick="uploadFile('${requisito}')"]`).disabled = true; // Deshabilita el botón de carga
+                updateEstado(requisito, 'pendiente');
+                document.querySelector(`button[onclick="uploadFile('${requisito}')"]`).disabled = true;
             } else {
                 mostrarModal(`Error al subir el archivo: ${data.error}`, 'errorModal');
             }
@@ -436,12 +437,10 @@ function handleFileChange(requisito) {
 }
 
 function cerrarSesion() {
-    // Crear un formulario oculto para enviar la solicitud de cierre de sesión con CSRF
     var form = document.createElement('form');
     form.method = 'POST';
     form.action = '/logout/';
 
-    // Obtener el token CSRF del formulario actual
     var csrfTokenElement = document.querySelector('input[name="csrfmiddlewaretoken"]');
     if (csrfTokenElement) {
         var csrfInput = document.createElement('input');
@@ -451,20 +450,16 @@ function cerrarSesion() {
         form.appendChild(csrfInput);
     }
 
-    // Limpiar el sessionStorage y localStorage para asegurar que la sesión realmente se cierre
     sessionStorage.clear();
     localStorage.clear();
 
-    // Añadir el formulario al body y enviarlo
     document.body.appendChild(form);
     form.submit();
 
-    // Redirigir al usuario a la página principal después de un breve retraso
     setTimeout(() => {
         window.location.href = '/index/';
     }, 500);
 }
-
 
 function mostrarModal(mensaje, modalId) {
     var modal = document.getElementById(modalId);
@@ -504,19 +499,16 @@ function mostrarModal(mensaje, modalId) {
     };
 }
 
-  // Función para esperar a que el modal se cierre
-  function esperarCierreModal(modalId) {
+function esperarCierreModal(modalId) {
     return new Promise((resolve) => {
         const modal = document.getElementById(modalId);
         const closeBtn = modal.querySelector('.close');
 
-        // Resuelve la promesa cuando el modal se cierre
         closeBtn.onclick = () => {
             modal.style.display = 'none';
             resolve();
         };
 
-        // También resuelve la promesa si se hace clic fuera del modal
         window.onclick = (event) => {
             if (event.target === modal) {
                 modal.style.display = 'none';
@@ -524,11 +516,10 @@ function mostrarModal(mensaje, modalId) {
             }
         };
 
-        // Resuelve la promesa si se presiona la tecla Escape
         window.onkeydown = (event) => {
             const escapeKeys = ['Escape', 'Esc'];
             const escapeKeyCodes = [27];
-            const escapeKeyCodesDeprecated = [1, '1']; // Algunos teclados pueden enviar un código de tecla de escape diferente
+            const escapeKeyCodesDeprecated = [1, '1'];
         
             if (escapeKeys.includes(event.key) || escapeKeyCodes.includes(event.keyCode) || escapeKeyCodesDeprecated.includes(event.keyCode)) {
                 modal.style.display = 'none';
@@ -547,12 +538,12 @@ function enviarOpcionTitulacion() {
             'Content-Type': 'application/json',
             'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
         },
-        body: JSON.stringify({ opcion_id : opcionId})
+        body: JSON.stringify({ opcion_id: opcionId })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            location.reload(); // Recargar la página para actualizar la información
+            location.reload();
         } else {
             mostrarModal(`Error al seleccionar la opción de titulación: ${data.error}`, 'errorModal');
         }
@@ -560,33 +551,5 @@ function enviarOpcionTitulacion() {
     .catch(error => {
         console.error('Error:', error);
         mostrarModal('Error al enviar la opción de titulación', 'errorModal');
-    });
-}
-
-function actualizarProgresoBackend() {
-    // Aquí se hace una solicitud al backend para actualizar el progreso
-    fetch('/actualizarProgreso/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
-        },
-        body: JSON.stringify({
-            id_tramite: obtenerIdTramite(), // Asegúrate de obtener correctamente el ID
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Actualiza la barra de progreso con el nuevo valor
-            document.querySelector('.progress-bar').style.width = `${data.progreso}%`;
-            document.querySelector('.progress-bar').setAttribute('aria-valuenow', data.progreso);
-            document.querySelector('.progress-bar').textContent = `${data.progreso}%`;
-        } else {
-            console.error('Error al actualizar el progreso:', data.error);
-        }
-    })
-    .catch(error => {
-        console.error('Error al actualizar el progreso:', error);
     });
 }

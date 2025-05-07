@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from api.views import *;
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +32,7 @@ urlpatterns = [
     path('recuperarContrasena/', recuperarContrasena, name='recuperarContrasena'),  # Ruta para "recuperar contraseña"
     path('inicioSesionAdmin/', loginAdmin, name='inicioSesionAdmin'),  # Ruta para "loginAdmin"
     path('cambiarContrasena/', cambiarContrasena, name='cambiarContrasena'),  # Ruta para "cambiar contraseña"
+    path('pre_fre/', preguntas_frecuentes, name='pre_fre'),  #Ruta para Preguntas Frecuentes
 
     path('recuperarContrasena/recuperarContra', RecuperarContraseñaView.as_view(), name='procesar_recuperacion'),
     path('cambiarContrasena/<int:id_sustentante>/', CambiarContrasenaView.as_view(), name='cambiar_contrasena'),  # Ruta para "cambiar contraseña"
@@ -62,6 +65,8 @@ urlpatterns = [
     # 4) confirmación de cuenta (tal cual lo tienes)
     path('confirmar-cuenta/<str:uidb64>/<str:token>/', ConfirmarCuentaView.as_view(), name='confirmar-cuenta'),
     path('verificarCorreoConfirmado/', verificar_correo_confirmado, name='verificar_correo_confirmado'),
+    path('specialLogout/', SpecialLogoutView.as_view(), name='special_logout'),
+    
 
     # 5) GET /perfilAdministrador/ => vista de administrador
     path('perfilAdministrador/', perfilAdministrador, name='perfilAdministrador'),
@@ -79,6 +84,20 @@ urlpatterns = [
     path('api/login/administrador/', AdministradorLoginView.as_view(), name='login_administrador'),  # Ruta para login de administrador
     path('api/perfil/', PerfilUsuarioView.as_view(), name='perfil_usuario'),
     path('api/verificarSesion/', verificar_sesion, name='verificar_sesion'),
+
+    # URLs para trámites
+    path('api/tramites/espera/', tramites_espera, name='tramites_espera'),
+    path('api/tramites/progreso/', tramites_progreso, name='tramites_progreso'),
+    path('api/tramites/aprobar/<int:tramite_id>/', aprobar_tramite, name='aprobar_tramite'),
+    path('api/tramites/documentos/<int:tramite_id>/', documentos_tramite, name='documentos_tramite'),
+    path('api/tramites/rechazar/<int:tramite_id>/', rechazar_tramite, name='rechazar_tramite'),
+    path('api/tramites/obtener-motivo/<int:tramite_id>/', obtener_motivo_rechazo, name='obtener_motivo'),
+    path('api/validar_documento/<int:documento_id>/', validar_documento, name='validar_documento'),
+
+    #URLs para notificaciones
+    path('api/notificaciones/<int:sustentante_id>/', obtener_notificaciones, name='obtener_notificaciones'),
+    path('api/notificaciones/marcar_leida/<int:notificacion_id>/', marcar_leida, name='marcar_leida'),
+    
 
       # mensajeria 
     # 1) GET /obtenerMensajes/7/ => ver mensajes de ID=7
@@ -101,3 +120,5 @@ urlpatterns = [
     path('api/mensajes/sustentante/', obtener_mensajes_sustentante, name='obtener_mensajes_sustentante'),
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
