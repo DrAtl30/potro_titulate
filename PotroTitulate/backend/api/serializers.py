@@ -1,9 +1,3 @@
-
-from rest_framework import serializers 
-from django.contrib.auth.hashers import make_password 
-from django.contrib.auth.hashers import check_password 
-from .models import Administrativos, Sustentante
-
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
@@ -21,7 +15,6 @@ from .models import Sustentante, OpcionTitulacion
 
 
 from .models import Sustentante, Administrativos
-
 import re
 
 class SustentanteRegistroSerializer(serializers.ModelSerializer):
@@ -107,8 +100,6 @@ class SustentanteLoginSerializer(serializers.Serializer):
             'contrasena_temporal': data['contrasena_temporal']  # Agregar si la contraseña es temporal
         }
 
-
-
 class AdministradorLoginSerializer(serializers.Serializer):
     correo_electronico = serializers.EmailField()
     contrasena = serializers.CharField(write_only=True)
@@ -130,13 +121,7 @@ class AdministradorLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("El usuario no tiene permisos de administrador")
         
         return {
-<<<<<<< HEAD
-            'id_administrador': administrador.id_administrativo,            
-            'nombre': administrador.nombre,
-            'correo_electronico': administrador.correo_electronico
-=======
             'id_administrador': administrativo.id_administrativo,
             'nombre': administrativo.nombre,
             'correo_electronico': user.email
->>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
         }

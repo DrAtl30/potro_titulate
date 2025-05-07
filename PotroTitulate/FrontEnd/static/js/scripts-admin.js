@@ -193,29 +193,6 @@ document.addEventListener("DOMContentLoaded", function() {
     function cargarListaSustentantes() {
 
         fetch("/listaSustentantes/")
-<<<<<<< HEAD
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Error al obtener la lista de sustentantes");
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    aspirantesList.innerHTML = "";
-                    data.sustentantes.forEach(s => {
-                        const li = document.createElement("li");
-                        li.classList.add("list-group-item");
-                        li.setAttribute("data-id", s.id_sustentante);
-                        li.textContent = s.nombre;
-                        aspirantesList.appendChild(li);
-                    });
-                } else {
-                    console.error("Error en listaSustentantes:", data.error);
-                }
-            })
-            .catch(err => console.error("Error fetch listaSustentantes:", err));
-=======
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -226,7 +203,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         })
         .catch(err => console.error("Error fetch listaSustentantes:", err));
->>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
     }
 
     // Función auxiliar para actualizar la lista visualmente
@@ -1007,28 +983,12 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
 
     // 10) Función para cargar la conversación
     function cargarConversacion(sustentanteId) {
-<<<<<<< HEAD
-        console.log("Cargando conversación para ID:", sustentanteId);
-
-        // Se utiliza el elemento ya obtenido al inicio (conversacionDiv)
-        if (!conversacionDiv) {
-            console.error("Elemento 'conversacion' no encontrado en el DOM");
-            return;
-        }
-
-        // Se utiliza una única URL; ajusta según tu endpoint real
-=======
     
->>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
         fetch(`/obtener_mensajes/${sustentanteId}/`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-<<<<<<< HEAD
-                    conversacionDiv.innerHTML = ""; // Limpia la conversación anterior
-=======
                     conversacionDiv.innerHTML = "";
->>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
                     data.mensajes.forEach(msg => {
                         const p = document.createElement("p");
                         const remitente = msg.es_de_administrador ? "Admin" : "Sustentante";
@@ -1063,46 +1023,16 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
         enviarMensajeAdmin(currentAspiranteId, texto);
     });
 
-<<<<<<< HEAD
-    // 10) Función enviarMensajeAdmin
-    function enviarMensajeAdmin(sustentanteId, texto) {
-        // Se asume que la URL para enviar el mensaje incluye el ID del sustentante
-=======
     // 13) Función enviarMensajeAdmin
     function enviarMensajeAdmin(sustentanteId, mensaje) {
->>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
         fetch(`/enviarMensajeAdmin/${sustentanteId}/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": getCookie("csrftoken")
             },
-            body: JSON.stringify({
-                sustentante_id: sustentanteId,
-                mensaje: texto
-            })
+            body: JSON.stringify({ mensaje: mensaje })
         })
-<<<<<<< HEAD
-            .then(r => {
-                if (!r.ok) {
-                    throw new Error("Error al enviar mensaje admin");
-                }
-                return r.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    mensajeTexto.value = "";
-                    console.log("Mensaje enviado correctamente");
-                    cargarConversacion(sustentanteId);
-                } else {
-                    console.error("Error al enviar mensaje:", data.error);
-                }
-            })
-            .catch(err => console.error(err));
-    }
-
-    // 13) Función getCookie para CSRF
-=======
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -1116,7 +1046,6 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
     }
     
     // 14) Función getCookie para CSRF
->>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== "") {
@@ -1131,17 +1060,7 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
         }
         return cookieValue;
     }
-<<<<<<< HEAD
-}); // Fin de DOMContentLoaded
 
-// Función para esperar a que el modal se cierre
-function esperarCierreModal(modalId) {
-    return new Promise((resolve) => {
-        const modal = document.getElementById(modalId);
-        const closeBtn = modal.querySelector('.close');
-=======
-
->>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
 
 function filtrarAspirantes() {
     const searchTerm = searchAspirantes.value.toLowerCase().trim();
@@ -1174,20 +1093,6 @@ function filtrarAspirantes() {
 
 }
 
-<<<<<<< HEAD
-function mostrarModal(mensaje, modalId) {
-    var modal = document.getElementById(modalId);
-    if (!modal) {
-        console.error("No se encontró el modal con ID " + modalId);
-        return;
-    }
-
-    var modalMessage = modal.querySelector('.modalMessage');
-    if (modalMessage) {
-        modalMessage.textContent = mensaje;
-    } else {
-        console.warn("No se encontró el elemento con clase 'modalMessage' dentro de " + modalId);
-=======
 
     
     // Función para filtrar trámites
@@ -1208,7 +1113,6 @@ function mostrarModal(mensaje, modalId) {
     // Event listeners para los campos de búsqueda
     if (searchAspirantes) {
         searchAspirantes.addEventListener("input", filtrarAspirantes);
->>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
     }
     
     if (searchTramites) {

@@ -39,7 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     
     function cargarMensajes() {
-        const sustentanteId = document.getElementById('idSustentante').value
+        const botonMensajes = document.getElementById('botonMensajes');
+        const sustentanteId = botonMensajes.getAttribute('data-sustentante-id');
+
 
         if (!sustentanteId) {
             console.warn('⚠️ID de sustentante no disponible')

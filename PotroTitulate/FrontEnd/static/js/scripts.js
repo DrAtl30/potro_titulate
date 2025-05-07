@@ -446,8 +446,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-<<<<<<< HEAD
-}
-=======
 });
->>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4

@@ -207,7 +207,7 @@ class Tramites(models.Model):
     class Meta:
         managed = False
         db_table = 'tramites'
-<<<<<<< HEAD
+
         
         
 class Notificaciones(models.Model):
@@ -224,7 +224,7 @@ class Notificaciones(models.Model):
 
     def __str__(self):
         return f"Notificación #{self.id_notificacion} | Admin? {self.es_de_administrador}"
-=======
+
         indexes = [
             models.Index(fields=['estado_actual']),
             models.Index(fields=['aprobado']),
@@ -280,4 +280,4 @@ class PreguntasFrecuentes(models.Model):
     def __str__(self):
         return self.pregunta
 
->>>>>>> 92718284e088831da31133f87bf5aaa0079c26c4
+
