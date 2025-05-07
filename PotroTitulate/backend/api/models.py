@@ -11,7 +11,6 @@ class Administrativos(models.Model):
     id_administrativo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     correo_electronico = models.CharField(unique=True, max_length=100)
-    # ELIMINAR el campo contrasena (ya no es necesario)
     
     user = models.OneToOneField(
         User,

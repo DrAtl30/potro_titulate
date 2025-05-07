@@ -6277,3 +6277,9 @@ Traceback (most recent call last):
                                    ^^^^^^^^^^^^^^^^^
 UnboundLocalError: cannot access local variable 'opcion_titulacion' where it is not associated with a value
 "GET /perfilUsuario/ HTTP/1.1" 500 68106
+Internal Server Error: /api/tramites/rechazar/4/
+"POST /api/tramites/rechazar/4/ HTTP/1.1" 500 67
+Internal Server Error: /api/tramites/rechazar/4/
+"POST /api/tramites/rechazar/4/ HTTP/1.1" 500 67
+Internal Server Error: /api/tramites/rechazar/4/
+"POST /api/tramites/rechazar/4/ HTTP/1.1" 500 67

@@ -26,6 +26,8 @@ logger = logging.getLogger(__name__)
 import json
 import os
 from django.http import FileResponse
+from django.core.exceptions import ObjectDoesNotExist
+
 
 def index(request):
     timestamp = datetime.now().timestamp
@@ -787,134 +789,125 @@ def tramites_progreso(request):
         print(traceback.format_exc())
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
+
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
-@require_POST
+@login_required
 def aprobar_tramite(request, tramite_id):
-    """
-    Vista para aprobar un trámite específico
-    """
-    try:
-        tramite = Tramites.objects.get(id_tramite=tramite_id)
+    if request.method == 'POST':
+        try:
+            administrativo = Administrativos.objects.get(user=request.user)
+        except Administrativos.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Usuario no autorizado'}, status=403)
 
-        if tramite.aprobado:
-            return JsonResponse({'success': False, 'error': 'El trámite ya está aprobado'}, status=400)
+        try:
+            tramite = Tramites.objects.get(id_tramite=tramite_id)
 
-        tramite.aprobado = True
-        tramite.estado_actual = 'en progreso'  # Cambia a 'en progreso' al aprobar
-        tramite.save()
+            tramite.estado_actual = 'en progreso'
+            tramite.aprobado = True
+            tramite.fecha_actualizacion = timezone.now().date()
+            tramite.ultima_actualizacion = timezone.now()
+            tramite.save()
 
-        # Opcional: Actualizar documentos asociados
-        Documentos.objects.filter(id_tramite=tramite_id).update(
-            estado_validacion='aceptado'
-        )
+            return JsonResponse({'success': True})
+        except Tramites.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': 'Error interno al procesar la aprobación'}, status=500)
 
-        return JsonResponse({
-            'success': True,
-            'message': 'Trámite aprobado correctamente',
-            'nuevo_estado': tramite.estado_actual,
-        })
+@csrf_exempt
+@login_required
+def rechazar_tramite(request, tramite_id):
+    if request.method == 'POST':
+        try:
+            administrativo = Administrativos.objects.get(user=request.user)
+        except Administrativos.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Usuario no autorizado'}, status=403)
 
-    except Tramites.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
-    except Exception as e:
-        import traceback
-        print(traceback.format_exc())  # Depuración en consola
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
-    
+        try:
+            tramite = Tramites.objects.get(id_tramite=tramite_id)
+            data = json.loads(request.body)
+            motivo_rechazo = data.get('motivo_rechazo', '')
+
+            tramite.estado_actual = 'Rechazado'
+            tramite.aprobado = False
+            tramite.motivo_rechazo = motivo_rechazo
+            tramite.fecha_rechazo = timezone.now()
+            tramite.rechazado_por = request.user
+            tramite.fecha_actualizacion = timezone.now().date()
+            tramite.ultima_actualizacion = timezone.now()
+            tramite.save()
+
+            return JsonResponse({'success': True})
+        except Tramites.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': 'Error interno al procesar el rechazo'}, status=500)
+
 @csrf_exempt
 @require_POST
-def rechazar_tramite(request, tramite_id):
-    # 1. Verificar autenticación del usuario Django
+def validar_documento(request, documento_id):
     if not request.user.is_authenticated:
         return JsonResponse({'success': False, 'error': 'Autenticación requerida'}, status=401)
 
-    # 2. Obtener el registro Administrativos correspondiente al usuario logueado
     try:
-        # Intentamos encontrar el administrativo usando el email del usuario logueado
-        admin_email = request.user.email
-        if not admin_email:
-             logger.warning(f"Usuario {request.user.username} autenticado pero sin email registrado en su perfil.")
-             return JsonResponse({'success': False, 'error': 'El perfil de usuario no tiene un email asociado.'}, status=400)
+        admin_profile = request.user.administrativo_profile
+    except AttributeError:
+        return JsonResponse({'success': False, 'error': 'No tienes permisos de administrador'}, status=403)
 
-        # Usamos get_object_or_404 para buscar por correo_electronico y manejar el caso Not Found
-        admin_obj = get_object_or_404(Administrativos, correo_electronico=admin_email)
-
-    except Administrativos.DoesNotExist:
-        # Este error significa que el email del usuario logueado no está en la tabla Administrativos
-        logger.error(f"Usuario {request.user.username} (email: {admin_email}) intentó rechazar trámite, pero no se encontró registro en la tabla 'administrativos'.")
-        return JsonResponse({'success': False, 'error': 'Usuario no encontrado en el registro de administrativos.'}, status=403) # 403 Forbidden parece apropiado
-    except Exception as e:
-        # Captura otros posibles errores durante la búsqueda
-        logger.error(f"Error inesperado buscando administrativo para {request.user.username}: {str(e)}")
-        return JsonResponse({'success': False, 'error': 'Error interno al verificar permisos de administrador.'}, status=500)
-
-
-    # 3. Procesar el rechazo (el resto de la lógica)
     try:
-        data = json.loads(request.body)
-        motivo = data.get('motivo_rechazo', 'Rechazado por el administrador')
-
         with transaction.atomic():
-            tramite = Tramites.objects.select_related('id_sustentante', 'id_opcion').select_for_update().get(id_tramite=tramite_id)
+            documento = Documentos.objects.select_related('id_tramite', 'id_tramite__id_sustentante').get(id_documento=documento_id)
 
-            if tramite.estado_actual == 'Rechazado':
-                return JsonResponse({
-                    'success': False,
-                    'error': 'El trámite ya fue rechazado anteriormente'
-                }, status=400)
+            try:
+                data = json.loads(request.body)
+            except json.JSONDecodeError:
+                return JsonResponse({'success': False, 'error': 'Datos JSON inválidos'}, status=400)
 
-            # Actualizar trámite
-            tramite.aprobado = False
-            tramite.estado_actual = 'Rechazado'
-            tramite.motivo_rechazo = motivo
-            tramite.fecha_rechazo = timezone.now()
-            # Asignamos la instancia de Administrativos encontrada al campo FK
-            # **Asegúrate que tramite.rechazado_por sea un ForeignKey a Administrativos**
-            # Si fuera un FK a User, usarías request.user
-            tramite.rechazado_por = admin_obj
-            tramite.save()
+            accion = data.get('accion')
+            if accion not in ['aceptado', 'rechazado']:
+                return JsonResponse({'success': False, 'error': 'Acción no válida'}, status=400)
 
-            # Registrar en historial
-            HistorialTramite.objects.create(
-                id_tramite=tramite,
-                accion='Rechazado',
-                detalles=f"Motivo: {motivo}",
-                # Aquí también, si 'usuario' es FK a User usa request.user,
-                # si es FK a Administrativos usa admin_obj
-                usuario=request.user # Asumiendo que es FK a User
+            comentario = data.get('comentario', '').strip()
+            if accion == 'rechazado' and not comentario:
+                return JsonResponse({'success': False, 'error': 'Se requiere un motivo para el rechazo'}, status=400)
+
+            documento.estado_validacion = accion
+            documento.comentarios_validacion = comentario
+            documento.fecha_validacion = timezone.now()
+            documento.revisado_por = request.user
+            documento.validado_por = request.user
+            documento.save()
+
+            mensaje = (
+                f"Su documento '{documento.nombre_documento}' del trámite {documento.id_tramite.id_tramite} "
+                f"ha sido {'aceptado' if accion == 'aceptado' else 'rechazado'}"
             )
+            if accion == 'rechazado':
+                mensaje += f". Motivo: {comentario}"
 
-            # Crear Notificación para el Sustentante
-            opcion_nombre = tramite.id_opcion.nombre_opcion if tramite.id_opcion else 'desconocido'
-            mensaje_notificacion = f"Su trámite ({opcion_nombre}) ha sido rechazado. Motivo: {motivo}"
-
-            Notificaciones.objects.create(
-                id_sustentante=tramite.id_sustentante,
-                id_administrativo=admin_obj, # Usamos el objeto Administrativos encontrado
-                mensaje=mensaje_notificacion,
-                fecha_envio=timezone.now().date(),
-                estado_lectura=False,
+            enviar_notificacion(
+                sustentante_id=documento.id_tramite.id_sustentante.id_sustentante,
+                administrativo_id=admin_profile.id_administrativo,
+                mensaje=mensaje,
                 es_de_administrador=True
             )
 
             return JsonResponse({
                 'success': True,
-                'message': 'Trámite rechazado correctamente y notificación enviada.',
-                'motivo': motivo
+                'message': f'Documento {accion} correctamente',
+                'tramite_id': documento.id_tramite.id_tramite,
+                'documento_id': documento.id_documento,
+                'nuevo_estado': documento.estado_validacion
             })
 
-    except json.JSONDecodeError:
-        return JsonResponse({'success': False, 'error': 'Datos inválidos en la solicitud'}, status=400)
-    except Tramites.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
+    except Documentos.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Documento no encontrado'}, status=404)
     except Exception as e:
-        logger.error(f"Error al procesar rechazo para trámite {tramite_id} por {request.user.username}: {str(e)}")
-        return JsonResponse({
-            'success': False,
-            'error': 'Error interno al procesar el rechazo'
-        }, status=500)
+        logger.exception(f"Error al validar documento {documento_id}")
+        return JsonResponse({'success': False, 'error': 'Error interno del servidor'}, status=500)
 
-    
 @require_GET
 def documentos_tramite(request, tramite_id):
     """
@@ -956,93 +949,6 @@ def obtener_motivo_rechazo(request, tramite_id):
     except Tramites.DoesNotExist:
         return JsonResponse({'success': False}, status=404)
 
-logger = logging.getLogger(__name__)
-@require_POST
-@csrf_exempt
-def validar_documento(request, documento_id):
-    """
-    Vista para validar (aprobar/rechazar) un documento por un administrativo.
-    """
-    # 1. Verificar autenticación
-    if not request.user.is_authenticated:
-        return JsonResponse({'success': False, 'error': 'Autenticación requerida'}, status=401)
-
-    # 2. Obtener el perfil administrativo
-    try:
-        admin_profile = request.user.administrativo_profile
-    except AttributeError:
-        return JsonResponse({
-            'success': False,
-            'error': 'No tienes permisos de administrador'
-        }, status=403)
-
-    # 3. Procesar la validación
-    try:
-        with transaction.atomic():
-            documento = Documentos.objects.select_related(
-                'id_tramite',
-                'id_tramite__id_sustentante'
-            ).get(id_documento=documento_id)
-
-            try:
-                data = json.loads(request.body)
-            except json.JSONDecodeError:
-                return JsonResponse({'success': False, 'error': 'Datos JSON inválidos'}, status=400)
-
-            accion = data.get('accion')
-            if accion not in ['aceptado', 'rechazado']:
-                return JsonResponse({
-                    'success': False,
-                    'error': 'Acción no válida'
-                }, status=400)
-
-            comentario = data.get('comentario', '').strip()
-            if accion == 'rechazado' and not comentario:
-                return JsonResponse({
-                    'success': False,
-                    'error': 'Se requiere un motivo para el rechazo'
-                }, status=400)
-
-            # Actualizar documento - asignamos el USER, no el perfil administrativo
-            documento.estado_validacion = accion
-            documento.comentarios_validacion = comentario
-            documento.fecha_validacion = timezone.now()
-            documento.revisado_por = request.user  # Asignamos el usuario Django
-            documento.validado_por = request.user  # Asignamos el usuario Django
-            documento.save()
-
-            # Enviar notificación
-            mensaje = (
-                f"Su documento '{documento.nombre_documento}' del trámite {documento.id_tramite.id_tramite} "
-                f"ha sido {'aceptado' if accion == 'aceptado' else 'rechazado'}"
-            )
-            
-            if accion == 'rechazado':
-                mensaje += f". Motivo: {comentario}"
-
-            enviar_notificacion(
-                sustentante_id=documento.id_tramite.id_sustentante.id_sustentante,
-                administrativo_id=admin_profile.id_administrativo,
-                mensaje=mensaje,
-                es_de_administrador=True
-            )
-
-            return JsonResponse({
-                'success': True,
-                'message': f'Documento {accion} correctamente',
-                'tramite_id': documento.id_tramite.id_tramite,
-                'documento_id': documento.id_documento,
-                'nuevo_estado': documento.estado_validacion
-            })
-
-    except Documentos.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'Documento no encontrado'}, status=404)
-    except Exception as e:
-        logger.exception(f"Error al validar documento {documento_id}")
-        return JsonResponse({
-            'success': False,
-            'error': 'Error interno del servidor'
-        }, status=500)
     
 def actualizar_estado_tramite(tramite):
     """
