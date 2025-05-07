@@ -75,7 +75,7 @@ urlpatterns = [
 
 
     path('api/logout/', LogoutView.as_view(), name='logout'),  # Ruta para logout
-
+                                                                        
     path('api/login/administrador/', AdministradorLoginView.as_view(), name='login_administrador'),  # Ruta para login de administrador
     path('api/perfil/', PerfilUsuarioView.as_view(), name='perfil_usuario'),
     path('api/verificarSesion/', verificar_sesion, name='verificar_sesion'),

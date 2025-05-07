@@ -1,40 +1,37 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-<<<<<<< HEAD
 from django.http import Http404, HttpResponse, JsonResponse, HttpResponseRedirect
 from rest_framework import status
 from .serializers import AdministradorLoginSerializer, SustentanteRegistroSerializer
 from .serializers import SustentanteLoginSerializer
-=======
 from django.contrib.auth import login
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse, Http404, HttpResponse
 from rest_framework import status
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
 from .serializers import *;
 from django.shortcuts import redirect, get_object_or_404, render
 from datetime import datetime
 from django.core.mail import send_mail, BadHeaderError
 from django.utils.crypto import get_random_string
-<<<<<<< HEAD
+
 from .models import Notificaciones, Sustentante, Documentos, Tramites, OpcionTitulacion
 from django.contrib.auth.decorators import login_required
-=======
+
 from .models import *;
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
-<<<<<<< HEAD
+
 from django.template.loader import render_to_string
 from django.urls import reverse
 #import jwt
-=======
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+
+
 from django.conf import settings
 import json
 import os
@@ -51,7 +48,7 @@ def inicio_sesion(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'iniciosesion.html', {'timestamp': timestamp})
 
-<<<<<<< HEAD
+
 def administrador(request):
     timestamp = datetime.now().timestamp()  # Genera una marca de tiempo
     context = {'timestamp': timestamp}
@@ -68,8 +65,7 @@ def administrador(request):
 
     return render(request, 'administrador.html', context)
 
-=======
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+
 def perfilUsuario(request):
     sustentante_id = request.session.get('sustentante_id')
     timestamp = datetime.now().timestamp()
@@ -549,8 +545,7 @@ def descargar_documento(request, documento_id):
             return response
     raise Http404("El archivo no existe")
 
-<<<<<<< HEAD
-=======
+
 def verificar_correo_confirmado(request):
     if request.method == 'POST':
         import json
@@ -565,7 +560,7 @@ def verificar_correo_confirmado(request):
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+
 @csrf_exempt
 def obtener_mensajes(request, sustentante_id):
     """
@@ -593,7 +588,7 @@ def obtener_mensajes(request, sustentante_id):
 
 
 @csrf_exempt
-<<<<<<< HEAD
+
 def enviar_mensaje_admin(request):
     """
     Endpoint para que el ADMINISTRADOR envíe un mensaje a un sustentante.
@@ -614,9 +609,11 @@ def enviar_mensaje_admin(request):
             # Por simplicidad, no lo usamos aquí, pero podrías guardarlo si lo requieres.
 
             sustentante = get_object_or_404(Sustentante, id_sustentante=sustentante_id)
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
             # Creamos el registro en notificaciones
-=======
 def enviar_mensaje_admin(request, id_sustentante):
     """
     Endpoint para que el ADMINISTRADOR envíe un mensaje a un sustentante.
@@ -641,32 +638,28 @@ def enviar_mensaje_admin(request, id_sustentante):
             administrativo = get_object_or_404(Administrativos, id_administrativo=id_administrativo)
 
             # Crear el mensaje en la tabla Notificaciones
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
-            Notificaciones.objects.create(
+
+            Notificaciones.objects.create (
                 id_sustentante=sustentante,
                 mensaje=mensaje_texto,
                 fecha_envio=timezone.now(),
-<<<<<<< HEAD
-                estado_lectura='No leído',       # o como manejes tu estado
-                es_de_administrador=True        # Indica que lo manda el admin
-=======
-                estado_lectura=False,  # False para "No leído", True para "Leído"
+                estado_lectura = False,  # False para "No leído", True para "Leído"
                 es_de_administrador=True,  # Indica que lo manda el admin
                 id_administrativo=administrativo
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+
             )
 
             return JsonResponse({'success': True, 'message': 'Mensaje enviado correctamente'}, status=200)
         
         except Exception as e:
-<<<<<<< HEAD
+
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
-=======
+
             print(f"Error: {str(e)}")
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     print("Error: Método no permitido")
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
 @csrf_exempt
@@ -696,12 +689,12 @@ def enviar_mensaje_sustentante(request):
 
 
 def perfilAdministrador(request):
-<<<<<<< HEAD
+
     # 1) Verificar si hay un administrador loggeado en la sesión
     admin_id = request.session.get('admin_id')
     if not admin_id:
         return redirect('loginAdmin')  # o la ruta de tu login de administrador
-=======
+
     timestamp = datetime.now().timestamp()
 
     print(f"Session data: {request.session.items()}")  # <-- Depuración
@@ -710,7 +703,7 @@ def perfilAdministrador(request):
     admin_id = request.session.get('admin_id')
     if not admin_id:
         return redirect('inicioSesionAdmin')  # o la ruta de tu login de administrador
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+
     
     try:
         # 2) Obtener el objeto del Admin
@@ -737,11 +730,11 @@ def perfilAdministrador(request):
         return render(request, 'administrador.html', context)
 
     except Administrativos.DoesNotExist:
-<<<<<<< HEAD
+
         return redirect('loginAdmin')
-=======
+
         return redirect('inicioSesionAdmin')
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+
     
 def lista_sustentantes(request):
     if request.method == 'GET':
@@ -754,8 +747,8 @@ def lista_sustentantes(request):
             })
         return JsonResponse({'success': True, 'sustentantes': lista})
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
-<<<<<<< HEAD
-=======
+
+
 
 def verificar_sesion(request):
     session_key = request.COOKIES.get('session_key')
@@ -808,4 +801,4 @@ def obtener_mensajes_sustentante(request):
 
         return JsonResponse({'success': True, 'mensajes': mensajes_data}, status=200)
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+

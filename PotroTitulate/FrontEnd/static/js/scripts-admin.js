@@ -32,27 +32,27 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log("Cargando lista de sustentantes...");
 
         fetch("/listaSustentantes/")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error al obtener la lista de sustentantes");
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                aspirantesList.innerHTML = "";
-                data.sustentantes.forEach(s => {
-                    const li = document.createElement("li");
-                    li.classList.add("list-group-item");
-                    li.setAttribute("data-id", s.id_sustentante);
-                    li.textContent = s.nombre;
-                    aspirantesList.appendChild(li);
-                });
-            } else {
-                console.error("Error en listaSustentantes:", data.error);
-            }
-        })
-        .catch(err => console.error("Error fetch listaSustentantes:", err));
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error al obtener la lista de sustentantes");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    aspirantesList.innerHTML = "";
+                    data.sustentantes.forEach(s => {
+                        const li = document.createElement("li");
+                        li.classList.add("list-group-item");
+                        li.setAttribute("data-id", s.id_sustentante);
+                        li.textContent = s.nombre;
+                        aspirantesList.appendChild(li);
+                    });
+                } else {
+                    console.error("Error en listaSustentantes:", data.error);
+                }
+            })
+            .catch(err => console.error("Error fetch listaSustentantes:", err));
     }
 
     // 4) Alternar visibilidad de la lista de aspirantes
@@ -85,22 +85,15 @@ document.addEventListener("DOMContentLoaded", function() {
     // 7) Función para cargar la conversación
     function cargarConversacion(sustentanteId) {
         console.log("Cargando conversación para ID:", sustentanteId);
-    
-<<<<<<< HEAD
-        const conversacionDiv = document.getElementById('conversacionDiv');
-=======
-        const conversacionDiv = document.getElementById('conversacion');
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+
+        // Se utiliza el elemento ya obtenido al inicio (conversacionDiv)
         if (!conversacionDiv) {
             console.error("Elemento 'conversacion' no encontrado en el DOM");
             return;
         }
-    
-<<<<<<< HEAD
-        fetch(`/obtener_mensajes/?id_sustentante=${sustentanteId}`)
-=======
+
+        // Se utiliza una única URL; ajusta según tu endpoint real
         fetch(`/obtener_mensajes/${sustentanteId}/`)
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al obtener mensajes");
@@ -110,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(data => {
                 if (data.success) {
                     conversacionDiv.innerHTML = ""; // Limpia la conversación anterior
-                    
                     data.mensajes.forEach(msg => {
                         const p = document.createElement("p");
                         const remitente = msg.es_de_administrador ? "Admin" : "Sustentante";
@@ -123,7 +115,6 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .catch(error => console.error("Error:", error));
     }
-    
 
     // 8) Botón Regresar (a la lista de aspirantes)
     btnRegresarAspirantes.addEventListener("click", () => {
@@ -148,56 +139,37 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // 10) Función enviarMensajeAdmin
-<<<<<<< HEAD
     function enviarMensajeAdmin(sustentanteId, texto) {
-        fetch("/enviarMensajeAdmin/", {
-=======
-    function enviarMensajeAdmin(sustentanteId, mensaje) {
+        // Se asume que la URL para enviar el mensaje incluye el ID del sustentante
         fetch(`/enviarMensajeAdmin/${sustentanteId}/`, {
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": getCookie("csrftoken")
             },
-<<<<<<< HEAD
             body: JSON.stringify({
                 sustentante_id: sustentanteId,
                 mensaje: texto
             })
-=======
-            body: JSON.stringify({ mensaje: mensaje })
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
         })
-        .then(r => {
-            if (!r.ok) {
-                throw new Error("Error al enviar mensaje admin");
-            }
-            return r.json();
-        })
-        .then(data => {
-            if (data.success) {
-<<<<<<< HEAD
-                mensajeTexto.value = "";
-=======
-                console.log("Mensaje enviado correctamente");
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
-                cargarConversacion(sustentanteId);
-            } else {
-                console.error("Error al enviar mensaje:", data.error);
-            }
-        })
-        .catch(err => console.error(err));
+            .then(r => {
+                if (!r.ok) {
+                    throw new Error("Error al enviar mensaje admin");
+                }
+                return r.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    mensajeTexto.value = "";
+                    console.log("Mensaje enviado correctamente");
+                    cargarConversacion(sustentanteId);
+                } else {
+                    console.error("Error al enviar mensaje:", data.error);
+                }
+            })
+            .catch(err => console.error(err));
     }
-<<<<<<< HEAD
 
-
-    
-
-=======
-    
-        
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
     // 13) Función getCookie para CSRF
     function getCookie(name) {
         let cookieValue = null;
@@ -213,14 +185,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         return cookieValue;
     }
-     
-<<<<<<< HEAD
-});
-=======
-});
+}); // Fin de DOMContentLoaded
 
- // Función para esperar a que el modal se cierre
- function esperarCierreModal(modalId) {
+// Función para esperar a que el modal se cierre
+function esperarCierreModal(modalId) {
     return new Promise((resolve) => {
         const modal = document.getElementById(modalId);
         const closeBtn = modal.querySelector('.close');
@@ -256,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function mostrarModal(mensaje, modalId) {
     var modal = document.getElementById(modalId);
     if (!modal) {
-        console.error(`No se encontró el modal con ID ${modalId}`);
+        console.error("No se encontró el modal con ID " + modalId);
         return;
     }
 
@@ -264,7 +232,7 @@ function mostrarModal(mensaje, modalId) {
     if (modalMessage) {
         modalMessage.textContent = mensaje;
     } else {
-        console.warn(`No se encontró el elemento con clase 'modalMessage' dentro de ${modalId}`);
+        console.warn("No se encontró el elemento con clase 'modalMessage' dentro de " + modalId);
     }
 
     modal.style.display = 'flex';
@@ -290,4 +258,3 @@ function mostrarModal(mensaje, modalId) {
         }
     };
 }
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029

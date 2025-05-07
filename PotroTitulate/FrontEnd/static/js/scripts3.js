@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-<<<<<<< HEAD
+
 // Función que muestra el modal
 function mostrarModal(mensaje, modalId) {
     var modal = document.getElementById(modalId);
@@ -65,14 +65,13 @@ function mostrarModal(mensaje, modalId) {
 }
 
 // Función que espera a que el usuario cierre el modal
-=======
+
 // Función para esperar a que el modal se cierre
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
 function esperarCierreModal(modalId) {
     return new Promise((resolve) => {
         const modal = document.getElementById(modalId);
         const closeBtn = modal.querySelector('.close');
-<<<<<<< HEAD
+
 
         function handleClose() {
             if (modal.style.display !== 'none') {
@@ -108,9 +107,9 @@ function esperarCierreModal(modalId) {
         modal.addEventListener('click', handleClickOutside);
         document.addEventListener('keydown', handleKeyDown);
     });
-=======
 
-        // Resuelve la promesa cuando el modal se cierre
+        // Resuelve la promesa cuando el modal se cierre 
+        
         closeBtn.onclick = () => {
             modal.style.display = 'none';
             resolve();
@@ -135,8 +134,8 @@ function esperarCierreModal(modalId) {
                 resolve();
             }
         };
-    });
-}
+    };
+
 
 function mostrarModal(mensaje, modalId) {
     var modal = document.getElementById(modalId);
@@ -174,5 +173,5 @@ function mostrarModal(mensaje, modalId) {
             modal.style.display = 'none';
         }
     };
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+
 }

@@ -33,8 +33,7 @@ class Documentos(models.Model):
         db_table = 'documentos'
 
 
-<<<<<<< HEAD
-=======
+
 class Notificaciones(models.Model):
     id_notificacion = models.AutoField(primary_key=True)
     id_sustentante = models.ForeignKey(
@@ -55,7 +54,7 @@ class Notificaciones(models.Model):
     class Meta:
         managed = False
         db_table = 'notificaciones'
->>>>>>> b6bd58ee1f1681a0c47ab9402968eba67ab63029
+
 
 class OpcionTitulacion(models.Model):
     id_opcion = models.AutoField(primary_key=True)
