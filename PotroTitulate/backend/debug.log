@@ -6283,3 +6283,1986 @@ Internal Server Error: /api/tramites/rechazar/4/
 "POST /api/tramites/rechazar/4/ HTTP/1.1" 500 67
 Internal Server Error: /api/tramites/rechazar/4/
 "POST /api/tramites/rechazar/4/ HTTP/1.1" 500 67
+Internal Server Error: /api/tramites/espera/
+"GET /api/tramites/espera/ HTTP/1.1" 500 230
+Internal Server Error: /api/notificaciones/79/
+"GET /api/notificaciones/79/ HTTP/1.1" 500 263
+Internal Server Error: /api/verificarSesion/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/api/views.py", line 652, in verificar_sesion
+    sustentante_id = request.session.get('sustentante_id')
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 74, in get
+    return self._session.get(key, default)
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /api/verificarSesion/ HTTP/1.1" 500 204878
+Internal Server Error: /api/verificarSesion/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/api/views.py", line 652, in verificar_sesion
+    sustentante_id = request.session.get('sustentante_id')
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 74, in get
+    return self._session.get(key, default)
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+Internal Server Error: /api/notificaciones/79/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 22, in process_response
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+"GET /api/notificaciones/79/ HTTP/1.1" 500 227492
+Internal Server Error: /api/verificarSesion/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 22, in process_response
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+"GET /api/verificarSesion/ HTTP/1.1" 500 227474
+Internal Server Error: /listaSustentantes/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/api/views.py", line 639, in lista_sustentantes
+    for s in sustentantes:
+             ^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 400, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 22, in process_response
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+Internal Server Error: /administrador/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/decorators.py", line 57, in _view_wrapper
+    test_pass = test_func(request.user)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/decorators.py", line 80, in <lambda>
+    lambda u: u.is_authenticated,
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+Internal Server Error: /administrador/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/decorators.py", line 57, in _view_wrapper
+    test_pass = test_func(request.user)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/decorators.py", line 80, in <lambda>
+    lambda u: u.is_authenticated,
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+Internal Server Error: /api/tramites/progreso/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 22, in process_response
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+Internal Server Error: /api/tramites/espera/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 22, in process_response
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+Internal Server Error: /listaSustentantes/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 22, in process_response
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+Internal Server Error: /administrador/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 22, in process_response
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+Internal Server Error: /administrador/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 22, in process_response
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+"GET /administrador/ HTTP/1.1" 500 227788
+Internal Server Error: /.well-known/appspecific/com.chrome.devtools.json
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 22, in process_response
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 500 226810
+Internal Server Error: /administrador/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/decorators.py", line 57, in _view_wrapper
+    test_pass = test_func(request.user)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/decorators.py", line 80, in <lambda>
+    lambda u: u.is_authenticated,
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+Internal Server Error: /administrador/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 22, in process_response
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+"GET /administrador/ HTTP/1.1" 500 227794
+Internal Server Error: /.well-known/appspecific/com.chrome.devtools.json
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/backend/backend/middleware.py", line 22, in process_response
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 37, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/middleware.py", line 17, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 209, in get_user
+    user_id = _get_user_session_key(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/__init__.py", line 62, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 645, in get
+    num = len(clone)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/db/backends/postgresql/base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 500 226816
+Internal Server Error: /api/sustentante/79/actualizar_oportunidades/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+TypeError: actualizar_oportunidades() got an unexpected keyword argument 'id_sustentante'
+"POST /api/sustentante/79/actualizar_oportunidades/ HTTP/1.1" 500 79202

@@ -134,6 +134,8 @@ class Sustentante(AbstractBaseUser, PermissionsMixin):
     confirmado = models.BooleanField(default=False)
     last_login = models.DateTimeField(blank=True, null=True)
     id_opcion = models.ForeignKey(OpcionTitulacion, on_delete=models.CASCADE, db_column='id_opcion', null=True)  # Relaciona con OpciónTitulación
+    oportunidades_restantes = models.IntegerField(default=3)
+
 
     session_key = models.CharField(max_length=40, blank=True, null=True)
 

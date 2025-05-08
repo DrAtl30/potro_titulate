@@ -69,6 +69,8 @@ urlpatterns = [
     path('api/tramites/rechazar/<int:tramite_id>/', rechazar_tramite, name='rechazar_tramite'),
     path('api/tramites/obtener-motivo/<int:tramite_id>/', obtener_motivo_rechazo, name='obtener_motivo'),
     path('api/validar_documento/<int:documento_id>/', validar_documento, name='validar_documento'),
+    path('api/sustentante/<int:id_sustentante>/actualizar_oportunidades/', actualizar_oportunidades, name='actualizar_oportunidades'),
+
 
     #URLs para notificaciones
     path('api/notificaciones/<int:sustentante_id>/', obtener_notificaciones, name='obtener_notificaciones'),
