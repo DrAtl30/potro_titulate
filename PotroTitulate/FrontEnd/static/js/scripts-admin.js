@@ -1,3 +1,70 @@
+ // Sistema de manejo de modales unificado
+ const ModalManager = {
+    currentModal: null,
+    
+    show: function(modalElement) {
+        this.hide(); // Cerrar cualquier modal abierto
+        this.currentModal = modalElement;
+        modalElement.classList.add('show');
+        modalElement.style.display = 'block';
+        document.body.classList.add('modal-open');
+        
+        // Agregar backdrop
+        const backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop fade show';
+        document.body.appendChild(backdrop);
+    },
+    
+    hide: function() {
+        if (this.currentModal) {
+            this.currentModal.classList.remove('show');
+            this.currentModal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+            
+            // Remover backdrop
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) backdrop.remove();
+            
+            this.currentModal = null;
+        }
+    },
+    
+    setupModalEvents: function(modalElement) {
+        // Botón de cerrar (X)
+        modalElement.querySelector('.close').addEventListener('click', () => this.hide());
+        
+        // Botón Cancelar
+        const cancelBtn = modalElement.querySelector('#cancelarAccion');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => this.hide());
+        }
+        
+        // Clic fuera del modal
+        modalElement.addEventListener('click', (e) => {
+            if (e.target === modalElement) {
+                this.hide();
+            }
+        });
+    }
+};
+
+
+// 14) Función getCookie para CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        let cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     // 1) Referencias a elementos
     const aspirantesSection = document.getElementById("aspirantesSection");
@@ -24,6 +91,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const listaTramitesEspera = document.getElementById("listaTramitesEspera");
     const listaTramitesProgreso = document.getElementById("listaTramitesProgreso");
 
+   
     const modalConfirmacion = document.createElement('div');
     modalConfirmacion.className = 'modal fade';
     modalConfirmacion.id = 'confirmacionModal';
@@ -61,55 +129,60 @@ document.addEventListener("DOMContentLoaded", function() {
     `;
     document.body.appendChild(modalConfirmacion);
 
-    // Sistema de manejo de modales unificado
-    const ModalManager = {
-        currentModal: null,
-        
-        show: function(modalElement) {
-            this.hide(); // Cerrar cualquier modal abierto
-            this.currentModal = modalElement;
-            modalElement.classList.add('show');
-            modalElement.style.display = 'block';
-            document.body.classList.add('modal-open');
-            
-            // Agregar backdrop
-            const backdrop = document.createElement('div');
-            backdrop.className = 'modal-backdrop fade show';
-            document.body.appendChild(backdrop);
-        },
-        
-        hide: function() {
-            if (this.currentModal) {
-                this.currentModal.classList.remove('show');
-                this.currentModal.style.display = 'none';
-                document.body.classList.remove('modal-open');
-                
-                // Remover backdrop
-                const backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) backdrop.remove();
-                
-                this.currentModal = null;
-            }
-        },
-        
-        setupModalEvents: function(modalElement) {
-            // Botón de cerrar (X)
-            modalElement.querySelector('.close').addEventListener('click', () => this.hide());
-            
-            // Botón Cancelar
-            const cancelBtn = modalElement.querySelector('#cancelarAccion');
-            if (cancelBtn) {
-                cancelBtn.addEventListener('click', () => this.hide());
-            }
-            
-            // Clic fuera del modal
-            modalElement.addEventListener('click', (e) => {
-                if (e.target === modalElement) {
-                    this.hide();
-                }
-            });
-        }
-    };
+    // Crear modal dinámicamente
+    const modalEditar = document.createElement('div');
+    modalEditar.className = 'modal fade';
+    modalEditar.id = 'modalEditarOportunidades';
+    modalEditar.tabIndex = -1;
+    modalEditar.innerHTML = `
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Editar Oportunidades para <span id="nombreSustentante"></span></h5>
+            <button type="button" class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Oportunidades actuales: <span id="oportunidadesActuales"></span></p>
+            <div class="d-flex gap-2">
+            <button id="btnAgregar" class="btn btn-success">Agregar</button>
+            <button id="btnQuitar" class="btn btn-danger">Quitar</button>
+            <button id="cancelarAccion" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    `;
+
+
+    // Insertarlo en el body
+    document.body.appendChild(modalEditar);
+
+    // Configurar eventos del modal recién creado
+    ModalManager.setupModalEvents(modalEditar);
+
+    // Event Listeners para botones del modal
+    modalEditar.querySelector('#btnAgregar').addEventListener('click', () => {
+    if (oportunidadesActuales < 3) {
+        oportunidadesActuales++;
+        document.getElementById('oportunidadesActuales').textContent = oportunidadesActuales;
+        actualizarOportunidades();
+    } else {
+        alert('No se pueden asignar más de 3 oportunidades.');
+    }
+    });
+
+    modalEditar.querySelector('#btnQuitar').addEventListener('click', () => {
+    if (oportunidadesActuales > 0) {
+        oportunidadesActuales--;
+        document.getElementById('oportunidadesActuales').textContent = oportunidadesActuales;
+        actualizarOportunidades();
+    } else {
+        alert('No puede haber menos de 0 oportunidades.');
+    }
+    });
+
+
+    
 
     // Configurar eventos para el modal de confirmación
     ModalManager.setupModalEvents(modalConfirmacion);
@@ -212,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const li = document.createElement("li");
             li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
             li.setAttribute("data-id", s.id_sustentante);
-            
+    
             const contenido = document.createElement("div");
             contenido.innerHTML = `
                 <strong>${s.nombre}</strong>
@@ -220,13 +293,24 @@ document.addEventListener("DOMContentLoaded", function() {
                     ${s.numero_cuenta ? `No. cuenta: ${s.numero_cuenta}` : 'No. cuenta: No disponible'} | 
                     ${s.correo || 'Correo: No disponible'}
                 </div>
+                <div class="text-muted small">
+                    Oportunidades restantes: 
+                    <strong id="oportunidades-${s.id_sustentante}">
+                        ${s.oportunidades_restantes !== undefined ? s.oportunidades_restantes : 'No disponible'}
+                    </strong>
+                    <button class="btn btn-primary btn-sm"
+                        onclick="editarOportunidades(${s.id_sustentante}, '${s.nombre}', ${s.oportunidades_restantes})">
+                        Editar Oportunidades
+                    </button>
+                </div>
             `;
-            
+    
             li.appendChild(contenido);
             aspirantesList.appendChild(li);
         });
     }
-
+    
+    
     // 5) Función para cargar trámites en espera (modificada)
     function cargarTramitesEspera() {
         fetch("/api/tramites/espera/")
@@ -255,6 +339,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <small class="d-block">No. cuenta: ${tramite.numero_cuenta || 'No disponible'}</small>
                                 <small class="d-block">Correo: ${tramite.correo || 'No disponible'}</small>
                                 <small class="d-block">Inicio: ${tramite.fecha_inicio}</small>
+                                <small class="d-block">Oportunidades: ${tramite.oportunidades_restantes || 'No disponible'}</small>
                             </div>
                             <span class="badge badge-opcion-titulacion">
                                 ${tramite.nombre_opcion}
@@ -358,6 +443,8 @@ document.addEventListener("DOMContentLoaded", function() {
                                     <small class="d-block">No. cuenta: ${tramite.numero_cuenta || 'No disponible'}</small>
                                     <small class="d-block">Correo: ${tramite.correo || 'No disponible'}</small>
                                     <small class="d-block">Actualizado: ${tramite.fecha_actualizacion}</small>
+                                    <small class="d-block">Oportunidades: ${tramite.oportunidades_restantes || 'No disponible'}</small>
+
                                 </div>
                                 <div>
                                     <span class="badge badge-opcion-titulacion">
@@ -1044,22 +1131,9 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
         })
         .catch(err => console.error(err));
     }
+
     
-    // 14) Función getCookie para CSRF
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            let cookies = document.cookie.split(";");
-            for (let i = 0; i < cookies.length; i++) {
-                let cookie = cookies[i].trim();
-                if (cookie.startsWith(name + "=")) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
+    
 
 
 function filtrarAspirantes() {
@@ -1118,4 +1192,87 @@ function filtrarAspirantes() {
     if (searchTramites) {
         searchTramites.addEventListener("input", filtrarTramites);
     }
+<<<<<<< HEAD
 });
+=======
+
+    
+
+});
+
+
+// Variable global para almacenar el ID del sustentante
+let sustentanteSeleccionado = null;
+
+function editarOportunidades(idSustentante, nombreSustentante, oportunidades) {
+    sustentanteSeleccionado = idSustentante;
+    oportunidadesActuales = oportunidades;
+  
+    document.getElementById('nombreSustentante').textContent = nombreSustentante;
+    document.getElementById('oportunidadesActuales').textContent = oportunidades;
+  
+    ModalManager.show(document.getElementById('modalEditarOportunidades'));
+}
+
+function actualizarOportunidades() {
+    // Verificar que tenemos un ID válido
+    if (!sustentanteSeleccionado) {
+        console.error('Error: No se ha seleccionado un sustentante');
+        alert('Por favor, seleccione un sustentante primero');
+        return;
+    }
+
+    // Obtener el valor actualizado del input/mostrador
+    const nuevasOportunidades = parseInt(document.getElementById('oportunidadesActuales').textContent);
+    
+    const csrftoken = getCookie('csrftoken');
+
+    fetch(`/api/sustentante/${sustentanteSeleccionado}/actualizar_oportunidades/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            oportunidades_restantes: nuevasOportunidades,
+            accion: 'actualizar'
+        })
+    })
+    .then(async response => {
+        console.log('Status:', response.status);
+        
+        // Verificar si la respuesta es JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            throw new Error(text || 'Respuesta no válida del servidor');
+        }
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Error ${response.status}`);
+        }
+
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            console.log('Actualización exitosa', data);
+            alert('Oportunidades actualizadas correctamente');
+            ModalManager.hide(document.getElementById('modalEditarOportunidades'));
+            
+            // Actualizar la vista si es necesario
+            const oportunidadesElement = document.querySelector(`[data-id="${sustentanteSeleccionado}"] #oportunidades-${sustentanteSeleccionado}`);
+            if (oportunidadesElement) {
+                oportunidadesElement.textContent = data.oportunidades_restantes;
+            }
+        } else {
+            throw new Error(data.error || 'Hubo un problema al actualizar');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert(error.message);
+    });
+}
+>>>>>>> 8fdc37aa921740df5a4951ca82b210fd4a2fd159

@@ -641,7 +641,8 @@ def lista_sustentantes(request):
                 'id_sustentante': s.id_sustentante,
                 'nombre': s.nombre,
                 'numero_cuenta': s.numero_cuenta,  # Agregar número de cuenta
-                'correo': s.correo_electronico     # Agregar correo electrónico
+                'correo': s.correo_electronico,    # Agregar correo electrónico
+                'oportunidades_restantes': s.oportunidades_restantes
             })
         return JsonResponse({'success': True, 'sustentantes': lista})
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
@@ -733,7 +734,9 @@ def tramites_espera(request):
                 'nombre': f"Trámite {tramite.id_tramite} - {tramite.estado_actual}",
                 'fecha_inicio': tramite.fecha_inicio.strftime('%Y-%m-%d'),
                 'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,
-                'nombre_opcion': nombre_opcion
+                'nombre_opcion': nombre_opcion,
+                'oportunidades_restantes': sustentante.oportunidades_restantes
+
             })
 
         return JsonResponse({
@@ -776,7 +779,9 @@ def tramites_progreso(request):
                 'fecha_actualizacion': tramite.fecha_actualizacion.strftime('%Y-%m-%d') if tramite.fecha_actualizacion else None,
                 'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,
                 'nombre_opcion': nombre_opcion,
-                'estado_actual': tramite.estado_actual  # Agregar estado actual
+                'estado_actual': tramite.estado_actual,  # Agregar estado actual
+                'oportunidades_restantes': sustentante.oportunidades_restantes
+
             })
 
         return JsonResponse({
@@ -1108,5 +1113,53 @@ def marcar_leida(request, notificacion_id):
             'success': False,
             'error': f'Error al marcar como leída: {str(e)}'
         }, status=500)
+<<<<<<< HEAD
         
         
+=======
+    
+
+@csrf_exempt
+@login_required
+def actualizar_oportunidades(request, sustentante_id):
+    if request.method == 'POST':
+        try:
+            administrativo = Administrativos.objects.get(user=request.user)
+        except Administrativos.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Usuario no autorizado'}, status=403)
+
+        try:
+            sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
+            data = json.loads(request.body)
+            accion = data.get('accion')
+
+            if accion == 'quemar':
+                if sustentante.oportunidades_restantes > 0:
+                    sustentante.oportunidades_restantes -= 1
+                    sustentante.save()
+                    return JsonResponse({'success': True, 'oportunidades_restantes': sustentante.oportunidades_restantes})
+                else:
+                    return JsonResponse({'success': False, 'error': 'No quedan oportunidades'}, status=400)
+
+            elif accion == 'devolver':
+                if sustentante.oportunidades_restantes < 3:
+                    sustentante.oportunidades_restantes += 1
+                    sustentante.save()
+                    return JsonResponse({'success': True, 'oportunidades_restantes': sustentante.oportunidades_restantes})
+                else:
+                    return JsonResponse({'success': False, 'error': 'Ya tiene el máximo de oportunidades'}, status=400)
+
+            elif accion == 'actualizar':
+                nuevas_oportunidades = int(data.get('oportunidades_restantes'))
+                if nuevas_oportunidades < 0:
+                    return JsonResponse({'success': False, 'error': 'El número de oportunidades no puede ser negativo'}, status=400)
+                sustentante.oportunidades_restantes = nuevas_oportunidades
+                sustentante.save()
+                return JsonResponse({'success': True, 'oportunidades_restantes': sustentante.oportunidades_restantes})
+
+            else:
+                return JsonResponse({'success': False, 'error': 'Acción inválida'}, status=400)
+
+        except Sustentante.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Sustentante no encontrado'}, status=404)
+>>>>>>> 8fdc37aa921740df5a4951ca82b210fd4a2fd159
