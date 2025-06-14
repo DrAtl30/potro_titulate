@@ -25,7 +25,7 @@ import logging
 logger = logging.getLogger(__name__)  
 import json
 import os
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -479,12 +479,13 @@ class ConfirmarCuentaView(APIView):
             if default_token_generator.check_token(sustentante, token):
                 sustentante.confirmado = True
                 sustentante.save()
-                return Response({'mensaje': 'Cuenta confirmada correctamente'}, status=status.HTTP_200_OK)
+                timestamp = timezone.now().timestamp()
+                return render(request, 'confirmarCorreoExito.html', {'timestamp': timestamp})  
             else:
-                return Response({'error': 'Enlace inválido o expirado'}, status=status.HTTP_400_BAD_REQUEST)
+                return HttpResponseRedirect('/error-confirmacion/') 
         except Exception:
-            return Response({'error': 'Enlace inválido'}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return HttpResponseRedirect('/error-confirmacion/')  
+
 def descargar_documento(request, documento_id):
     documento = get_object_or_404(Documentos, id_documento=documento_id)
     file_path = os.path.join(settings.MEDIA_ROOT, documento.archivo.name)

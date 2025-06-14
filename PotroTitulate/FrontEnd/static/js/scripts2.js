@@ -396,6 +396,13 @@ function handleFileChange(requisito) {
             return;
         }
 
+        // Verificar longitud del nombre del archivo (incluyendo extensión)
+        if (file.name.length > 50) {
+            mostrarModal('El nombre del archivo no debe superar los 50 caracteres.', 'errorModal');
+            fileInput.value = '';
+            return;
+        }
+
         const maxSizeMB = 3;
         const maxSizeBytes = maxSizeMB * 1024 * 1024;
 

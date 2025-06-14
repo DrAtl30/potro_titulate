@@ -55,7 +55,7 @@ class SustentanteRegistroSerializer(serializers.ModelSerializer):
         sustentante.contrasena_temporal = contrasena_temporal  # Asigna el valor de contrasena_temporal si lo tiene
         sustentante.save()  # Guarda el objeto en la base de datos
 
-        # Enviar correo de confirmación (suponiendo que tengas una función para esto)
+        # Enviar correo de confirmación 
         self.enviar_correo_confirmacion(sustentante)
         return sustentante
     def enviar_correo_confirmacion(self, sustentante):
