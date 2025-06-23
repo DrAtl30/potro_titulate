@@ -5,26 +5,35 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     gcc \
     openssh-client \
+    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Crear directorios
+# Crear directorio de trabajo
 WORKDIR /PotroTitulate
-COPY . /PotroTitulate
 
-# Instalar dependencias Python
-RUN pip install --upgrade pip
-RUN pip install -r /PotroTitulate/FrontEnd/requirements.txt
-
-# Dar permisos a la clave ssh
-RUN mkdir -p /root/.ssh
-COPY ssh/id_rsa /root/.ssh/id_rsa
-RUN chmod 600 /root/.ssh/id_rsa
-
-# Opcional: configurar hosts conocidos
-RUN touch /root/.ssh/known_hosts
-
-# Script de arranque que primero levanta el túnel y luego ejecuta gunicorn
+# Copiar script de arranque
 COPY ssh/start_server.sh /start_server.sh
+COPY ssh/known_hosts /root/.ssh/known_hosts
 RUN chmod +x /start_server.sh
 
+# Copiar todo el proyecto backend
+COPY . /PotroTitulate
+
+# Copiar requirements antes (desde contexto backend)
+COPY requirements.txt /PotroTitulate/requirements.txt
+
+# Instalar dependencias de Python
+RUN pip install --upgrade pip
+RUN pip install -r /PotroTitulate/requirements.txt
+
+# Configurar SSH
+RUN mkdir -p /root/.ssh
+COPY ssh/key-1.key /root/.ssh/key-1.key
+RUN chmod 600 /root/.ssh/key-1.key
+RUN touch /root/.ssh/known_hosts
+
+# Ejecuta collectstatic para juntar los archivos estáticos
+RUN python manage.py collectstatic --noinput
+
+# Comando de inicio
 CMD ["/start_server.sh"]

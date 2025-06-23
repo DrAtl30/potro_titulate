@@ -1,0 +1,31 @@
+services:
+  web:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Montar desde el directorio correcto del contenedor
+      - static_volume:/PotroTitulate/staticfiles
+      - media_volume:/PotroTitulate/mediafiles
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      # Usar los volúmenes compartidos
+      - static_volume:/staticfiles
+      - media_volume:/mediafiles
+      # Frontend dist (si tienes una SPA)
+      - ./frontend/dist:/usr/share/nginx/html/frontend
+      # Configuración de nginx
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+
+# Volúmenes nombrados para compartir entre contenedores
+volumes:
+  static_volume:
+  media_volume:

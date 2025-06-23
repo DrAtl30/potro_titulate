@@ -1,0 +1,239 @@
+
+/* Contenedor principal de la zona madal */
+.zona-mensajes {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 900px;
+    height: 70vh;
+    max-height: 600px;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #2C5234;
+}
+
+/* Layout interno */
+.zona-mensajes-interno {
+    display: flex;
+    height: 100%;
+}
+
+/* barra lateral que separará por fecha*/
+.sidebar-mensajes {
+    width: 250px;
+    background: #f8f9fa;
+    border-right: 1px solid #2C5234;
+    overflow-y: auto;
+    padding: 15px;
+    color: black;
+}
+
+.sidebar-mensajes h5 {
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #523b2c;
+    font-size: 1.1rem;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #9C8412;
+}
+
+/* Listar los items en la barra lateral conforme a fechas */
+.lista-resumen-mensajes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.item-resumen-mensaje {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    background-color: #f8f8f8;
+}
+/*---------------------------*/
+.item-resumen-mensaje:hover {
+    background: #eee5ba;
+    border-left: 3px solid #9C8412;
+}
+
+.item-resumen-mensaje.activo {
+    background: #f0f7f1;
+    border-left: 3px solid #2C5234;
+}
+
+.titulo-resumen {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #BEA52A;
+    margin-bottom: 4px;
+}
+
+.cantidad-resumen {
+    font-size: 0.8rem;
+    color: #9C8412;
+    font-weight: 500;
+}
+
+/* Área principal de mensajes */
+.contenedor-principal-mensajes {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+}
+
+/* Encabezado */
+.encabezado-mensajes {
+    padding: 15px 20px;
+    border-bottom: 2px solid #9C8412;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2C5234;
+}
+
+.encabezado-mensajes h3 {
+    font-weight: bold;
+    margin: 0;
+    color: white;
+    font-size: 1.2rem;
+}
+
+/* Botón cerrar */
+.boton-cerrar-mensajes {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease;
+    padding: 0 8px;
+    line-height: 1;
+}
+
+.boton-cerrar-mensajes:hover {
+    color: #9C8412;
+    transform: scale(1.1);
+}
+
+/* Contenedor de mensajes */
+.lista-mensajes-contenedor {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+/* Lista de mensajes */
+.lista-mensajes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Items individuales */
+.item-mensaje {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background 0.2s;
+    background-color: white;
+    margin: 8px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.item-mensaje:hover {
+    background-color: #eee5ba;
+}
+
+.encabezado-item-mensaje {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.remitente-mensaje {
+    font-weight: bold;
+    color: #2C5234;
+    font-size: 0.95rem;
+}
+
+.remitente-mensaje.usuario {
+    color: #9C8412;
+}
+
+.fecha-mensaje {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.texto-mensaje {
+    white-space: pre-wrap;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #333;
+    padding-left: 10px;
+}
+
+/* Para pantallas reducidas */
+@media (max-width: 768px) {
+    .zona-mensajes {
+        width: 95%;
+        height: 80vh;
+    }
+    
+    .sidebar-mensajes {
+        width: 200px;
+    }
+    
+    .encabezado-mensajes h3 {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .zona-mensajes-interno {
+        flex-direction: column;
+    }
+    
+    .sidebar-mensajes {
+        width: 100%;
+        height: auto;
+        max-height: 150px;
+        border-right: none;
+        border-bottom: 2px solid #2C5234;
+        overflow-x: hidden;
+    }
+    
+    .lista-resumen-mensajes {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        flex-wrap: nowrap;
+    }
+    
+    .item-resumen-mensaje {
+        min-width: 140px;
+        margin-right: 10px;
+        margin-bottom: 0;
+    }
+    
+    .encabezado-mensajes {
+        padding: 12px 15px;
+    }
+    
+    .item-mensaje {
+        padding: 12px 15px;
+    }
+}
