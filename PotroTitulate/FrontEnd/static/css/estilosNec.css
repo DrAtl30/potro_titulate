@@ -12,7 +12,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #5a7561;
+    background-color: #679370;
     padding: 10px 20px;
     color: white;
 }
@@ -56,7 +56,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #5a7561;
+    background-color: #679370;
     padding: 10px 20px;
     color: white;
 }
@@ -143,7 +143,7 @@ main {
 /* Estilos generales para el footer */
 footer {
     position: relative;
-    background-color: #6e7b68;
+    background-color: #679370;
     padding: 20px; /* Ajusta el padding para que el contenido esté bien posicionado */
     text-align: left; /* Asegura que el texto esté alineado a la izquierda */
     margin-top: auto;

@@ -30,7 +30,7 @@ body, html {
 
 .registro-form .form-control {
     border-radius: 50px;
-    border: 1px solid #5a7561;
+    border: 1px solid #679370;
     padding: 10px 15px;
     margin-bottom: 15px;
     width: 100%;
@@ -38,7 +38,7 @@ body, html {
 
 .registro-form button {
     width: 100%;
-    background-color: #5a7561;
+    background-color: #679370;
     color: white;
     border: none;
     border-radius: 50px;
@@ -49,7 +49,7 @@ body, html {
 
 .back-arrow {
     font-size: 24px;
-    color: #5a7561;
+    color: #679370;
     text-decoration: none;
     position: absolute;
     top: 20px;
@@ -108,7 +108,7 @@ body, html {
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #5a7561;
+    color: #679370;
     font-size: 18px;
 }
 
@@ -158,7 +158,7 @@ body, html {
 /* Footer */
 footer {
     position: relative;
-    background-color: #6e7b68;
+    background-color: #679370;
     text-align: center;
     margin-top: auto;
     height: 10vh;
