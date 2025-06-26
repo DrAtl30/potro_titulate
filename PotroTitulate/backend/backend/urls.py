@@ -114,7 +114,6 @@ urlpatterns = [
     # 3) POST /enviarMensajeSustentante/7/ => si el sustentante manda mensaje
     path('enviarMensajeSustentante/<int:id_sustentante>/', enviar_mensaje_sustentante, name='enviarMensajeSustentante'),
 
-    # 4) confirmación de cuenta (tal cual lo tienes)
     path('confirmar-cuenta/<str:uidb64>/<str:token>/', ConfirmarCuentaView.as_view(), name='confirmar-cuenta'),
 
     # 5) GET /perfilAdministrador/ => vista de administrador

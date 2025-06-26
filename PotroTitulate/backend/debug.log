@@ -8537,3 +8537,7 @@ Traceback (most recent call last):
 TypeError: actualizar_oportunidades() got an unexpected keyword argument 'id_sustentante'
 "POST /api/sustentante/79/actualizar_oportunidades/ HTTP/1.1" 500 79202
 >>>>>>> 8fdc37aa921740df5a4951ca82b210fd4a2fd159
+Internal Server Error: /api/notificaciones/45/
+"GET /api/notificaciones/45/ HTTP/1.1" 500 159
+Internal Server Error: /api/notificaciones/45/
+"GET /api/notificaciones/45/ HTTP/1.1" 500 159
