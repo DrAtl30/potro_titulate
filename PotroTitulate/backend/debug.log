@@ -8536,8 +8536,23 @@ Traceback (most recent call last):
     return view_func(request, *args, **kwargs)
 TypeError: actualizar_oportunidades() got an unexpected keyword argument 'id_sustentante'
 "POST /api/sustentante/79/actualizar_oportunidades/ HTTP/1.1" 500 79202
+<<<<<<< HEAD
 >>>>>>> 8fdc37aa921740df5a4951ca82b210fd4a2fd159
 Internal Server Error: /api/notificaciones/45/
 "GET /api/notificaciones/45/ HTTP/1.1" 500 159
 Internal Server Error: /api/notificaciones/45/
 "GET /api/notificaciones/45/ HTTP/1.1" 500 159
+=======
+Internal Server Error: /api/sustentante/80/actualizar_oportunidades/
+Traceback (most recent call last):
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/home/EnriqueMAP/Documentos/potro_titulate/PotroTitulate/env/lib64/python3.13/site-packages/django/contrib/auth/decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+TypeError: actualizar_oportunidades() got an unexpected keyword argument 'id_sustentante'
+"POST /api/sustentante/80/actualizar_oportunidades/ HTTP/1.1" 500 79161
+>>>>>>> a5bf81605db0b29cc49eddaae0b8e66cc3e503d3

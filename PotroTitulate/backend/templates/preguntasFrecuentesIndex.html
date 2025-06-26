@@ -35,30 +35,94 @@
         <h1 class="body-titles">Preguntas Frecuentes</h1>
             <div class="accordion-scroll-container">
                 <div class="accordion custom-acordion" id = "prefreAccordion">
-                    {% for prefre in pre_freS %}
-                        <div class="accordion-item custom-accordion-item">
-                            <h2 class="accordion-header" id="heading{{forloop.counter}}">
-                                <button class="accordion-button custom-accordion-button {% if not forloop.first %}collapsed{% endif %}" 
-                                        type="button" 
-                                        data-bs-toggle="collapse" 
-                                        data-bs-target="#prefre{{ forloop.counter}}">
-                                    {{prefre.pregunta}}
-                                </button>
+                    <!-- Pregunta 1 -->
+                <div class="accordion-item custom-accordion-item">
+                    <h2 class="accordion-header" id="heading1">
+                        <button class="accordion-button custom-accordion-button" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#prefre1">
+                            ¿Qué métodos de titulación ofrece la facultad?
+                        </button>
                             </h2>
-                            <div id="prefre{{ forloop.counter }}" 
-                                  class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" 
-                                  data-bs-parent="#prefreAccordion">
-
-                               <div class="accordion-body custom-accordion-body">
-                                    {{ prefre.respuesta }}
-                                </div>
-                            </div>
+                            <div id="prefre1" class="accordion-collapse collapse show" data-bs-parent="#prefreAccordion">
+                        <div class="accordion-body custom-accordion-body">
+                             La facultad ofrece: Artículo Especializado, Ensayo, memoria de experiencia laboral, reporte de aplicacion de conocimientos, reporte de autoempleo profesional, tesis, tesina, etc 
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
-            </div>
-        </main>
+                   <!-- Pregunta 2 -->
+                <div class="accordion-item custom-accordion-item">
+                    <h2 class="accordion-header" id="heading2">
+                        <button class="accordion-button custom-accordion-button collapsed" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#prefre2">
+                            ¿Cuál es el método más rápido para titularme?
+                        </button>
+                    </h2>
+                    <div id="prefre2" class="accordion-collapse collapse" data-bs-parent="#prefreAccordion">
+                        <div class="accordion-body custom-accordion-body">
+                            Depende de tu situación académica. El Examen General de Conocimientos suele ser el más rápido si tienes un promedio alto, mientras que la Experiencia Profesional es ideal si ya cuentas con experiencia laboral relevante.
+                        </div>
+                    </div>
+                </div>
 
+                
+                <!-- Pregunta 3 -->
+                <div class="accordion-item custom-accordion-item">
+                    <h2 class="accordion-header" id="heading3">
+                        <button class="accordion-button custom-accordion-button collapsed" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#prefre3">
+                            ¿Necesito un asesor para la titulación por tesis?
+                        </button>
+                    </h2>
+                    <div id="prefre3" class="accordion-collapse collapse" data-bs-parent="#prefreAccordion">
+                        <div class="accordion-body custom-accordion-body">
+                            Sí, es obligatorio contar con un director de tesis registrado (profesor de la facultad) y al menos un sinodal. Debes coordinarte con el departamento académico para asignarlos.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 4 -->
+                <div class="accordion-item custom-accordion-item">
+                    <h2 class="accordion-header" id="heading4">
+                        <button class="accordion-button custom-accordion-button collapsed" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#prefre4">
+                            ¿Puedo cambiar de método de titulación después de iniciar?
+                        </button>
+                    </h2>
+                    <div id="prefre4" class="accordion-collapse collapse" data-bs-parent="#prefreAccordion">
+                        <div class="accordion-body custom-accordion-body">
+                            Sí, pero debes solicitar la cancelación del método anterior y cumplir con los requisitos del nuevo. Puede haber implicaciones administrativas (tiempos, costos, etc.).
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 5 -->
+                <div class="accordion-item custom-accordion-item">
+                    <h2 class="accordion-header" id="heading5">
+                        <button class="accordion-button custom-accordion-button collapsed" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#prefre5">
+                            ¿Hay algún costo adicional por titulación?
+                        </button>
+                    </h2>
+                    <div id="prefre5" class="accordion-collapse collapse" data-bs-parent="#prefreAccordion">
+                        <div class="accordion-body custom-accordion-body">
+                            Todos los métodos tienen derechos de titulación (consulta el costo vigente en Control Escolar). Algunos métodos como tesis pueden requerir gastos adicionales (impresión, encuadernación, etc.).
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
     <!--Footer de imagen larga-->
     <footer class="footer-custom">
         <img src="{% static 'img/pleca con hexágonos LARGA.jpg'%}" alt="Footer" class="footer-img">
