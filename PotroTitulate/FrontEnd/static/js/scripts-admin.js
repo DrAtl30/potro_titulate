@@ -90,8 +90,54 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnMostrarProgreso = document.getElementById("btnMostrarProgreso");
     const listaTramitesEspera = document.getElementById("listaTramitesEspera");
     const listaTramitesProgreso = document.getElementById("listaTramitesProgreso");
+     // Referencias para toggle
+  const btnMostrarRechazados  = document.getElementById("btnMostrarRechazados");
+  const seccionEspera         = document.getElementById("tramitesEspera");
+  const seccionProgreso       = document.getElementById("tramitesProgreso");
+  const seccionRechazados     = document.getElementById("tramitesRechazados");
+  const listaRechazados = document.getElementById("listaTramitesRechazados");
 
-   
+// Toggle “Trámites Rechazados” con AJAX
+btnMostrarRechazados.addEventListener("click", async function(e) {
+  e.preventDefault();
+  // 1) Mostrar solo la sección de rechazados
+  seccionEspera.style.display     = "none";
+  seccionProgreso.style.display   = "none";
+  seccionRechazados.style.display = "block";
+
+  // 2) Spinner mientras carga
+  listaRechazados.innerHTML = `
+    <li class="list-group-item text-center text-muted">
+      <i class="fas fa-spinner fa-spin"></i> Cargando rechazados…
+    </li>
+  `;
+
+  // 3) Fetch al endpoint 
+  try {
+    const resp = await fetch("/api/tramites/rechazados/");
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const { tramites } = await resp.json();
+
+    // 4) Pinta el resultado
+    if (tramites.length === 0) {
+      listaRechazados.innerHTML = `<li class="list-group-item">No hay trámites rechazados.</li>`;
+    } else {
+      listaRechazados.innerHTML = tramites.map(t => `
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          ${t.numero_cuenta} – ${t.nombre_completo}
+          <span class="badge bg-danger">Rechazado</span>
+        </li>
+      `).join("");
+    }
+  } catch (err) {
+    listaRechazados.innerHTML = `
+      <li class="list-group-item text-danger">
+        <i class="fas fa-exclamation-triangle"></i> ${err.message}
+      </li>
+    `;
+  }
+});
+
     const modalConfirmacion = document.createElement('div');
     modalConfirmacion.className = 'modal fade';
     modalConfirmacion.id = 'confirmacionModal';
@@ -1053,8 +1099,32 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
     });
 
     // 8) Event listeners para botones de trámites
-    btnMostrarEspera.addEventListener("click", cargarTramitesEspera);
-    btnMostrarProgreso.addEventListener("click", cargarTramitesProgreso);
+    // Toggle “Solicitudes por Aprobar”
+  btnMostrarEspera.addEventListener("click", function(e) {
+    e.preventDefault();
+    seccionEspera.style.display     = "block";
+    seccionProgreso.style.display   = "none";
+    seccionRechazados.style.display = "none";
+    cargarTramitesEspera();  // si necesitas recargar vía AJAX
+  });
+
+  // Toggle “Documentos en Revisión”
+  btnMostrarProgreso.addEventListener("click", function(e) {
+    e.preventDefault();
+    seccionEspera.style.display     = "none";
+    seccionProgreso.style.display   = "block";
+    seccionRechazados.style.display = "none";
+    cargarTramitesProgreso();  // si necesitas recargar vía AJAX
+  });
+
+  // Toggle “Trámites Rechazados”
+  btnMostrarRechazados.addEventListener("click", function(e) {
+    e.preventDefault();
+    seccionEspera.style.display     = "none";
+    seccionProgreso.style.display   = "none";
+    seccionRechazados.style.display = "block";
+    // no necesitas AJAX: ya está en el template
+  });
     
     // 9) Al hacer click en un aspirante
     aspirantesList.addEventListener("click", (e) => {
@@ -1192,13 +1262,10 @@ function filtrarAspirantes() {
     if (searchTramites) {
         searchTramites.addEventListener("input", filtrarTramites);
     }
-<<<<<<< HEAD
+
 });
-=======
 
     
-
-});
 
 
 // Variable global para almacenar el ID del sustentante
@@ -1275,4 +1342,4 @@ function actualizarOportunidades() {
         alert(error.message);
     });
 }
->>>>>>> 8fdc37aa921740df5a4951ca82b210fd4a2fd159
+

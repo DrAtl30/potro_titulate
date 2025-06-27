@@ -752,8 +752,40 @@ def tramites_espera(request):
             'success': False,
             'error': str(e)
         }, status=500)
+ 
+@require_GET
+def tramites_rechazados(request):
+    """
+    Devuelve todos los trámites cuyo estado_actual sea 'Rechazado'
+    en el mismo formato que tramites_espera y tramites_progreso.
+    """
+    try:
+        qs = Tramites.objects.filter(estado_actual__iexact='rechazado') \
+             .select_related('id_sustentante', 'id_opcion')
 
+        resultados = []
+        for tramite in qs:
+            sust = tramite.id_sustentante
+            resultados.append({
+                'id_tramite': tramite.id_tramite,
+                'sustentante': f"{sust.nombre} {sust.apellido}",
+                'nombre_completo': f"{sust.nombre} {sust.apellido}",
+                'numero_cuenta': sust.numero_cuenta,
+                'correo': sust.correo_electronico,
+                'nombre': f"Trámite {tramite.id_tramite} - Rechazado",
+                'fecha_actualizacion': tramite.fecha_actualizacion.strftime('%Y-%m-%d') 
+                                       if tramite.fecha_actualizacion else None,
+                'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,
+                'nombre_opcion': tramite.id_opcion.nombre_opcion 
+                                 if tramite.id_opcion else "Sin opción",
+                'oportunidades_restantes': sust.oportunidades_restantes,
+            })
 
+        return JsonResponse({'success': True, 'tramites': resultados})
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+ 
 @require_GET
 def tramites_progreso(request):
     """
