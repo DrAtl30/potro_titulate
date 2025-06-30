@@ -123,12 +123,23 @@ btnMostrarRechazados.addEventListener("click", async function(e) {
       listaRechazados.innerHTML = `<li class="list-group-item">No hay trámites rechazados.</li>`;
     } else {
       listaRechazados.innerHTML = tramites.map(t => `
+<<<<<<< HEAD
         <li class="list-group-item d-flex justify-content-between align-items-center">
+=======
+        <li class="list-group-item tramite-item d-flex justify-content-between align-items-center">
+>>>>>>> 238381640c044704cbb4587d191c554eefd624ce
           ${t.numero_cuenta} – ${t.nombre_completo}
           <span class="badge bg-danger">Rechazado</span>
         </li>
       `).join("");
+<<<<<<< HEAD
     }
+=======
+      
+    }
+    filtrarTramites(); 
+
+>>>>>>> 238381640c044704cbb4587d191c554eefd624ce
   } catch (err) {
     listaRechazados.innerHTML = `
       <li class="list-group-item text-danger">
@@ -1118,6 +1129,7 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
   });
 
   // Toggle “Trámites Rechazados”
+<<<<<<< HEAD
   btnMostrarRechazados.addEventListener("click", function(e) {
     e.preventDefault();
     seccionEspera.style.display     = "none";
@@ -1125,6 +1137,9 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
     seccionRechazados.style.display = "block";
     // no necesitas AJAX: ya está en el template
   });
+=======
+ 
+>>>>>>> 238381640c044704cbb4587d191c554eefd624ce
     
     // 9) Al hacer click en un aspirante
     aspirantesList.addEventListener("click", (e) => {
@@ -1236,22 +1251,21 @@ function filtrarAspirantes() {
     });
 
 }
-
-
-    
     // Función para filtrar trámites
     function filtrarTramites() {
+        const term  = searchTramites.value.toLowerCase().trim();
         const searchTerm = searchTramites.value.toLowerCase();
-        const items = [...document.querySelectorAll("#listaTramitesEspera li.tramite-item, #listaTramitesProgreso li.tramite-item")];
+        const items = document.querySelectorAll(`
+    #listaTramitesEspera    li.tramite-item,
+    #listaTramitesProgreso  li.tramite-item,
+    #listaTramitesRechazados li.tramite-item
+  `);   
         
-        items.forEach(item => {
-            const cuentaText = item.textContent.toLowerCase();
-            if (cuentaText.includes(searchTerm)) {
-                item.style.display = "flex";
-            } else {
-                item.style.display = "none";
-            }
-        });
+        items.forEach(li => {
+    const visible = li.textContent.toLowerCase().includes(term);
+    li.classList.toggle('d-none', !visible);   // ← usa la clase de Bootstrap
+  });
+  
     }
     
     // Event listeners para los campos de búsqueda

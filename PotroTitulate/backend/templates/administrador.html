@@ -122,21 +122,38 @@
         </div>
 
           <!-- Subsección para Trámites Rechazados -->
+<<<<<<< HEAD
         <div id="tramitesRechazados" style="display: none;">
           <h4>Trámites Rechazados</h4>
           <div class="tramites-list-container">
             <ul id="listaTramitesRechazados" class="list-group">
              {% for t in tramites_rechazados %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
+=======
+       <div id="tramitesRechazados" style="display: none;">
+  <h4>Trámites Rechazados</h4>
+  <div class="tramites-list-container">
+    <ul id="listaTramitesRechazados" class="list-group">
+      {% for t in tramites_rechazados %}
+        <li class="list-group-item tramite-item d-flex justify-content-between align-items-center">
+>>>>>>> 238381640c044704cbb4587d191c554eefd624ce
           {{ t.numero_cuenta }} – {{ t.alumno.nombre }}
           <span class="badge bg-danger">Rechazado</span>
         </li>
       {% empty %}
+<<<<<<< HEAD
         <li class="list-group-item">No hay trámites rechazados.</li>
+=======
+        <li class="list-group-item tramite-item">No hay trámites rechazados.</li>
+>>>>>>> 238381640c044704cbb4587d191c554eefd624ce
       {% endfor %}
     </ul>
   </div>
 </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 238381640c044704cbb4587d191c554eefd624ce
         
         <!-- Subsección para Documentos en Revisión -->
         <div id="tramitesProgreso" style="display: none;">
