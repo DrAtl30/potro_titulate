@@ -123,23 +123,15 @@ btnMostrarRechazados.addEventListener("click", async function(e) {
       listaRechazados.innerHTML = `<li class="list-group-item">No hay trámites rechazados.</li>`;
     } else {
       listaRechazados.innerHTML = tramites.map(t => `
-<<<<<<< HEAD
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-=======
         <li class="list-group-item tramite-item d-flex justify-content-between align-items-center">
->>>>>>> 238381640c044704cbb4587d191c554eefd624ce
           ${t.numero_cuenta} – ${t.nombre_completo}
           <span class="badge bg-danger">Rechazado</span>
         </li>
       `).join("");
-<<<<<<< HEAD
-    }
-=======
       
     }
     filtrarTramites(); 
 
->>>>>>> 238381640c044704cbb4587d191c554eefd624ce
   } catch (err) {
     listaRechazados.innerHTML = `
       <li class="list-group-item text-danger">
@@ -1129,17 +1121,7 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
   });
 
   // Toggle “Trámites Rechazados”
-<<<<<<< HEAD
-  btnMostrarRechazados.addEventListener("click", function(e) {
-    e.preventDefault();
-    seccionEspera.style.display     = "none";
-    seccionProgreso.style.display   = "none";
-    seccionRechazados.style.display = "block";
-    // no necesitas AJAX: ya está en el template
-  });
-=======
  
->>>>>>> 238381640c044704cbb4587d191c554eefd624ce
     
     // 9) Al hacer click en un aspirante
     aspirantesList.addEventListener("click", (e) => {
@@ -1356,4 +1338,3 @@ function actualizarOportunidades() {
         alert(error.message);
     });
 }
-

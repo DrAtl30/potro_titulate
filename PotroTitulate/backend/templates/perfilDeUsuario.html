@@ -2,253 +2,225 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de usuario</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/estilos2.css' %}">
-    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
-    <link rel="stylesheet" href= "{% static 'css/mensajes.css'%}">
-    <style>
-
-        /* Estilos para el contenedor de notificaciones (puedes ajustar) */
-        #notificaciones-container {
-            position: fixed; /* O relative si prefieres en el flujo */
-            top: 80px; /* Ajusta según tu header */
-            right: 20px;
-            width: 350px;
-            max-height: 400px;
-            overflow-y: auto;
-            z-index: 1050; /* Encima de otros elementos */
-            background-color: #f8f9fa; /* Un fondo ligero */
-            border: 1px solid #dee2e6;
-            border-radius: .25rem;
-            padding: 1rem;
-            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
-            display: none; /* Oculto inicialmente, podrías mostrarlo con un botón */
-        }
-         /* Estilo para alertas dentro del contenedor */
-        #notificaciones-container .alert {
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-        #notificaciones-container .alert p {
-            margin-bottom: 0.25rem;
-        }
-         #notificaciones-container .alert small {
-            font-size: 0.8rem;
-        }
-
-         /* Botón para mostrar/ocultar notificaciones (Opcional) */
-         #botonToggleNotificaciones {
-            /* Estilos para tu botón */
-            margin-left: 10px; /* Ejemplo */
-         }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perfil de usuario</title>
+  <!-- Bootstrap y Font-Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Tus estilos -->
+  <link rel="stylesheet" href="{% static 'css/estilos2.css' %}">
+  <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+  <link rel="stylesheet" href="{% static 'css/mensajes.css' %}">
+  <style>
+    /* Header fijo en la parte superior */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: #5a7561; /* verde UAEM */
+      padding: .75rem 1rem;
+    }
+    header nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    header nav .btn,
+    header nav a {
+      color: #fff;
+    }
+    .back-arrow {
+      color: #5a7561;
+      font-size: 1.5rem;
+      text-decoration: none;
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+    }
+    /* Notificaciones fijadas */
+    #notificaciones-container {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      width: 350px;
+      max-height: 400px;
+      overflow-y: auto;
+      z-index: 1050;
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: .25rem;
+      padding: 1rem;
+      box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+      display: none;
+    }
+    /* Ajustes menores */
+    #notificaciones-container .alert { margin-bottom: .5rem; font-size: .9rem; }
+    #notificaciones-container .alert p { margin-bottom: .25rem; }
+    #notificaciones-container .alert small { font-size: .8rem; }
+  </style>
 </head>
 <body>
-    <a href="{% url 'index' %}" class="back-arrow">&larr;</a>
-    <div class="header-left" style="display: flex; justify-content: center; flex: 1;">
-        <img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}" alt="Escudo UAEM" style="max-height: 120px;">
+  <!-- Flecha de regreso -->
+  <a href="{% url 'index' %}" class="back-arrow">&larr;</a>
+
+  <!-- Logo UAEM -->
+  <div class="d-flex justify-content-center py-3">
+    <img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}"
+         alt="Escudo UAEM" style="max-height: 120px;">
+  </div>
+
+  <!-- Bienvenida -->
+  <div class="px-4 pb-3" style="font-size: 1.1rem; font-weight: 500;">
+    Bienvenido: {{ nombre_sustentante }}
+  </div>
+
+  <!-- Barra de navegación (header pegado arriba) -->
+  <header>
+    <nav>
+      <button id="botonMensajes"
+              data-sustentante-id="{{ id_sustentante }}"
+              class="btn btn-info">
+        <i class="fas fa-envelope"></i> Ver mensajes
+      </button>
+
+      <button id="botonToggleNotificaciones" class="btn btn-warning position-relative">
+        <i class="fas fa-bell"></i> Notificaciones
+        <span id="notificaciones-badge"
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              style="display: none;">!</span>
+      </button>
+
+      <!-- Espaciador flexible para empujar el botón de cerrar sesión a la derecha -->
+      <div class="flex-grow-1"></div>
+
+      <button class="btn btn-link text-white" style="text-decoration: none;"
+              onclick="cerrarSesion()">
+        Cerrar sesión
+      </button>
+    </nav>
+  </header>
+
+  <!-- Contenedor de notificaciones -->
+  <div id="notificaciones-container">
+    <h5>Notificaciones</h5>
+    <hr>
+    <div id="lista-notificaciones-aqui">
+      <p class="text-muted" id="no-notificaciones-msg">
+        No tienes notificaciones nuevas.
+      </p>
     </div>
-    <div style="text-align: left; padding: 10px 20px; font-size: 18px; font-weight: bold;">
-        Bienvenido: {{ nombre_sustentante }} </div>
-    <header>
-        <nav>
-            <button type="button" id="botonMensajes" data-sustentante-id="{{ id_sustentante }}" class="btn btn-info">
-                Ver mensajes
-              </button>   
-            
-            <!-- Contenedor del modal para zona de mensajes -->
-            <div id="zonaMensajes" class="zona-mensajes">
-                <div class="zona-mensajes-interno">
-                    <!-- Barra lateral  -->
-                    <div class="sidebar-mensajes">
-                        <h5>Mensajes Recibidos</h5>
-                        <ul id="listaResumenMensajes" class="lista-resumen-mensajes">
-                            <!-- Los resúmenes contabilizados de los mensajes aparecen aquí-->
-                        </ul>
-                    </div>
-                    
-                    <!-- Área principal para los mensajes -->
-                    <div class="contenedor-principal-mensajes">
-                        <div class="encabezado-mensajes">
-                            <h3>Detalle de Mensajes</h3>
-                            <button id="cerrarMensajes" class="boton-cerrar-mensajes" aria-label="Cerrar mensajes">
-                                &times;
-                            </button>
-                        </div>
-                        
-                        <!-- Contenedor con scroll para mensajes -->
-                        <div class="lista-mensajes-contenedor">
-                            <ul id="listaMensajes" class="lista-mensajes">
-                                <!-- el acumulado de todos los mensajes van aquí-->
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
+  </div>
 
-
-            <button id="botonToggleNotificaciones" class="btn btn-warning position-relative">
-                <i class="fas fa-bell"></i> Notificaciones
-                <span id="notificaciones-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
-                    ! </span>
-            </button>
-
-            <div class="dropdown">
-                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Preguntas Frecuentes</a>
-                 <div class="dropdown-menu">
-                     <a href="#">Pregunta 1</a>
-                     <a href="#">Pregunta 2</a>
-                     <a href="#">Pregunta 3</a>
-                 </div>
-             </div>
-             <button class="btn btn-link text-white ms-auto" style="text-decoration: none;" onclick="cerrarSesion()">Cerrar sesión</button>
-        </nav>
-    </header>
-
-    <div id="notificaciones-container">
-        <h5>Notificaciones</h5>
-        <hr>
-        <div id="lista-notificaciones-aqui">
-             <p class="text-muted" id="no-notificaciones-msg">No tienes notificaciones nuevas.</p>
+  <!-- Zona de mensajes (modal interno) -->
+  <div id="zonaMensajes" class="zona-mensajes">
+    <div class="zona-mensajes-interno">
+      <div class="sidebar-mensajes">
+        <h5>Mensajes Recibidos</h5>
+        <ul id="listaResumenMensajes" class="lista-resumen-mensajes"></ul>
+      </div>
+      <div class="contenedor-principal-mensajes">
+        <div class="encabezado-mensajes">
+          <h3>Detalle de Mensajes</h3>
+          <button id="cerrarMensajes" class="boton-cerrar-mensajes">&times;</button>
         </div>
-    </div>
-
-    <div id="requisitosContainer" style="margin-top: 20px;"></div>
-
-    <input type="hidden" id="idTramite" value="{{ id_tramite }}"> <input type="hidden" id="idSustentante" value="{{ id_sustentante }}"> <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-    
-    <!-- Modales -->
-    <div id="errorModal" class="modal">
-        <div class="modalContent">
-            <span class="close">&times;</span>
-            <p class="modalMessage"></p>
+        <div class="lista-mensajes-contenedor">
+          <ul id="listaMensajes" class="lista-mensajes"></ul>
         </div>
+      </div>
     </div>
-    
+  </div>
 
-    <div id="successModal" class="modal">
-        <div class="modalContent">
-            <span class="close">&times;</span>
-            <p class="modalMessage"></p>
-        </div>
+  <!-- Contenedor dinámico de requisitos -->
+  <div id="requisitosContainer" class="px-4 mt-4"></div>
+
+  <!-- Hidden inputs -->
+  <input type="hidden" id="idTramite"    value="{{ id_tramite }}">
+  <input type="hidden" id="idSustentante" value="{{ id_sustentante }}">
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+  <!-- Modales de éxito/error genéricos -->
+  <div id="errorModal" class="modal">
+    <div class="modalContent">
+      <span class="close">&times;</span>
+      <p class="modalMessage"></p>
     </div>
+  </div>
+  <div id="successModal" class="modal">
+    <div class="modalContent">
+      <span class="close">&times;</span>
+      <p class="modalMessage"></p>
+    </div>
+  </div>
 
-    <!-- Campo oculto para almacenar el id_tramite -->
-    <input type="hidden" id="idTramite" value="{{ id_tramite }}">
+  <!-- Scripts de Bootstrap y tus JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/scripts2.js' %}?v={{ timestamp }}"></script>
+  <script src="{% static 'js/session-check.js' %}?v={{ timestamp }}"></script>
+  <script src="{% static 'js/mensajes.js' %}?v={{ timestamp }}"></script>
+  <script src="{% static 'js/notificaciones.js' %}?v={{ timestamp }}"></script>
 
-    <!-- Campo oculto para almacenar el id_sustentante -->
-    <input type="hidden" id="idSustentante" value="{{ id_sustentante }}">
+  <script>
+    // Obtiene CSRF para POSTs
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(cookie => {
+          cookie = cookie.trim();
+          if (cookie.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+          }
+        });
+      }
+      return cookieValue;
+    }
 
-    <!-- Enlace a Bootstrap JS -->
+    // Devuelve el id del sustentante
+    function obtenerIdDelSustentante() {
+      const input = document.getElementById('idSustentante');
+      return input ? input.value : null;
+    }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'js/scripts2.js' %}?v={{ timestamp }}"></script>
-    <script src="{% static 'js/session-check.js' %}?v={{ timestamp }}"></script>
-    <script src="{% static 'js/mensajes.js' %}?v={{ timestamp }}"></script>
+    // Toggle de notificaciones
+    const toggleButton = document.getElementById('botonToggleNotificaciones');
+    const notificacionesContainer = document.getElementById('notificaciones-container');
+    toggleButton?.addEventListener('click', () => {
+      if (notificacionesContainer.style.display === 'block') {
+        notificacionesContainer.style.display = 'none';
+      } else {
+        notificacionesContainer.style.display = 'block';
+        const id = obtenerIdDelSustentante();
+        if (id) cargarNotificaciones(id);
+      }
+    });
 
-    <script src="{% static 'js/notificaciones.js' %}?v={{ timestamp }}"></script>
+    // Verifica la sesión y, si está, carga notificaciones
+    function checkSession() {
+      fetch('/checkSession/')
+        .then(r => r.json())
+        .then(data => {
+          if (!data.is_authenticated) {
+            window.location.href = '/iniciosesion/';
+          } else {
+            const id = obtenerIdDelSustentante();
+            if (id) cargarNotificaciones(id);
+          }
+        })
+        .catch(console.error);
+    }
+    document.addEventListener('DOMContentLoaded', checkSession);
+    window.onpageshow = e => { if (e.persisted) checkSession(); };
 
-    <script>
-        // Función para obtener el CSRF token (necesaria para el POST de marcar leída)
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        // Función que necesita notificaciones.js para saber a quién buscarle notificaciones
-        function obtenerIdDelSustentante() {
-            const input = document.getElementById('idSustentante');
-            return input ? input.value : null; // Devuelve el valor del input oculto
-        }
-
-        // Lógica para el botón opcional de mostrar/ocultar notificaciones
-        const toggleButton = document.getElementById('botonToggleNotificaciones');
-        const notificacionesContainer = document.getElementById('notificaciones-container');
-        if (toggleButton && notificacionesContainer) {
-             toggleButton.addEventListener('click', () => {
-                 // Alterna la visibilidad del contenedor
-                 if (notificacionesContainer.style.display === 'none' || notificacionesContainer.style.display === '') {
-                     notificacionesContainer.style.display = 'block';
-                     // Opcional: Llama a cargarNotificaciones aquí si quieres refrescar al abrir
-                     const sustentanteId = obtenerIdDelSustentante();
-                     if (sustentanteId) {
-                         cargarNotificaciones(sustentanteId); // Asume que cargarNotificaciones está definida en notificaciones.js
-                     }
-                 } else {
-                     notificacionesContainer.style.display = 'none';
-                 }
-             });
-        }
-
-        // Función para verificar la sesión (ya la tienes)
-        function checkSession() {
-            fetch('/checkSession/')
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.is_authenticated) {
-                        window.location.href = '/iniciosesion/';
-                    } else {
-                        // Si está autenticado, cargamos las notificaciones iniciales
-                         const sustentanteId = obtenerIdDelSustentante();
-                         if (sustentanteId) {
-                            // Llama a la función de notificaciones.js
-                            // Asegúrate que notificaciones.js esté cargado antes de este script
-                            // o envuelve esta llamada en DOMContentLoaded
-                             cargarNotificaciones(sustentanteId);
-                         }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al verificar la sesión:', error);
-                });
-        }
-
-        // Llama a checkSession cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', checkSession);
-
-
-        // Verifica la sesión cuando el usuario navega hacia atrás (ya lo tienes)
-        window.onpageshow = function(event) {
-            if (event.persisted) {
-                checkSession();
-            }
-        };
-
-        // Función para cerrar sesión 
-        function cerrarSesion() {
-             console.log("Cerrar sesión...");
-             fetch('/logout/', { 
-                 method: 'POST',
-                 headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                 }
-             }).then(response => {
-                 if(response.ok) {
-                    window.location.href = '/iniciosesion/'; // Redirige al login
-                 } else {
-                    console.error("Error al cerrar sesión");
-                 }
-             }).catch(error => console.error('Error en fetch de logout:', error));
-        }
-
-</script>
-
+    // Cerrar sesión
+    function cerrarSesion() {
+      fetch('/logout/', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': getCookie('csrftoken') }
+      }).then(res => {
+        if (res.ok) window.location.href = '/iniciosesion/';
+      }).catch(console.error);
+    }
+  </script>
 </body>
 </html>
