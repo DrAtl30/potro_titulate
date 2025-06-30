@@ -143,7 +143,7 @@
             <img src="{% static 'img/escudo positivo color vertical 2 líneas.png' %}" alt="Escudo UAEM">
         </div>
     </div>
-    
+    <div id="alertaGlobal" class="alert text-center fw-bold" role="alert" style="display: none;"></div>
     <div class="opciones-container container mt-4">
         <h2 class="text-center mb-4">Opciones de Titulación</h2>
         <ul class="list-group">
@@ -470,7 +470,7 @@ function enviarSolicitud() {
     console.log("ID de la opción seleccionada:", idOpcion); // Verificar el ID de la opción seleccionada
 
     if (!idOpcion) {
-        alert('Selecciona una opción de titulación válida.');
+        mostrarAlerta('⚠️ Selecciona una opción de titulación válida.', 'warning');
         return;
     }
 
@@ -490,10 +490,12 @@ function enviarSolicitud() {
     .then(response => {
         console.log("Estado de la respuesta:", response.status);
         if (response.ok) {
-            alert('Solicitud enviada con éxito.');
-            window.location.href = '/perfilUsuario/';
+            mostrarAlerta('✅ Solicitud enviada con éxito.', 'success');
+            setTimeout(() => {
+                window.location.href = '/perfilUsuario/';
+            }, 2000);
         } else {
-            alert('Error al enviar la solicitud.');
+            mostrarAlerta('❌ Error al enviar la solicitud.', 'danger');
         }
     })
     .catch(error => {
@@ -526,7 +528,32 @@ function enviarSolicitud() {
             checkSession();
         }
     };
-    </script>
     
+    function mostrarAlerta(mensaje, tipo = "success", duracion = 5000) {
+        const toastEl = document.getElementById("toastAlerta");
+        const toastBody = toastEl.querySelector(".toast-body");
+
+        // Cambiar color de fondo según el tipo
+        toastEl.className = `toast align-items-center text-white bg-${tipo} border-0`;
+
+        // Mensaje
+        toastBody.textContent = mensaje;
+
+        // Mostrar
+        const toast = new bootstrap.Toast(toastEl, { delay: duracion });
+        toast.show();
+    }
+    </script> 
+    
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
+        <div id="toastAlerta" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-bold">
+                    Mensaje por defecto
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
