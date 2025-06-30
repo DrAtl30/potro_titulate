@@ -105,6 +105,7 @@
         <div class="d-flex gap-3">
           <button id="btnMostrarEspera" class="btn btn-primary">Solicitudes por Aprobar</button>
           <button id="btnMostrarProgreso" class="btn btn-primary">Documentos en Revisión</button>
+          <button id="btnMostrarRechazados" class="btn btn-danger">Trámites Rechazados</button>
         </div>
         <div class="search-box">
           <input type="text" id="searchTramites" class="form-control" placeholder="Buscar por número de cuenta...">
@@ -119,6 +120,24 @@
             <ul id="listaTramitesEspera" class="list-group"></ul>
           </div>
         </div>
+
+          <!-- Subsección para Trámites Rechazados -->
+       <div id="tramitesRechazados" style="display: none;">
+  <h4>Trámites Rechazados</h4>
+  <div class="tramites-list-container">
+    <ul id="listaTramitesRechazados" class="list-group">
+      {% for t in tramites_rechazados %}
+        <li class="list-group-item tramite-item d-flex justify-content-between align-items-center">
+          {{ t.numero_cuenta }} – {{ t.alumno.nombre }}
+          <span class="badge bg-danger">Rechazado</span>
+        </li>
+      {% empty %}
+        <li class="list-group-item tramite-item">No hay trámites rechazados.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
         
         <!-- Subsección para Documentos en Revisión -->
         <div id="tramitesProgreso" style="display: none;">
