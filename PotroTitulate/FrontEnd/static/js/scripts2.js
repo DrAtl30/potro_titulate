@@ -438,7 +438,7 @@ function handleFileChange(requisito) {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error al subir el archivo');
+            mostrarAlerta('❌ Error al subir el archivo.', 'danger');
         });
     }
 }
@@ -560,3 +560,19 @@ function enviarOpcionTitulacion() {
         mostrarModal('Error al enviar la opción de titulación', 'errorModal');
     });
 }
+
+function mostrarAlerta(mensaje, tipo = "success", duracion = 5000) {
+    const toastEl = document.getElementById("toastAlerta");
+    const toastBody = toastEl.querySelector(".toast-body");
+
+    // Cambiar color de fondo según el tipo
+    toastEl.className = `toast align-items-center text-white bg-${tipo} border-0`;
+
+    // Mensaje
+    toastBody.textContent = mensaje;
+
+    // Mostrar
+    const toast = new bootstrap.Toast(toastEl, { delay: duracion });
+    toast.show();
+}
+
