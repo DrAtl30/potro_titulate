@@ -9336,3 +9336,58 @@ Internal Server Error: /api/notificaciones/45/
 "GET /api/notificaciones/45/ HTTP/1.1" 500 159
 Internal Server Error: /api/notificaciones/45/
 "GET /api/notificaciones/45/ HTTP/1.1" 500 159
+Internal Server Error: /api/notificaciones/45/
+"GET /api/notificaciones/45/ HTTP/1.1" 500 159
+Internal Server Error: /api/notificaciones/45/
+"GET /api/notificaciones/45/ HTTP/1.1" 500 159
+Internal Server Error: /obtener_mensajes/45/
+Traceback (most recent call last):
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\potro_titulate\PotroTitulate\backend\api\views.py", line 526, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 400, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1574, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/45/ HTTP/1.1" 500 129947
+Internal Server Error: /api/notificaciones/45/
+"GET /api/notificaciones/45/ HTTP/1.1" 500 159
+Internal Server Error: /api/notificaciones/45/
+"GET /api/notificaciones/45/ HTTP/1.1" 500 159
+Internal Server Error: /api/notificaciones/45/
+"GET /api/notificaciones/45/ HTTP/1.1" 500 159
