@@ -213,3 +213,120 @@
     window.onpageshow = e => { if (e.persisted) checkSession(); };
 
     
+<<<<<<< HEAD
+=======
+    <!-- Modales -->
+    <div id="errorModal" class="modal">
+        <div class="modalContent">
+            <span class="close">&times;</span>
+            <p class="modalMessage"></p>
+        </div>
+    </div>
+    
+
+    <div id="successModal" class="modal">
+        <div class="modalContent">
+            <span class="close">&times;</span>
+            <p class="modalMessage"></p>
+        </div>
+    </div>
+
+    <!-- Campo oculto para almacenar el id_tramite -->
+    <input type="hidden" id="idTramite" value="{{ id_tramite }}">
+
+    <!-- Campo oculto para almacenar el id_sustentante -->
+    <input type="hidden" id="idSustentante" value="{{ id_sustentante }}">
+
+    <!-- Enlace a Bootstrap JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/scripts2.js' %}?v={{ timestamp }}"></script>
+    <script src="{% static 'js/session-check.js' %}?v={{ timestamp }}"></script>
+    <script src="{% static 'js/mensajes.js' %}?v={{ timestamp }}"></script>
+
+    <script src="{% static 'js/notificaciones.js' %}?v={{ timestamp }}"></script>
+
+    <script>
+        // Función para obtener el CSRF token (necesaria para el POST de marcar leída)
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Función que necesita notificaciones.js para saber a quién buscarle notificaciones
+        function obtenerIdDelSustentante() {
+            const input = document.getElementById('idSustentante');
+            return input ? input.value : null; // Devuelve el valor del input oculto
+        }
+
+        // Lógica para el botón opcional de mostrar/ocultar notificaciones
+        const toggleButton = document.getElementById('botonToggleNotificaciones');
+        const notificacionesContainer = document.getElementById('notificaciones-container');
+        if (toggleButton && notificacionesContainer) {
+             toggleButton.addEventListener('click', () => {
+                 // Alterna la visibilidad del contenedor
+                 if (notificacionesContainer.style.display === 'none' || notificacionesContainer.style.display === '') {
+                     notificacionesContainer.style.display = 'block';
+                     // Opcional: Llama a cargarNotificaciones aquí si quieres refrescar al abrir
+                     const sustentanteId = obtenerIdDelSustentante();
+                     if (sustentanteId) {
+                         cargarNotificaciones(sustentanteId); // Asume que cargarNotificaciones está definida en notificaciones.js
+                     }
+                 } else {
+                     notificacionesContainer.style.display = 'none';
+                 }
+             });
+        }
+
+        // Función para verificar la sesión (ya la tienes)
+        function checkSession() {
+            fetch('/checkSession/')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.is_authenticated) {
+                        window.location.href = '/iniciosesion/';
+                    } else {
+                        // Si está autenticado, cargamos las notificaciones iniciales
+                         const sustentanteId = obtenerIdDelSustentante();
+                         if (sustentanteId) {
+                            // Llama a la función de notificaciones.js
+                            // Asegúrate que notificaciones.js esté cargado antes de este script
+                            // o envuelve esta llamada en DOMContentLoaded
+                             cargarNotificaciones(sustentanteId);
+                         }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al verificar la sesión:', error);
+                });
+        }
+
+        // Llama a checkSession cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', checkSession);
+
+
+        // Verifica la sesión cuando el usuario navega hacia atrás (ya lo tienes)
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                checkSession();
+            }
+        };
+
+        
+
+</script>
+
+</body>
+</html>
+>>>>>>> a80e830ca2009652ea04fa2fc1303ec5ec2758ab

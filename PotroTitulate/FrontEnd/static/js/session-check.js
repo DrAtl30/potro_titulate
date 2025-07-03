@@ -34,7 +34,7 @@ async function checkSession() {
                 if (newSessionKey) {
                     // Si la sesión es diferente
                     if (newSessionKey !== currentSessionKey) {
-                        alert('Se ha detectado un nuevo inicio de sesión. Redirigiendo...');
+                        mostrarAlerta('ℹ️ Se ha detectado un nuevo inicio de sesión. Redirigiendo...', 'info');
                         cerrarSesion(); // Si hay una sesión nueva, cierra la anterior
                     } else {
                     }
@@ -45,7 +45,7 @@ async function checkSession() {
         } else if (response.status === 401) {
             // Solo cerrar la sesión si hay una sesión activa
             if (currentSessionKey !== null) {
-                alert('Tu sesión ha expirado o ha sido cerrada en otro dispositivo.');
+                mostrarAlerta('ℹ️ Tu sesión ha expirado o ha sido cerrada en otro dispositivo.', 'info');
                 cerrarSesion(); // Cierra la sesión automáticamente
             } else {
             }
@@ -116,3 +116,18 @@ setInterval(checkSession, 5000);
 window.addEventListener('load', () => {
     checkSession();
 });
+
+function mostrarAlerta(mensaje, tipo = "success", duracion = 5000) {
+    const toastEl = document.getElementById("toastAlerta");
+    const toastBody = toastEl.querySelector(".toast-body");
+
+    // Cambiar color de fondo según el tipo
+    toastEl.className = `toast align-items-center text-white bg-${tipo} border-0`;
+
+    // Mensaje
+    toastBody.textContent = mensaje;
+
+    // Mostrar
+    const toast = new bootstrap.Toast(toastEl, { delay: duracion });
+    toast.show();
+}

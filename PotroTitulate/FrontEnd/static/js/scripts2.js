@@ -58,7 +58,7 @@ const requisitos = {
         'Formato de Llenado de Datos Personales',
         'Formato 8.9'
     ],
-    'Memoria de Experiencia Laboral': [
+    'Memoria de experiencia laboral': [
         'Formato 8.1 con sus firmas',
         'Aviso Firmado de Privacidad de la UAEM',
         'Certificado de 100% de plan de estudios',
@@ -75,7 +75,7 @@ const requisitos = {
         'Formato de Llenado de Datos Personales',
         'Formato 8.9'
     ],
-    'Reporte de Aplicación de Conocimientos': [
+    'Reporte de aplicación de conocimientos': [
         'Formato 8.1 con sus firmas',
         'Aviso Firmado de Privacidad de la UAEM',
         'Certificado de 100% de plan de estudios',
@@ -92,7 +92,7 @@ const requisitos = {
         'Formato de Llenado de Datos Personales',
         'Formato 8.9'
     ],
-    'Reporte de Autoempleo Profesional': [
+    'Reporte de autoempleo profesional': [
         'Formato 8.1 con sus firmas',
         'Aviso Firmado de Privacidad de la UAEM',
         'Certificado de 100% de plan de estudios',
@@ -109,7 +109,7 @@ const requisitos = {
         'Formato de Llenado de Datos Personales',
         'Formato 8.9'
     ],
-    'Reporte de Residencia de Investigación': [
+    'Reporte de residencia de investigación': [
         'Formato 8.1 con sus firmas',
         'Aviso Firmado de Privacidad de la UAEM',
         'Certificado de 100% de plan de estudios',
@@ -179,7 +179,7 @@ const requisitos = {
         'Formato de Llenado de Datos Personales',
         'Formato 8.9'
     ],
-    'Créditos de Estudios Avanzados': [
+    'Créditos de estudios avanzados': [
         'Formato 8.1 con sus firmas',
         'Certificado de 100% de plan de estudios',
         'Certificado de Servicio Social',
@@ -233,27 +233,26 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     fetch(`/verificarTramiteEnProgreso/${idSustentante}/`)
-    .then(response => response.ok ? response.json() : Promise.reject(response))
-    .then(data => {
-        if (data.tramiteEnProgreso) {
-            aprobado = data.aprobado;
-            opcionTitulacion = data.opcionTitulacion;
-            if (!aprobado) {
-                mostrarMensajeTramiteEnProceso();
-            }
-            showRequirements(opcionTitulacion);
-        } else {
-            window.location.href = '/opcionesTitulacion/';
-        }
-    })
-    .catch(error => console.error('Error al obtener el trámite:', error));
+.then(response => response.ok ? response.json() : Promise.reject(response))
+.then(data => {
+    console.log('Datos del trámite:', data);
+    if (data.tramiteEnProgreso) {
+        const aprobado = data.aprobado;
+        const opcionTitulacion = data.opcionTitulacion;
+        const estadoActual = data.estadoActual.toLowerCase();
 
-    function mostrarMensajeTramiteEnProceso() {
-        const mensaje = document.createElement('div');
-        mensaje.className = 'mensaje-tramite-proceso';
-        mensaje.textContent = 'Ya tienes un trámite en proceso. Por favor, espera a que sea aprobado por un admin.';
-        document.body.appendChild(mensaje);
+        if (estadoActual === 'pendiente') {
+            mostrarMensajeTramiteEnProceso();
+        } else {
+            // Solo si está aprobado o en progreso muestra requisitos
+            showRequirements(opcionTitulacion);
+        }
+    } else {
+        // Si no tiene trámite en progreso lo manda a seleccionar opción
+        window.location.href = '/opcionesTitulacion/';
     }
+})
+.catch(error => console.error('Error al obtener el trámite:', error));
 });
 
 function showRequirements(option) {
@@ -438,7 +437,7 @@ function handleFileChange(requisito) {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error al subir el archivo');
+            mostrarAlerta('❌ Error al subir el archivo.', 'danger');
         });
     }
 }
@@ -559,4 +558,24 @@ function enviarOpcionTitulacion() {
         console.error('Error:', error);
         mostrarModal('Error al enviar la opción de titulación', 'errorModal');
     });
+<<<<<<< HEAD
 }
+=======
+}
+
+function mostrarAlerta(mensaje, tipo = "success", duracion = 5000) {
+    const toastEl = document.getElementById("toastAlerta");
+    const toastBody = toastEl.querySelector(".toast-body");
+
+    // Cambiar color de fondo según el tipo
+    toastEl.className = `toast align-items-center text-white bg-${tipo} border-0`;
+
+    // Mensaje
+    toastBody.textContent = mensaje;
+
+    // Mostrar
+    const toast = new bootstrap.Toast(toastEl, { delay: duracion });
+    toast.show();
+}
+
+>>>>>>> a80e830ca2009652ea04fa2fc1303ec5ec2758ab

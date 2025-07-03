@@ -113,27 +113,32 @@ def opcionesTitulacion(request):
 
 #Vista para verificar si hay un trámite en progreso
 def verificar_tramite_en_progreso(request, id_sustentante):
-    # Verificar si el sustentante tiene un trámite en progreso
-    tramite = Tramites.objects.filter(id_sustentante=id_sustentante).first()  # Obtener el primer trámite si existe
+    """
+    Vista para verificar si el sustentante tiene un trámite activo (Pendiente, En Progreso o Aprobado)
+    """
+    try:
+        # Buscar el trámite más reciente por fecha de inicio
+        tramite = Tramites.objects.filter(id_sustentante=id_sustentante).order_by('-fecha_inicio').first()
 
-    if tramite:
-        # Obtener el ID de la opción de titulación
-        id_opcion = tramite.id_opcion.id_opcion if tramite.id_opcion else None
-        
-        # Buscar la opción de titulación con el ID obtenido
-        opcion_titulacion = OpcionTitulacion.objects.filter(id_opcion=id_opcion).first()
-        nombre_opcion = opcion_titulacion.nombre_opcion if opcion_titulacion else None
+        if tramite:
+            if tramite.estado_actual.lower() in ['pendiente', 'en progreso', 'aprobado']:
+                return JsonResponse({
+                    'tramiteEnProgreso': True,
+                    'aprobado': tramite.aprobado,
+                    'estadoActual': tramite.estado_actual,
+                    'opcionTitulacion': tramite.id_opcion.id_opcion if tramite.id_opcion else None
+                })
+            else:
+                # Si está Rechazado, Finalizado u otro estado
+                return JsonResponse({'tramiteEnProgreso': False})
+        else:
+            # Si no existe ningún trámite
+            return JsonResponse({'tramiteEnProgreso': False})
 
-        # Obtener el estado de 'aprobado' directamente desde el trámite
-        aprobado = tramite.aprobado
-        
-        return JsonResponse({
-            'tramiteEnProgreso': True,
-            'aprobado': aprobado,  # Pasamos el estado de aprobado
-            'opcionTitulacion': nombre_opcion  # Pasamos el nombre de la opción de titulación
-        })
-    else:
-        return JsonResponse({'tramiteEnProgreso': False})
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())
+        return JsonResponse({'tramiteEnProgreso': False, 'error': str(e)}, status=500)
 
 @csrf_exempt
 def enviar_solicitud(request):
@@ -870,6 +875,7 @@ def rechazar_tramite(request, tramite_id):
             data = json.loads(request.body)
             motivo_rechazo = data.get('motivo_rechazo', '')
 
+            # Actualizar el trámite
             tramite.estado_actual = 'Rechazado'
             tramite.aprobado = False
             tramite.motivo_rechazo = motivo_rechazo
@@ -879,11 +885,17 @@ def rechazar_tramite(request, tramite_id):
             tramite.ultima_actualizacion = timezone.now()
             tramite.save()
 
+            # Desasignar opción de titulación al sustentante
+            sustentante = tramite.id_sustentante  # Asumiendo que esta es la relación
+            sustentante.id_opcion = None
+            sustentante.save()
+
             return JsonResponse({'success': True})
+
         except Tramites.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
         except Exception as e:
-            return JsonResponse({'success': False, 'error': 'Error interno al procesar el rechazo'}, status=500)
+            return JsonResponse({'success': False, 'error': f'Error interno al procesar el rechazo: {str(e)}'}, status=500)
 
 @csrf_exempt
 @require_POST
