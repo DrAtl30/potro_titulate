@@ -230,22 +230,7 @@
             }
         };
 
-        // Función para cerrar sesión 
-        function cerrarSesion() {
-             console.log("Cerrar sesión...");
-             fetch('/logout/', { 
-                 method: 'POST',
-                 headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                 }
-             }).then(response => {
-                 if(response.ok) {
-                    window.location.href = '/iniciosesion/'; // Redirige al login
-                 } else {
-                    console.error("Error al cerrar sesión");
-                 }
-             }).catch(error => console.error('Error en fetch de logout:', error));
-        }
+        
 
 </script>
 
