@@ -116,7 +116,8 @@ def verificar_tramite_en_progreso(request, id_sustentante):
     """
     try:
         # Buscar el trámite más reciente por fecha de inicio
-        tramite = Tramites.objects.filter(id_sustentante=id_sustentante).order_by('-fecha_inicio').first()
+        tramite = Tramites.objects.filter(id_sustentante=id_sustentante).order_by('-fecha_inicio', '-id_tramite').first()
+
 
         if tramite:
             if tramite.estado_actual.lower() in ['pendiente', 'en progreso', 'aprobado']:
@@ -124,7 +125,7 @@ def verificar_tramite_en_progreso(request, id_sustentante):
                     'tramiteEnProgreso': True,
                     'aprobado': tramite.aprobado,
                     'estadoActual': tramite.estado_actual,
-                    'opcionTitulacion': tramite.id_opcion.id_opcion if tramite.id_opcion else None
+                    'opcionTitulacion': tramite.id_opcion.nombre_opcion if tramite.id_opcion else None
                 })
             else:
                 # Si está Rechazado, Finalizado u otro estado
@@ -864,36 +865,56 @@ def aprobar_tramite(request, tramite_id):
 def rechazar_tramite(request, tramite_id):
     if request.method == 'POST':
         try:
+            # 1. Verificar que el usuario es un administrativo autorizado
             administrativo = Administrativos.objects.get(user=request.user)
         except Administrativos.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Usuario no autorizado'}, status=403)
 
         try:
+            # 2. Obtener el trámite y el motivo del rechazo desde el request
             tramite = Tramites.objects.get(id_tramite=tramite_id)
             data = json.loads(request.body)
-            motivo_rechazo = data.get('motivo_rechazo', '')
+            motivo_rechazo = data.get('motivo_rechazo', 'No se especificó un motivo.') # Añadir un motivo por defecto
 
-            # Actualizar el trámite
+            # 3. Actualizar el estado y los datos del trámite
             tramite.estado_actual = 'Rechazado'
             tramite.aprobado = False
             tramite.motivo_rechazo = motivo_rechazo
             tramite.fecha_rechazo = timezone.now()
             tramite.rechazado_por = request.user
+            # Mantener estos campos para un registro completo
             tramite.fecha_actualizacion = timezone.now().date()
             tramite.ultima_actualizacion = timezone.now()
             tramite.save()
 
-            # Desasignar opción de titulación al sustentante
-            sustentante = tramite.id_sustentante  # Asumiendo que esta es la relación
+            # 4. Desasignar la opción de titulación al sustentante
+            sustentante = tramite.id_sustentante
             sustentante.id_opcion = None
             sustentante.save()
 
-            return JsonResponse({'success': True})
+            # --- INICIO: LÓGICA DE NOTIFICACIÓN ---
+            # 5. Construir el mensaje para la notificación
+            mensaje_notificacion = f"Su trámite de titulación para la opción '{tramite.id_opcion.nombre_opcion}' ha sido rechazado. Motivo: {motivo_rechazo}"
+
+            # 6. Enviar la notificación al sustentante
+            enviar_notificacion(
+                sustentante_id=sustentante.id_sustentante,
+                administrativo_id=administrativo.id_administrativo,
+                mensaje=mensaje_notificacion,
+                es_de_administrador=True
+            )
+            # --- FIN: LÓGICA DE NOTIFICACIÓN ---
+
+            return JsonResponse({'success': True, 'message': 'Trámite rechazado y notificación enviada correctamente.'})
 
         except Tramites.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
         except Exception as e:
+            # Considera usar logging para registrar el error en un archivo
+            print(f"Error en rechazar_tramite: {e}")
             return JsonResponse({'success': False, 'error': f'Error interno al procesar el rechazo: {str(e)}'}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
 @csrf_exempt
 @require_POST
@@ -1049,28 +1070,29 @@ def preguntas_frecuentes(request):
 
 def enviar_notificacion(sustentante_id, administrativo_id=None, mensaje="", es_de_administrador=False):
     """
-    Versión mejorada para enviar notificaciones
+    Función para crear y guardar una notificación en la base de datos.
     """
     try:
-        # Validación básica
         if not mensaje or not sustentante_id:
-            raise ValueError("Datos incompletos para la notificación")
-        
-        # Crear la notificación
+            # Es una buena práctica registrar este tipo de errores
+            print("[Advertencia] Faltan datos para crear la notificación.")
+            return False
+
         Notificaciones.objects.create(
             id_sustentante_id=sustentante_id,
-            id_administrativo_id=administrativo_id,  # Puede ser None (notificaciones del sistema)
+            id_administrativo_id=administrativo_id,
             mensaje=mensaje,
             fecha_envio=timezone.now(),
             estado_lectura=False,
             es_de_administrador=es_de_administrador
         )
         return True
-    
+
     except Exception as e:
-        # Loggear el error adecuadamente en producción
-        print(f"[Error] Notificación no enviada: {str(e)}")
+        # En un entorno de producción, esto debería ir a un sistema de logging (ej. Sentry, Logstash)
+        print(f"[Error] Notificación no enviada para sustentante {sustentante_id}: {str(e)}")
         return False
+
     
 @require_GET
 def obtener_notificaciones(request, sustentante_id):
