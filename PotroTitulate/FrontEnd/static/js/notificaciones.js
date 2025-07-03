@@ -1,6 +1,6 @@
 // Función para obtener y mostrar notificaciones
 function cargarNotificaciones(sustentanteId) {
-    fetch(`/api/notificaciones/${sustentanteId}/`) // Asegúrate que esta URL API exista y funcione
+    fetch(`/api/notificaciones/${sustentanteId}45/`) 
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

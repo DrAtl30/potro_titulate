@@ -1124,16 +1124,17 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
  
     
     // 9) Al hacer click en un aspirante
-    aspirantesList.addEventListener("click", (e) => {
-        if (e.target && e.target.matches(".list-group-item")) {
-            currentAspiranteId = e.target.getAttribute("data-id");
-            const nombreAspirante = e.target.textContent.trim();
+    aspirantesList.addEventListener('click', (e) => {
+    const item = e.target.closest('.list-group-item');
+    if (!item) return;                          // clic fuera de un <li>
 
-            showSection(mensajeSection);
-            nombreAspiranteSpan.textContent = nombreAspirante;
-            cargarConversacion(currentAspiranteId);
-        }
-    });
+    currentAspiranteId = item.dataset.id;
+    const nombreAspirante = item.querySelector('strong').textContent.trim();
+
+    nombreAspiranteSpan.textContent = nombreAspirante;
+    showSection(mensajeSection);
+    cargarConversacion(currentAspiranteId);
+});
 
     // 10) Función para cargar la conversación
     function cargarConversacion(sustentanteId) {

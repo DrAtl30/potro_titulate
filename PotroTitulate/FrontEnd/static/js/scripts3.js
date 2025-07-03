@@ -1,177 +1,124 @@
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("admin-login-form").addEventListener("submit", function(event) {
-        event.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
+    /* ---------------------------- login ---------------------------- */
+    const loginForm = document.getElementById("admin-login-form");
 
-        let formData = {
-            correo_electronico: document.getElementById("correo").value,
-            contrasena: document.getElementById("contrasena").value
-        };
+    if (loginForm) {
+        loginForm.addEventListener("submit", (event) => {
+            event.preventDefault();
 
-        fetch("/api/login/administrador/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken")
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.id_administrador) {
-                // Muestra el modal de éxito y espera a que el usuario lo cierre
-                mostrarModal("Inicio de sesión exitoso", "successModal");
-                esperarCierreModal("successModal").then(() => {
-                    window.location.href = "/administrador/";  // Redirige tras cerrar el modal
+            const formData = {
+                correo_electronico: document.getElementById("correo").value,
+                contrasena: document.getElementById("contrasena").value,
+            };
+
+            fetch("/api/login/administrador/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                body: JSON.stringify(formData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.id_administrador) {
+                        /* --- ÉXITO --- */
+                        mostrarModal(
+                            "Inicio de sesión exitoso",
+                            "successModal"
+                        );
+                        esperarCierreModal("successModal").then(() => {
+                            window.location.href = "/administrador/";
+                        });
+                    } else {
+                        /* --- CREDENCIALES INCORRECTAS --- */
+                        mostrarModal(
+                            "Credenciales incorrectas",
+                            "errorModal"
+                        );
+                        esperarCierreModal("errorModal");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    mostrarModal(
+                        "Hubo un problema al procesar tu solicitud",
+                        "errorModal"
+                    );
+                    esperarCierreModal("errorModal");
                 });
-            } else {
-                mostrarModal("Credenciales incorrectas", "errorModal");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            mostrarModal("Hubo un problema al procesar tu solicitud", "errorModal");
         });
-    });
+    }
 
+    /* ------------------------ utilidades ------------------------- */
     function getCookie(name) {
         let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            let cookies = document.cookie.split(";");
-            for (let i = 0; i < cookies.length; i++) {
-                let cookie = cookies[i].trim();
+        if (document.cookie) {
+            document.cookie.split(";").forEach((c) => {
+                const cookie = c.trim();
                 if (cookie.startsWith(name + "=")) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+                    cookieValue = decodeURIComponent(
+                        cookie.substring(name.length + 1)
+                    );
                 }
-            }
+            });
         }
         return cookieValue;
     }
 });
 
-
-// Función que muestra el modal
+/* -----------------------------------------------------------------
+   Mostrar modal
+------------------------------------------------------------------ */
 function mostrarModal(mensaje, modalId) {
-    var modal = document.getElementById(modalId);
+    const modal = document.getElementById(modalId);
     if (!modal) {
         console.error(`No se encontró el modal con ID ${modalId}`);
         return;
     }
-    var modalMessage = modal.querySelector('.modalMessage');
-    if (modalMessage) {
-        modalMessage.textContent = mensaje;
-    }
-    modal.style.display = 'flex';
+    const modalMessage = modal.querySelector(".modalMessage");
+    if (modalMessage) modalMessage.textContent = mensaje;
+    modal.style.display = "flex";
 }
 
-// Función que espera a que el usuario cierre el modal
-
-// Función para esperar a que el modal se cierre
+/* -----------------------------------------------------------------
+   Esperar cierre modal (X, clic sombra, Escape)
+------------------------------------------------------------------ */
 function esperarCierreModal(modalId) {
     return new Promise((resolve) => {
         const modal = document.getElementById(modalId);
-        const closeBtn = modal.querySelector('.close');
+        const closeBtn = modal.querySelector(".close");
 
-
-        function handleClose() {
-            if (modal.style.display !== 'none') {
-                modal.style.display = 'none';
-                removeListeners();
+        function cerrar() {
+            if (modal.style.display !== "none") {
+                modal.style.display = "none";
+                quitarListeners();
                 resolve();
             }
         }
-
-        function handleClickOutside(e) {
-            if (e.target === modal) {
-                handleClose();
-            }
+        function clickSombra(e) {
+            if (e.target === modal) cerrar();
         }
-
-        function handleKeyDown(e) {
-            if (e.key === 'Escape') {
-                handleClose();
-            }
+        function teclaEsc(e) {
+            if (e.key === "Escape" || e.key === "Esc" || e.keyCode === 27)
+                cerrar();
         }
-
-        function removeListeners() {
-            if (closeBtn) closeBtn.removeEventListener('click', handleClose);
-            modal.removeEventListener('click', handleClickOutside);
-            document.removeEventListener('keydown', handleKeyDown);
+        function quitarListeners() {
+            if (closeBtn) closeBtn.removeEventListener("click", cerrar);
+            modal.removeEventListener("click", clickSombra);
+            document.removeEventListener("keydown", teclaEsc);
         }
 
         if (closeBtn) {
-            closeBtn.addEventListener('click', handleClose);
+            closeBtn.addEventListener("click", cerrar);
         } else {
-            console.warn(`No se encontró el botón de cierre en ${modalId}`);
+            console.warn(
+                `No se encontró el botón de cierre en el modal ${modalId}`
+            );
         }
-        modal.addEventListener('click', handleClickOutside);
-        document.addEventListener('keydown', handleKeyDown);
+        modal.addEventListener("click", clickSombra);
+        document.addEventListener("keydown", teclaEsc);
     });
-
-        // Resuelve la promesa cuando el modal se cierre 
-        
-        closeBtn.onclick = () => {
-            modal.style.display = 'none';
-            resolve();
-        };
-
-        // También resuelve la promesa si se hace clic fuera del modal
-        window.onclick = (event) => {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-                resolve();
-            }
-        };
-
-        // Resuelve la promesa si se presiona la tecla Escape
-        window.onkeydown = (event) => {
-            const escapeKeys = ['Escape', 'Esc'];
-            const escapeKeyCodes = [27];
-            const escapeKeyCodesDeprecated = [1, '1']; // Algunos teclados pueden enviar un código de tecla de escape diferente
-        
-            if (escapeKeys.includes(event.key) || escapeKeyCodes.includes(event.keyCode) || escapeKeyCodesDeprecated.includes(event.keyCode)) {
-                modal.style.display = 'none';
-                resolve();
-            }
-        };
-    };
-
-
-function mostrarModal(mensaje, modalId) {
-    var modal = document.getElementById(modalId);
-    if (!modal) {
-        console.error(`No se encontró el modal con ID ${modalId}`);
-        return;
-    }
-
-    var modalMessage = modal.querySelector('.modalMessage');
-    if (modalMessage) {
-        modalMessage.textContent = mensaje;
-    } else {
-        console.warn(`No se encontró el elemento con clase 'modalMessage' dentro de ${modalId}`);
-    }
-
-    modal.style.display = 'flex';
-
-    var closeBtn = modal.querySelector('.close');
-    if (closeBtn) {
-        closeBtn.onclick = function() {
-            modal.style.display = 'none';
-        };
-    } else {
-        console.warn(`No se encontró el botón de cierre en ${modalId}`);
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    };
-
-    window.onkeydown = function(event) {
-        if (event.key === 'Escape') {
-            modal.style.display = 'none';
-        }
-    };
-
 }
+
+

@@ -1,0 +1,3 @@
+Method,Name,Error,Occurrences
+POST,login,"ConnectionRefusedError(10061, '[WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.')",4
+POST,subir_documento,HTTPError('401 Client Error: Unauthorized for url: subir_documento'),4

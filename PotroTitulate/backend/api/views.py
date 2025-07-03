@@ -27,6 +27,8 @@ import json
 import os
 from django.http import FileResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
 
 def index(request):
@@ -209,8 +211,8 @@ class LoginView(APIView):
                 request.session['sustentante_id'] = sustentante.id_sustentante
 
                 # Almacenar el session_key en el modelo Sustentante
-                sustentante.session_key = request.session.session_key
-                sustentante.save()
+                #sustentante.session_key = request.session.session_key
+                #sustentante.save()
 
                 # Configurar la cookie session_key
                 response = Response({
@@ -336,7 +338,7 @@ class CambiarContrasenaView(APIView):
         #return Response({'mensaje': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
         return JsonResponse({'redirect': '/iniciosesion'}, status=status.HTTP_200_OK)
     
-
+@csrf_exempt
 def uploadDocument(request):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)

@@ -212,15 +212,4 @@
     document.addEventListener('DOMContentLoaded', checkSession);
     window.onpageshow = e => { if (e.persisted) checkSession(); };
 
-    // Cerrar sesión
-    function cerrarSesion() {
-      fetch('/logout/', {
-        method: 'POST',
-        headers: { 'X-CSRFToken': getCookie('csrftoken') }
-      }).then(res => {
-        if (res.ok) window.location.href = '/iniciosesion/';
-      }).catch(console.error);
-    }
-  </script>
-</body>
-</html>
+    

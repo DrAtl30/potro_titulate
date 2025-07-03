@@ -38,7 +38,7 @@ urlpatterns = [
     path('cambiarContrasena/<int:id_sustentante>/', CambiarContrasenaView.as_view(), name='cambiar_contrasena'),  # Ruta para "cambiar contraseña"
 
     path('administradorLogin/', AdministradorLoginView.as_view(), name='adminstradorLogin'),
-
+     
     path('recuperarContrasenaExito/', recuperarContrasenaExito, name='recuperarContrasenaExito'),  # Ruta para "recuperar contraseña exito"
     path('administradorLogin/', AdministradorLoginView.as_view(), name='adminstradorLogin'),
     path('logout/', LogoutView.as_view(), name='logout'),
