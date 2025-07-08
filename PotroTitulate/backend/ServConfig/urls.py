@@ -19,6 +19,7 @@ from django.urls import path, include
 from api.views import *;
 from django.conf import settings
 from django.conf.urls.static import static
+from api import views 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -52,7 +53,6 @@ urlpatterns = [
     path('verificarTramiteEnProgreso/<int:id_sustentante>/', verificar_tramite_en_progreso, name='verificarTramiteEnProgreso'),
     path('enviarSolicitud/', enviar_solicitud, name='enviarSolicitud'),
     
-
 
 
     # mensajeria 
@@ -91,7 +91,7 @@ urlpatterns = [
     # URLs para trámites
     path('api/tramites/espera/', tramites_espera, name='tramites_espera'),
     path('api/tramites/progreso/', tramites_progreso, name='tramites_progreso'),
-    path('api/tramites/rechazados/', tramites_rechazados, name='api_tramites_rechazados'),
+    
     path('api/tramites/aprobar/<int:tramite_id>/', aprobar_tramite, name='aprobar_tramite'),
     path('api/tramites/documentos/<int:tramite_id>/', documentos_tramite, name='documentos_tramite'),
     path('api/tramites/rechazar/<int:tramite_id>/', rechazar_tramite, name='rechazar_tramite'),

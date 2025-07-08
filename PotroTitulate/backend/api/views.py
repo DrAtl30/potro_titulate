@@ -27,8 +27,6 @@ import json
 import os
 from django.http import FileResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth import logout
-from django.shortcuts import redirect
 
 
 def index(request):
@@ -113,32 +111,27 @@ def opcionesTitulacion(request):
 
 #Vista para verificar si hay un trámite en progreso
 def verificar_tramite_en_progreso(request, id_sustentante):
-    """
-    Vista para verificar si el sustentante tiene un trámite activo (Pendiente, En Progreso o Aprobado)
-    """
-    try:
-        # Buscar el trámite más reciente por fecha de inicio
-        tramite = Tramites.objects.filter(id_sustentante=id_sustentante).order_by('-fecha_inicio').first()
+    # Verificar si el sustentante tiene un trámite en progreso
+    tramite = Tramites.objects.filter(id_sustentante=id_sustentante).first()  # Obtener el primer trámite si existe
 
-        if tramite:
-            if tramite.estado_actual.lower() in ['pendiente', 'en progreso', 'aprobado']:
-                return JsonResponse({
-                    'tramiteEnProgreso': True,
-                    'aprobado': tramite.aprobado,
-                    'estadoActual': tramite.estado_actual,
-                    'opcionTitulacion': tramite.id_opcion.id_opcion if tramite.id_opcion else None
-                })
-            else:
-                # Si está Rechazado, Finalizado u otro estado
-                return JsonResponse({'tramiteEnProgreso': False})
-        else:
-            # Si no existe ningún trámite
-            return JsonResponse({'tramiteEnProgreso': False})
+    if tramite:
+        # Obtener el ID de la opción de titulación
+        id_opcion = tramite.id_opcion.id_opcion if tramite.id_opcion else None
+        
+        # Buscar la opción de titulación con el ID obtenido
+        opcion_titulacion = OpcionTitulacion.objects.filter(id_opcion=id_opcion).first()
+        nombre_opcion = opcion_titulacion.nombre_opcion if opcion_titulacion else None
 
-    except Exception as e:
-        import traceback
-        print(traceback.format_exc())
-        return JsonResponse({'tramiteEnProgreso': False, 'error': str(e)}, status=500)
+        # Obtener el estado de 'aprobado' directamente desde el trámite
+        aprobado = tramite.aprobado
+        
+        return JsonResponse({
+            'tramiteEnProgreso': True,
+            'aprobado': aprobado,  # Pasamos el estado de aprobado
+            'opcionTitulacion': nombre_opcion  # Pasamos el nombre de la opción de titulación
+        })
+    else:
+        return JsonResponse({'tramiteEnProgreso': False})
 
 @csrf_exempt
 def enviar_solicitud(request):
@@ -216,8 +209,8 @@ class LoginView(APIView):
                 request.session['sustentante_id'] = sustentante.id_sustentante
 
                 # Almacenar el session_key en el modelo Sustentante
-                #sustentante.session_key = request.session.session_key
-                #sustentante.save()
+                sustentante.session_key = request.session.session_key
+                sustentante.save()
 
                 # Configurar la cookie session_key
                 response = Response({
@@ -343,7 +336,7 @@ class CambiarContrasenaView(APIView):
         #return Response({'mensaje': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
         return JsonResponse({'redirect': '/iniciosesion'}, status=status.HTTP_200_OK)
     
-@csrf_exempt
+
 def uploadDocument(request):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
@@ -759,40 +752,8 @@ def tramites_espera(request):
             'success': False,
             'error': str(e)
         }, status=500)
- 
-@require_GET
-def tramites_rechazados(request):
-    """
-    Devuelve todos los trámites cuyo estado_actual sea 'Rechazado'
-    en el mismo formato que tramites_espera y tramites_progreso.
-    """
-    try:
-        qs = Tramites.objects.filter(estado_actual__iexact='rechazado') \
-             .select_related('id_sustentante', 'id_opcion')
 
-        resultados = []
-        for tramite in qs:
-            sust = tramite.id_sustentante
-            resultados.append({
-                'id_tramite': tramite.id_tramite,
-                'sustentante': f"{sust.nombre} {sust.apellido}",
-                'nombre_completo': f"{sust.nombre} {sust.apellido}",
-                'numero_cuenta': sust.numero_cuenta,
-                'correo': sust.correo_electronico,
-                'nombre': f"Trámite {tramite.id_tramite} - Rechazado",
-                'fecha_actualizacion': tramite.fecha_actualizacion.strftime('%Y-%m-%d') 
-                                       if tramite.fecha_actualizacion else None,
-                'id_opcion': tramite.id_opcion.id_opcion if tramite.id_opcion else None,
-                'nombre_opcion': tramite.id_opcion.nombre_opcion 
-                                 if tramite.id_opcion else "Sin opción",
-                'oportunidades_restantes': sust.oportunidades_restantes,
-            })
 
-        return JsonResponse({'success': True, 'tramites': resultados})
-
-    except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
- 
 @require_GET
 def tramites_progreso(request):
     """
@@ -875,7 +836,6 @@ def rechazar_tramite(request, tramite_id):
             data = json.loads(request.body)
             motivo_rechazo = data.get('motivo_rechazo', '')
 
-            # Actualizar el trámite
             tramite.estado_actual = 'Rechazado'
             tramite.aprobado = False
             tramite.motivo_rechazo = motivo_rechazo
@@ -885,17 +845,11 @@ def rechazar_tramite(request, tramite_id):
             tramite.ultima_actualizacion = timezone.now()
             tramite.save()
 
-            # Desasignar opción de titulación al sustentante
-            sustentante = tramite.id_sustentante  # Asumiendo que esta es la relación
-            sustentante.id_opcion = None
-            sustentante.save()
-
             return JsonResponse({'success': True})
-
         except Tramites.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Trámite no encontrado'}, status=404)
         except Exception as e:
-            return JsonResponse({'success': False, 'error': f'Error interno al procesar el rechazo: {str(e)}'}, status=500)
+            return JsonResponse({'success': False, 'error': 'Error interno al procesar el rechazo'}, status=500)
 
 @csrf_exempt
 @require_POST

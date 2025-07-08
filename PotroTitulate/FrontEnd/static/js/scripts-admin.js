@@ -66,7 +66,7 @@ function getCookie(name) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    // 1) Referencias a elementos
+   // 1) Referencias a elementos
     const aspirantesSection = document.getElementById("aspirantesSection");
     const tablaAspirante = document.getElementById("tablaAspirante");
     const mensajeSection = document.getElementById("mensajeSection");
@@ -90,56 +90,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnMostrarProgreso = document.getElementById("btnMostrarProgreso");
     const listaTramitesEspera = document.getElementById("listaTramitesEspera");
     const listaTramitesProgreso = document.getElementById("listaTramitesProgreso");
-     // Referencias para toggle
-  const btnMostrarRechazados  = document.getElementById("btnMostrarRechazados");
-  const seccionEspera         = document.getElementById("tramitesEspera");
-  const seccionProgreso       = document.getElementById("tramitesProgreso");
-  const seccionRechazados     = document.getElementById("tramitesRechazados");
-  const listaRechazados = document.getElementById("listaTramitesRechazados");
-
-// Toggle “Trámites Rechazados” con AJAX
-btnMostrarRechazados.addEventListener("click", async function(e) {
-  e.preventDefault();
-  // 1) Mostrar solo la sección de rechazados
-  seccionEspera.style.display     = "none";
-  seccionProgreso.style.display   = "none";
-  seccionRechazados.style.display = "block";
-
-  // 2) Spinner mientras carga
-  listaRechazados.innerHTML = `
-    <li class="list-group-item text-center text-muted">
-      <i class="fas fa-spinner fa-spin"></i> Cargando rechazados…
-    </li>
-  `;
-
-  // 3) Fetch al endpoint 
-  try {
-    const resp = await fetch("/api/tramites/rechazados/");
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const { tramites } = await resp.json();
-
-    // 4) Pinta el resultado
-    if (tramites.length === 0) {
-      listaRechazados.innerHTML = `<li class="list-group-item">No hay trámites rechazados.</li>`;
-    } else {
-      listaRechazados.innerHTML = tramites.map(t => `
-        <li class="list-group-item tramite-item d-flex justify-content-between align-items-center">
-          ${t.numero_cuenta} – ${t.nombre_completo}
-          <span class="badge bg-danger">Rechazado</span>
-        </li>
-      `).join("");
-      
-    }
-    filtrarTramites(); 
-
-  } catch (err) {
-    listaRechazados.innerHTML = `
-      <li class="list-group-item text-danger">
-        <i class="fas fa-exclamation-triangle"></i> ${err.message}
-      </li>
-    `;
-  }
-});
 
     const modalConfirmacion = document.createElement('div');
     modalConfirmacion.className = 'modal fade';
@@ -585,6 +535,7 @@ btnMostrarRechazados.addEventListener("click", async function(e) {
 
     // Función para cargar documentos de un trámite 
     async function cargarDocumentosTramite(tramiteId, sustentanteId, parentElement) {
+        console.log("🔍 Cargando docs para trámite:", tramiteId);
         const documentosList = parentElement.querySelector(`#documentos-${tramiteId}`);
         
         try {
@@ -1018,39 +969,33 @@ btnMostrarRechazados.addEventListener("click", async function(e) {
     });
 
     // 8) Event listeners para botones de trámites
-    // Toggle “Solicitudes por Aprobar”
-  btnMostrarEspera.addEventListener("click", function(e) {
-    e.preventDefault();
-    seccionEspera.style.display     = "block";
-    seccionProgreso.style.display   = "none";
-    seccionRechazados.style.display = "none";
-    cargarTramitesEspera();  // si necesitas recargar vía AJAX
-  });
+    btnMostrarEspera.addEventListener("click", cargarTramitesEspera);
+    btnMostrarProgreso.addEventListener("click", cargarTramitesProgreso);
+    
+    // 9) Al hacer click en un aspirante
+    aspirantesList.addEventListener("click", (e) => {
+        if (e.target && e.target.matches(".list-group-item")) {
+            currentAspiranteId = e.target.getAttribute("data-id");
+            const nombreAspirante = e.target.textContent.trim();
 
-  // Toggle “Documentos en Revisión”
-  btnMostrarProgreso.addEventListener("click", function(e) {
-    e.preventDefault();
-    seccionEspera.style.display     = "none";
-    seccionProgreso.style.display   = "block";
-    seccionRechazados.style.display = "none";
-    cargarTramitesProgreso();  // si necesitas recargar vía AJAX
-  });
-
-  // Toggle “Trámites Rechazados”
+            showSection(mensajeSection);
+            nombreAspiranteSpan.textContent = nombreAspirante;
+            cargarConversacion(currentAspiranteId);
+        }
+    });
  
     
     // 9) Al hacer click en un aspirante
-    aspirantesList.addEventListener('click', (e) => {
-    const item = e.target.closest('.list-group-item');
-    if (!item) return;                          // clic fuera de un <li>
+    aspirantesList.addEventListener("click", (e) => {
+        if (e.target && e.target.matches(".list-group-item")) {
+            currentAspiranteId = e.target.getAttribute("data-id");
+            const nombreAspirante = e.target.textContent.trim();
 
-    currentAspiranteId = item.dataset.id;
-    const nombreAspirante = item.querySelector('strong').textContent.trim();
-
-    nombreAspiranteSpan.textContent = nombreAspirante;
-    showSection(mensajeSection);
-    cargarConversacion(currentAspiranteId);
-});
+            showSection(mensajeSection);
+            nombreAspiranteSpan.textContent = nombreAspirante;
+            cargarConversacion(currentAspiranteId);
+        }
+    });
 
     // 10) Función para cargar la conversación
     function cargarConversacion(sustentanteId) {
@@ -1151,20 +1096,18 @@ function filtrarAspirantes() {
 
 }
     // Función para filtrar trámites
-    function filtrarTramites() {
-        const term  = searchTramites.value.toLowerCase().trim();
+     function filtrarTramites() {
         const searchTerm = searchTramites.value.toLowerCase();
-        const items = document.querySelectorAll(`
-    #listaTramitesEspera    li.tramite-item,
-    #listaTramitesProgreso  li.tramite-item,
-    #listaTramitesRechazados li.tramite-item
-  `);   
+        const items = [...document.querySelectorAll("#listaTramitesEspera li.tramite-item, #listaTramitesProgreso li.tramite-item")];
         
-        items.forEach(li => {
-    const visible = li.textContent.toLowerCase().includes(term);
-    li.classList.toggle('d-none', !visible);   // ← usa la clase de Bootstrap
-  });
-  
+        items.forEach(item => {
+            const cuentaText = item.textContent.toLowerCase();
+            if (cuentaText.includes(searchTerm)) {
+                item.style.display = "flex";
+            } else {
+                item.style.display = "none";
+            }
+        });
     }
     
     // Event listeners para los campos de búsqueda

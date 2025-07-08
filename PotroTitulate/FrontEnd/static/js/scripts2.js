@@ -218,14 +218,17 @@ const requisitos = {
 };
 
 
-// Variables globales
-let aprobado = false;
-let opcionTitulacion = '';
-let totalSteps = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
     const idSustentante = document.getElementById("idSustentante")?.value;
     const idTramite = document.getElementById("idTramite")?.value;
+
+    function mostrarMensajeTramiteEnProceso() {
+        const mensaje = document.createElement('div');
+        mensaje.className = 'mensaje-tramite-proceso';
+        mensaje.textContent = 'Ya tienes un trámite en proceso. Por favor, espera a que sea aprobado por un admin.';
+        document.body.appendChild(mensaje);
+    }
 
     if (!idSustentante) {
         console.error('ID del sustentante no encontrado.');
@@ -233,27 +236,27 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     fetch(`/verificarTramiteEnProgreso/${idSustentante}/`)
-.then(response => response.ok ? response.json() : Promise.reject(response))
-.then(data => {
-    console.log('Datos del trámite:', data);
-    if (data.tramiteEnProgreso) {
-        const aprobado = data.aprobado;
-        const opcionTitulacion = data.opcionTitulacion;
-        const estadoActual = data.estadoActual.toLowerCase();
+    .then(response => response.ok ? response.json() : Promise.reject(response))
+    .then(data => {
 
-        if (estadoActual === 'pendiente') {
-            mostrarMensajeTramiteEnProceso();
+        if (data.tramiteEnProgreso) {
+            aprobado = data.aprobado;            // <---- asignar globales
+            opcionTitulacion = data.opcionTitulacion;
+            
+            const estadoActual = data.estadoActual.toLowerCase();
+
+            if (estadoActual === 'pendiente') {
+                mostrarMensajeTramiteEnProceso();
+            } else {
+                showRequirements(opcionTitulacion);
+            }
         } else {
-            // Solo si está aprobado o en progreso muestra requisitos
-            showRequirements(opcionTitulacion);
+            window.location.href = '/opcionesTitulacion/';
         }
-    } else {
-        // Si no tiene trámite en progreso lo manda a seleccionar opción
-        window.location.href = '/opcionesTitulacion/';
-    }
-})
-.catch(error => console.error('Error al obtener el trámite:', error));
+    })
+    .catch(error => console.error('Error al obtener el trámite:', error));
 });
+
 
 function showRequirements(option) {
     const requisitosContainer = document.getElementById('requisitosContainer');
@@ -558,9 +561,6 @@ function enviarOpcionTitulacion() {
         console.error('Error:', error);
         mostrarModal('Error al enviar la opción de titulación', 'errorModal');
     });
-<<<<<<< HEAD
-}
-=======
 }
 
 function mostrarAlerta(mensaje, tipo = "success", duracion = 5000) {
@@ -577,5 +577,3 @@ function mostrarAlerta(mensaje, tipo = "success", duracion = 5000) {
     const toast = new bootstrap.Toast(toastEl, { delay: duracion });
     toast.show();
 }
-
->>>>>>> a80e830ca2009652ea04fa2fc1303ec5ec2758ab

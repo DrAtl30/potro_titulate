@@ -246659,3 +246659,850 @@ LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
                                                              ^
 
 "GET /obtener_mensajes/45/ HTTP/1.1" 500 130395
+Internal Server Error: /obtener_mensajes/45/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 533, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/45/ HTTP/1.1" 500 129199
+Internal Server Error: /obtener_mensajes/45/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 533, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/45/ HTTP/1.1" 500 129199
+Internal Server Error: /obtener_mensajes/15/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 533, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/15/ HTTP/1.1" 500 129207
+Internal Server Error: /obtener_mensajes/16/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 533, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/16/ HTTP/1.1" 500 129207
+Internal Server Error: /obtener_mensajes/15/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 533, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/15/ HTTP/1.1" 500 129207
+Internal Server Error: /obtener_mensajes/45/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 533, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/45/ HTTP/1.1" 500 129199
+Internal Server Error: /obtener_mensajes/45/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 533, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/45/ HTTP/1.1" 500 129199
+Internal Server Error: /obtener_mensajes/45/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 533, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/45/ HTTP/1.1" 500 129199
+Internal Server Error: /obtener_mensajes/45/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 533, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/45/ HTTP/1.1" 500 129199
+Internal Server Error: /api/tramites/documentos/admin/89/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 1214, in documentos_por_tramite_admin
+    payload = [{
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 1220, in <listcomp>
+    'archivo_url':      d.archivo.url
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'archivo' attribute has no file associated with it.
+"GET /api/tramites/documentos/admin/89/ HTTP/1.1" 500 19170
+Internal Server Error: /api/tramites/documentos/89/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 1215, in documentos_por_tramite_admin
+    payload = [{
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 1221, in <listcomp>
+    'archivo_url':      d.archivo.url
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'archivo' attribute has no file associated with it.
+"GET /api/tramites/documentos/89/ HTTP/1.1" 500 85277
+Internal Server Error: /api/tramites/documentos/89/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 1215, in documentos_por_tramite_admin
+    payload = [{
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 1221, in <listcomp>
+    'archivo_url':      d.archivo.url
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'archivo' attribute has no file associated with it.
+"GET /api/tramites/documentos/89/ HTTP/1.1" 500 85414
+Internal Server Error: /api/tramites/documentos/89/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 1215, in documentos_por_tramite_admin
+    payload = [{
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 1221, in <listcomp>
+    'archivo_url':      d.archivo.url
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'archivo' attribute has no file associated with it.
+"GET /api/tramites/documentos/89/ HTTP/1.1" 500 85414
+Internal Server Error: /obtener_mensajes/15/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 526, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/15/ HTTP/1.1" 500 130440
+Internal Server Error: /obtener_mensajes/15/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 526, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/15/ HTTP/1.1" 500 130440
+Internal Server Error: /obtener_mensajes/45/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 526, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/45/ HTTP/1.1" 500 130583
+Internal Server Error: /obtener_mensajes/45/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 526, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/45/ HTTP/1.1" 500 130583
+Internal Server Error: /enviarSolicitud/
+"POST /enviarSolicitud/ HTTP/1.1" 500 57
+Internal Server Error: /enviarSolicitud/
+"POST /enviarSolicitud/ HTTP/1.1" 500 57
+Internal Server Error: /enviarSolicitud/
+"POST /enviarSolicitud/ HTTP/1.1" 500 57
+Internal Server Error: /obtener_mensajes/1/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 526, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/1/ HTTP/1.1" 500 130562
+Internal Server Error: /obtener_mensajes/1/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 526, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/1/ HTTP/1.1" 500 130562
+Internal Server Error: /obtener_mensajes/1/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 526, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/1/ HTTP/1.1" 500 130562
+Internal Server Error: /obtener_mensajes/1/
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedTable: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\backend\api\views.py", line 526, in obtener_mensajes
+    for msg in mensajes:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\USER\Downloads\potro_titulate\PotroTitulate\env\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: relation "api_notificaciones" does not exist
+LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
+                                                             ^
+
+"GET /obtener_mensajes/1/ HTTP/1.1" 500 130562
+Internal Server Error: /enviarSolicitud/
+"POST /enviarSolicitud/ HTTP/1.1" 500 57
+Internal Server Error: /enviarSolicitud/
+"POST /enviarSolicitud/ HTTP/1.1" 500 57
