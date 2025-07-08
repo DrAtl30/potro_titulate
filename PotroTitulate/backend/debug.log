@@ -8800,3 +8800,5 @@ Internal Server Error: /api/notificaciones/45/
 "GET /api/notificaciones/45/ HTTP/1.1" 500 159
 Internal Server Error: /api/notificaciones/45/
 "GET /api/notificaciones/45/ HTTP/1.1" 500 159
+Internal Server Error: /enviarSolicitud/
+"POST /enviarSolicitud/ HTTP/1.1" 500 57
