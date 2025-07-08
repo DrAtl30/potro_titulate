@@ -4,7 +4,7 @@ import re
 import getpass  # Para manejar contraseñas de forma segura
 
 # Configuración inicial de Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ServConfig.settings')
 django.setup()
 
 from django.contrib.auth.models import User
