@@ -5,57 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interfaz UAEM</title>
-    <!-- Enlace a Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Enlace a estilos.css -->
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
     <link rel="stylesheet" href="{% static 'css/estilosNec.css' %}">
-    <style>
-        .perfil-container {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .perfil-menu {
-            display: none;
-            position: absolute;
-            background-color: white;
-            min-width: 150px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-            overflow: hidden;
-            right: 0;
-            z-index: 1000;
-        }
-        
-        .perfil-menu a {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            color: black;
-        }
-        
-        .perfil-menu a:hover {
-            background-color: #f1f1f1;
-        }
-        
-        .perfil-container.active .perfil-menu {
-            display: block;
-        }
-        /*Nuvos estilos para Formatos y Preguntas Frecuentes*/
-
-        .dropdown-menu {
-            min-width: 300px;
-            max-width: 400px;
-            max-height: calc(4*40px);
-            overflow-y: auto;
-            white-space: normal;
-        }
-        .dropdown-menu a {
-            padding: 8px 15px;
-            word-break: break-word;
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -65,25 +17,21 @@
                 <div class="dropdown">
                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Formatos</a>
                     <div class="dropdown-menu">
-                        <a href=" {% url 'descargar_formato' 'formato_8_1.docx' %}" class="dropdown-item" download>8.1 Solicitud y Registro para la Evaluación Profesiona</a>
-                        <a href=" {% url 'descargar_formato' 'formato_8_3.docx' %}" class="dropdown-item" download>8.3 Dictamen de Revisión de protocolo</a>
-                        <a href=" {% url 'descargar_formato' 'formato_8_5.docx' %}" class="dropdown-item" download>8.5 Voto Aprobatorio</a>
-                        <a href=" {% url 'descargar_formato' 'formato_8_7.docx' %}" class="dropdown-item" download>8.7 Documentación para la Evaluación Profesional</a>
-                        <a href=" {% url 'descargar_formato' 'formato_8_10.docx' %}" class="dropdown-item" download>8.10 Revocación de Asesor/Revisor/Jurado</a>
-                        <a href=" {% url 'descargar_formato' 'formato_8_11.docx' %}" class="dropdown-item" download>8.10 Carta de Cesión de Derechos</a>
+                        <a href="{% url 'descargar_formato' 'formato_8_1.docx' %}" class="dropdown-item" download>8.1 Solicitud y Registro para la Evaluación Profesional</a>
+                        <a href="{% url 'descargar_formato' 'formato_8_3.docx' %}" class="dropdown-item" download>8.3 Dictamen de Revisión de protocolo</a>
+                        <a href="{% url 'descargar_formato' 'formato_8_5.docx' %}" class="dropdown-item" download>8.5 Voto Aprobatorio</a>
+                        <a href="{% url 'descargar_formato' 'formato_8_7.docx' %}" class="dropdown-item" download>8.7 Documentación para la Evaluación Profesional</a>
+                        <a href="{% url 'descargar_formato' 'formato_8_10.docx' %}" class="dropdown-item" download>8.10 Revocación de Asesor/Revisor/Jurado</a>
+                        <a href="{% url 'descargar_formato' 'formato_8_11.docx' %}" class="dropdown-item" download>8.10 Carta de Cesión de Derechos</a>
                     </div>
                 </div>
-                <div class="dropdown">
-                    <a href="{% url 'pre_fre' %}" >Preguntas Frecuentes</a>
-                </div>
+                <a href="{% url 'pre_fre' %}" >Preguntas Frecuentes</a>
             </nav>
         </div>
         <div class="header-right">
-            <!-- Botones de login y registro -->
             <a href="{% url 'registro' %}" id="btn-register">Registrarse</a>
             <a href="{% url 'inicio_sesion' %}" id="btn-login">Iniciar Sesión</a>
         
-            <!-- Menú de perfil -->
             <div id="perfil-container" class="perfil-container" style="display: none;">
                 <button id="perfil-nombre" class="btn btn-secondary">
                     Perfil ▼
@@ -95,20 +43,18 @@
                 </div>
             </div>
         </div>
-         
     </header>
 
-    <!-- Carrusel -->
     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="{%static 'img/slide1.jpg' %}" class="d-block w-100" alt="imagen 1">
+                <img src="{% static 'img/slide1.jpg' %}" class="d-block w-100" alt="Imagen 1">
             </div>
             <div class="carousel-item">
-                <img src="{%static 'img/slide2.jpg' %}" class="d-block w-100" alt="imagen 2">
+                <img src="{% static 'img/slide2.jpg' %}" class="d-block w-100" alt="Imagen 2">
             </div>
             <div class="carousel-item">
-                <img src="{% static 'img/slide3.jpg' %}" class="d-block w-100" alt="imagen 3">
+                <img src="{% static 'img/slide3.jpg' %}" class="d-block w-100" alt="Imagen 3">
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -142,12 +88,9 @@
         </div>
     </footer>
 
-    <!-- Enlace a Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Enlace a scripts.js -->
     <script src="{% static 'js/scripts.js' %}?v={{ timestamp }}"></script>
     <script src="{% static 'js/main.js' %}?v={{ timestamp }}"></script>
     <script src="{% static 'js/session-check.js' %}?v={{ timestamp }}"></script>
-    
 </body>
 </html>
