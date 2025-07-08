@@ -8800,6 +8800,7 @@ Internal Server Error: /api/notificaciones/45/
 "GET /api/notificaciones/45/ HTTP/1.1" 500 159
 Internal Server Error: /api/notificaciones/45/
 "GET /api/notificaciones/45/ HTTP/1.1" 500 159
+<<<<<<< HEAD
 Internal Server Error: /api/notificaciones/45/
 "GET /api/notificaciones/45/ HTTP/1.1" 500 159
 Internal Server Error: /api/notificaciones/45/
@@ -247504,5 +247505,7 @@ LINE 1: ..., "api_notificaciones"."es_de_administrador" FROM "api_notif...
 "GET /obtener_mensajes/1/ HTTP/1.1" 500 130562
 Internal Server Error: /enviarSolicitud/
 "POST /enviarSolicitud/ HTTP/1.1" 500 57
+=======
+>>>>>>> 3dcf7b351096add783515ab31d7905149c7773f0
 Internal Server Error: /enviarSolicitud/
 "POST /enviarSolicitud/ HTTP/1.1" 500 57
