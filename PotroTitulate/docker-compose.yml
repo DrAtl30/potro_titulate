@@ -8,6 +8,7 @@ services:
     volumes:
       - ./backend/staticfiles:/PotroTitulate/staticfiles
       - ./backend/media:/PotroTitulate/media
+      - ./FrontEnd/static:/FrontEnd/static
 
   nginx:
     image: nginx:latest
@@ -20,3 +21,4 @@ services:
       - ./backend/media:/mediafiles
       - ./frontend/dist:/usr/share/nginx/html/frontend
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./FrontEnd/static:/frontend_static 
