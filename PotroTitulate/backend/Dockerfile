@@ -4,6 +4,8 @@ FROM python:3.11-slim
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     gcc \
+    netcat-openbsd \
+    net-tools \
     openssh-client \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
@@ -32,8 +34,8 @@ COPY ssh/key-1.key /root/.ssh/key-1.key
 RUN chmod 600 /root/.ssh/key-1.key
 RUN touch /root/.ssh/known_hosts
 
-# Ejecuta collectstatic para juntar los archivos estáticos
-RUN python manage.py collectstatic --noinput
+# **Elimina el collectstatic del build porque usarás los archivos estáticos montados localmente**
+# RUN rm -rf /PotroTitulate/staticfiles && python manage.py collectstatic --noinput
 
 # Comando de inicio
 CMD ["/start_server.sh"]

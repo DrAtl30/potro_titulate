@@ -12,7 +12,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #5a7561;
+    background-color: #679370;
     padding: 10px 20px;
     color: white;
     flex-shrink: 0;
@@ -65,7 +65,7 @@ main {
 
 footer {
     position: relative;
-    background-color: #6e7b68;
+    background-color: #679370;
     padding: 0;
     text-align: center;
     margin-top: auto;
@@ -92,7 +92,7 @@ footer img {
 
 footer {
     position: relative;
-    background-color: #6e7b68;
+    background-color: #679370;
     padding: 0;
     text-align: left;
     margin-top: auto;
@@ -288,7 +288,7 @@ footer img {
 }
 
 .tramites-list-container::-webkit-scrollbar-thumb {
-    background: #5a7561;
+    background: #679370;
     border-radius: 4px;
 }
 

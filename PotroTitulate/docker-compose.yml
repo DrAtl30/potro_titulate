@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   web:
     build:
@@ -6,26 +8,22 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      # Montar desde el directorio correcto del contenedor
-      - static_volume:/PotroTitulate/staticfiles
-      - media_volume:/PotroTitulate/mediafiles
+      # Montar los staticfiles y mediafiles locales para que estén disponibles en el contenedor
+      - ./backend/staticfiles:/PotroTitulate/staticfiles
+      - ./backend/mediafiles:/PotroTitulate/mediafiles
 
   nginx:
     image: nginx:latest
-    volumes:
-      # Usar los volúmenes compartidos
-      - static_volume:/staticfiles
-      - media_volume:/mediafiles
-      # Frontend dist (si tienes una SPA)
-      - ./frontend/dist:/usr/share/nginx/html/frontend
-      # Configuración de nginx
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "80:80"
     depends_on:
       - web
+    volumes:
+      # Montar los mismos volúmenes para que nginx acceda a los archivos estáticos y media
+      - ./backend/staticfiles:/staticfiles
+      - ./backend/mediafiles:/mediafiles
+      # Montar frontend SPA si usas
+      - ./frontend/dist:/usr/share/nginx/html/frontend
+      # Montar config de nginx
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
 
-# Volúmenes nombrados para compartir entre contenedores
-volumes:
-  static_volume:
-  media_volume:

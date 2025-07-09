@@ -21,9 +21,18 @@ cat /root/.ssh/known_hosts
 echo "========== Estableciendo túnel SSH =========="
 ssh -i /root/.ssh/key-1.key -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/root/.ssh/known_hosts -fN -L 5433:127.0.0.1:5432 opc@129.153.221.86
 
-# Espera breve para asegurar que el túnel esté arriba
-sleep 3
+# Espera y verifica que el túnel esté disponible antes de continuar
+echo "========== Verificando disponibilidad del túnel SSH =========="
+until nc -z localhost 5433; do
+  echo "Esperando a que el puerto 5433 esté disponible..."
+  sleep 1
+done
+echo "Puerto 5433 disponible, túnel SSH activo."
 
-# Arrancar gunicorn/Django
+# Mostrar servicios escuchando para verificar
+echo "Puertos activos:"
+netstat -tulnp
+
+# Arrancar Gunicorn / Django
 echo "========== Levantando servidor Django =========="
 gunicorn --bind 0.0.0.0:8000 ServConfig.wsgi:application

@@ -90,8 +90,57 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnMostrarProgreso = document.getElementById("btnMostrarProgreso");
     const listaTramitesEspera = document.getElementById("listaTramitesEspera");
     const listaTramitesProgreso = document.getElementById("listaTramitesProgreso");
+     // Referencias para toggle
+  const btnMostrarRechazados  = document.getElementById("btnMostrarRechazados");
+  const seccionEspera         = document.getElementById("tramitesEspera");
+  const seccionProgreso       = document.getElementById("tramitesProgreso");
+  const seccionRechazados     = document.getElementById("tramitesRechazados");
+  const listaRechazados = document.getElementById("listaTramitesRechazados");
 
-   
+// Toggle “Trámites Rechazados” con AJAX
+btnMostrarRechazados.addEventListener("click", async function(e) {
+  e.preventDefault();
+  // 1) Mostrar solo la sección de rechazados
+  seccionEspera.style.display     = "none";
+  seccionProgreso.style.display   = "none";
+  seccionRechazados.style.display = "block";
+
+  // 2) Spinner mientras carga
+  listaRechazados.innerHTML = `
+    <li class="list-group-item text-center text-muted">
+      <i class="fas fa-spinner fa-spin"></i> Cargando rechazados…
+    </li>
+  `;
+
+  // 3) Fetch al endpoint 
+  try {
+    const resp = await fetch("/api/tramites/rechazados/");
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const { tramites } = await resp.json();
+
+    // 4) Pinta el resultado
+    if (tramites.length === 0) {
+      listaRechazados.innerHTML = `<li class="list-group-item">No hay trámites rechazados.</li>`;
+    } else {
+      listaRechazados.innerHTML = tramites.map(t => `
+        <li class="list-group-item tramite-item d-flex justify-content-between align-items-center">
+          ${t.numero_cuenta} – ${t.nombre_completo}
+          <span class="badge bg-danger">Rechazado</span>
+        </li>
+      `).join("");
+      
+    }
+    filtrarTramites(); 
+
+  } catch (err) {
+    listaRechazados.innerHTML = `
+      <li class="list-group-item text-danger">
+        <i class="fas fa-exclamation-triangle"></i> ${err.message}
+      </li>
+    `;
+  }
+});
+
     const modalConfirmacion = document.createElement('div');
     modalConfirmacion.className = 'modal fade';
     modalConfirmacion.id = 'confirmacionModal';
@@ -167,7 +216,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('oportunidadesActuales').textContent = oportunidadesActuales;
         actualizarOportunidades();
     } else {
-        alert('No se pueden asignar más de 3 oportunidades.');
+        mostrarToast('⚠️ No se pueden asignar más de 3 oportunidades.', 'warning');
     }
     });
 
@@ -177,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('oportunidadesActuales').textContent = oportunidadesActuales;
         actualizarOportunidades();
     } else {
-        alert('No puede haber menos de 0 oportunidades.');
+        mostrarToast('⚠️ No puede haber menos de 0 oportunidades.', 'warning');
     }
     });
 
@@ -228,14 +277,14 @@ document.addEventListener("DOMContentLoaded", function() {
                         ? 'Trámite aprobado correctamente' 
                         : 'Trámite rechazado correctamente';
                     
-                    alert(mensaje);
+                    mostrarToast(mensaje, 'success');
                     cargarTramitesEspera();
                 } else {
                     throw new Error(data.error || 'Error desconocido');
                 }
             })
             .catch(error => {
-                alert(`Error al ${accion} el trámite: ${error.message}`);
+                mostrarToast(`❌ Error al ${accion} el trámite: ${error.message}`, 'error');
             });
         };
 
@@ -873,7 +922,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 
                 if (comentario === null || !comentario) {
                     if (comentario === '') {
-                        alert('Debe ingresar un motivo para el rechazo');
+                        mostrarToast('⚠️ Debe ingresar un motivo para el rechazo.', 'warning');
                     }
                     return;
                 }
@@ -951,91 +1000,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 };
 
-    // Función para mostrar notificaciones toast mejorada
-function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
-    // Configuración de tipos
-    const tipos = {
-        success: {
-            bg: 'bg-success',
-            icon: 'fas fa-check-circle'
-        },
-        error: {
-            bg: 'bg-danger',
-            icon: 'fas fa-exclamation-circle'
-        },
-        warning: {
-            bg: 'bg-warning',
-            icon: 'fas fa-exclamation-triangle'
-        },
-        info: {
-            bg: 'bg-info',
-            icon: 'fas fa-info-circle'
-        }
-    };
 
-    // Seleccionar configuración según tipo (default a success)
-    const config = tipos[tipo.toLowerCase()] || tipos.success;
-
-    // Crear contenedor principal de toasts si no existe
-    let toastContainer = document.getElementById('toast-container');
-    if (!toastContainer) {
-        toastContainer = document.createElement('div');
-        toastContainer.id = 'toast-container';
-        toastContainer.style.position = 'fixed';
-        toastContainer.style.bottom = '20px';
-        toastContainer.style.right = '20px';
-        toastContainer.style.zIndex = '9999';
-        toastContainer.style.maxWidth = '350px';
-        toastContainer.style.width = '100%';
-        document.body.appendChild(toastContainer);
-    }
-
-    // Crear toast individual
-    const toastId = `toast-${Date.now()}`;
-    const toast = document.createElement('div');
-    toast.id = toastId;
-    toast.className = `toast show ${config.bg} text-white mb-3`;
-    toast.role = 'alert';
-    toast.ariaLive = 'assertive';
-    toast.ariaAtomic = 'true';
-    
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-icon p-3 d-flex align-items-center">
-                <i class="${config.icon} fa-2x"></i>
-            </div>
-            <div class="toast-body">
-                <strong class="text-capitalize">${tipo}</strong>
-                <div>${mensaje}</div>
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" 
-                    onclick="document.getElementById('${toastId}').remove()">
-            </button>
-        </div>
-    `;
-
-    // Agregar al contenedor
-    toastContainer.insertBefore(toast, toastContainer.firstChild);
-
-    // Auto-eliminación después del tiempo especificado
-    let timeoutId = setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, tiempo);
-
-    // Pausar desvanecimiento al hacer hover
-    toast.addEventListener('mouseenter', () => {
-        clearTimeout(timeoutId);
-    });
-
-    // Reanudar desvanecimiento al salir
-    toast.addEventListener('mouseleave', () => {
-        timeoutId = setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
-        }, 1000);
-    });
-}
 
 
     // 7) Event listeners para botones principales
@@ -1053,8 +1018,26 @@ function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
     });
 
     // 8) Event listeners para botones de trámites
-    btnMostrarEspera.addEventListener("click", cargarTramitesEspera);
-    btnMostrarProgreso.addEventListener("click", cargarTramitesProgreso);
+    // Toggle “Solicitudes por Aprobar”
+  btnMostrarEspera.addEventListener("click", function(e) {
+    e.preventDefault();
+    seccionEspera.style.display     = "block";
+    seccionProgreso.style.display   = "none";
+    seccionRechazados.style.display = "none";
+    cargarTramitesEspera();  // si necesitas recargar vía AJAX
+  });
+
+  // Toggle “Documentos en Revisión”
+  btnMostrarProgreso.addEventListener("click", function(e) {
+    e.preventDefault();
+    seccionEspera.style.display     = "none";
+    seccionProgreso.style.display   = "block";
+    seccionRechazados.style.display = "none";
+    cargarTramitesProgreso();  // si necesitas recargar vía AJAX
+  });
+
+  // Toggle “Trámites Rechazados”
+ 
     
     // 9) Al hacer click en un aspirante
     aspirantesList.addEventListener("click", (e) => {
@@ -1166,22 +1149,21 @@ function filtrarAspirantes() {
     });
 
 }
-
-
-    
     // Función para filtrar trámites
     function filtrarTramites() {
+        const term  = searchTramites.value.toLowerCase().trim();
         const searchTerm = searchTramites.value.toLowerCase();
-        const items = [...document.querySelectorAll("#listaTramitesEspera li.tramite-item, #listaTramitesProgreso li.tramite-item")];
+        const items = document.querySelectorAll(`
+    #listaTramitesEspera    li.tramite-item,
+    #listaTramitesProgreso  li.tramite-item,
+    #listaTramitesRechazados li.tramite-item
+  `);   
         
-        items.forEach(item => {
-            const cuentaText = item.textContent.toLowerCase();
-            if (cuentaText.includes(searchTerm)) {
-                item.style.display = "flex";
-            } else {
-                item.style.display = "none";
-            }
-        });
+        items.forEach(li => {
+    const visible = li.textContent.toLowerCase().includes(term);
+    li.classList.toggle('d-none', !visible);   // ← usa la clase de Bootstrap
+  });
+  
     }
     
     // Event listeners para los campos de búsqueda
@@ -1193,9 +1175,9 @@ function filtrarAspirantes() {
         searchTramites.addEventListener("input", filtrarTramites);
     }
 
-    
-
 });
+
+    
 
 
 // Variable global para almacenar el ID del sustentante
@@ -1215,7 +1197,7 @@ function actualizarOportunidades() {
     // Verificar que tenemos un ID válido
     if (!sustentanteSeleccionado) {
         console.error('Error: No se ha seleccionado un sustentante');
-        alert('Por favor, seleccione un sustentante primero');
+        mostrarToast('⚠️ Por favor, seleccione un sustentante primero', 'warning');
         return;
     }
 
@@ -1255,7 +1237,7 @@ function actualizarOportunidades() {
     .then(data => {
         if (data.success) {
             console.log('Actualización exitosa', data);
-            alert('Oportunidades actualizadas correctamente');
+            mostrarToast('✅ Oportunidades actualizadas correctamente', 'success');
             ModalManager.hide(document.getElementById('modalEditarOportunidades'));
             
             // Actualizar la vista si es necesario
@@ -1269,6 +1251,92 @@ function actualizarOportunidades() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert(error.message);
+        mostrarToast(`❌ Error: ${error.message}`, 'danger');
+    });
+}
+
+    // Función para mostrar notificaciones toast mejorada
+function mostrarToast(mensaje, tipo = 'success', tiempo = 5000) {
+    // Configuración de tipos
+    const tipos = {
+        success: {
+            bg: 'bg-success',
+            icon: 'fas fa-check-circle'
+        },
+        error: {
+            bg: 'bg-danger',
+            icon: 'fas fa-exclamation-circle'
+        },
+        warning: {
+            bg: 'bg-warning',
+            icon: 'fas fa-exclamation-triangle'
+        },
+        info: {
+            bg: 'bg-info',
+            icon: 'fas fa-info-circle'
+        }
+    };
+
+    // Seleccionar configuración según tipo (default a success)
+    const config = tipos[tipo.toLowerCase()] || tipos.success;
+
+    // Crear contenedor principal de toasts si no existe
+    let toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.style.position = 'fixed';
+        toastContainer.style.bottom = '20px';
+        toastContainer.style.right = '20px';
+        toastContainer.style.zIndex = '9999';
+        toastContainer.style.maxWidth = '350px';
+        toastContainer.style.width = '100%';
+        document.body.appendChild(toastContainer);
+    }
+
+    // Crear toast individual
+    const toastId = `toast-${Date.now()}`;
+    const toast = document.createElement('div');
+    toast.id = toastId;
+    toast.className = `toast show ${config.bg} text-white mb-3`;
+    toast.role = 'alert';
+    toast.ariaLive = 'assertive';
+    toast.ariaAtomic = 'true';
+    
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-icon p-3 d-flex align-items-center">
+                <i class="${config.icon} fa-2x"></i>
+            </div>
+            <div class="toast-body">
+                <strong class="text-capitalize">${tipo}</strong>
+                <div>${mensaje}</div>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" 
+                    onclick="document.getElementById('${toastId}').remove()">
+            </button>
+        </div>
+    `;
+
+    // Agregar al contenedor
+    toastContainer.insertBefore(toast, toastContainer.firstChild);
+
+    // Auto-eliminación después del tiempo especificado
+    let timeoutId = setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, tiempo);
+
+    // Pausar desvanecimiento al hacer hover
+    toast.addEventListener('mouseenter', () => {
+        clearTimeout(timeoutId);
+    });
+
+    // Reanudar desvanecimiento al salir
+    toast.addEventListener('mouseleave', () => {
+        timeoutId = setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 1000);
     });
 }

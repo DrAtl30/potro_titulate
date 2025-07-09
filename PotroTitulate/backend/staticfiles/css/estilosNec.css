@@ -1,4 +1,4 @@
-/* Estilos generales */
+/* ===== Estilos Generales ===== */
 body, html {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -8,31 +8,34 @@ body, html {
     display: flex;
     flex-direction: column;
 }
+
+/* ===== Header ===== */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #5a7561;
+    background-color: #679370;
     padding: 10px 20px;
     color: white;
+    font-size: 18px;
 }
-.header-left {
+
+.header-left, .header-right {
     display: flex;
     align-items: center;
-    gap: 15px; 
-}
-.header-right {
-    display: flex;
-    gap: 15px; 
+    gap: 15px;
 }
 
 header img {
     max-height: 90px;
+    padding-right: 10px;
 }
 
 header nav {
     display: flex;
-    gap: 20px; 
+    align-items: center;
+    height: 100%;
+    gap: 20px;
 }
 
 header nav a, .header-right a {
@@ -45,31 +48,7 @@ header nav a:hover, .header-right a:hover {
     text-decoration: underline;
 }
 
-
-body {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #5a7561;
-    padding: 10px 20px;
-    color: white;
-}
-
-header img {
-    max-height: 90px;
-}
-
-nav {
-    display: flex;
-    align-items: center;
-}
-
+/* ===== Dropdowns ===== */
 nav .dropdown {
     position: relative;
 }
@@ -80,6 +59,11 @@ nav .dropdown-menu {
     background-color: #fff;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+    min-width: 300px;
+    max-width: 400px;
+    max-height: calc(4*40px);
+    overflow-y: auto;
+    white-space: normal;
 }
 
 nav .dropdown:hover .dropdown-menu {
@@ -88,32 +72,52 @@ nav .dropdown:hover .dropdown-menu {
 
 nav .dropdown-menu a {
     color: #333;
-    padding: 8px 16px;
+    padding: 8px 15px;
     text-decoration: none;
     display: block;
+    word-break: break-word;
 }
 
 nav .dropdown-menu a:hover {
     background-color: #f1f1f1;
 }
 
-header div a {
-    margin-left: 15px;
-    color: white;
+/* ===== Menú de Perfil ===== */
+.perfil-container {
+    position: relative;
+    display: inline-block;
+}
+
+.perfil-menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 150px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    overflow: hidden;
+    right: 0;
+    z-index: 1000;
+}
+
+.perfil-menu a {
+    display: block;
+    padding: 10px;
     text-decoration: none;
+    color: black;
 }
 
-header div a:hover {
-    text-decoration: underline;
+.perfil-menu a:hover {
+    background-color: #f1f1f1;
 }
 
-main {
-    flex: 1;
+.perfil-container.active .perfil-menu {
+    display: block;
 }
 
-/* Carrusel */
+/* ===== Carrusel ===== */
 .carousel-inner {
-    height: 500px; 
+    height: 500px;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -136,26 +140,26 @@ main {
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-    background-color: #333; 
+    background-color: #333;
     border-radius: 50%;
 }
 
-/* Estilos generales para el footer */
+/* ===== Footer ===== */
 footer {
     position: relative;
-    background-color: #6e7b68;
-    padding: 20px; /* Ajusta el padding para que el contenido esté bien posicionado */
-    text-align: left; /* Asegura que el texto esté alineado a la izquierda */
+    background-color: #679370;
+    padding: 20px;
+    text-align: left;
     margin-top: auto;
-    height: auto; /* Asegura que la altura se ajuste al contenido */
-    min-height: 200px; /* Ajusta la altura mínima para asegurar que todo el contenido sea visible */
+    height: auto;
+    min-height: 200px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Alinea el contenido a la izquierda */
-    justify-content: flex-start; /* Alinea el contenido a la izquierda */
+    align-items: flex-start;
+    justify-content: flex-start;
     color: white;
-    overflow: visible; /* Cambia a visible para asegurar que todo el contenido se muestre */
-    width: 100%; /* Asegura que el footer ocupe todo el ancho */
+    overflow: visible;
+    width: 100%;
 }
 
 footer img {
@@ -165,53 +169,43 @@ footer img {
     position: absolute;
     left: 0;
     top: 0;
-    z-index: 1; /* Asegura que la imagen esté detrás del contenido */
+    z-index: 1;
     filter: blur(1px);
 }
 
 .footer-content {
     position: relative;
-    z-index: 2; 
+    z-index: 2;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start; /* Alinea el contenido a la izquierda */
-    align-items: flex-start; /* Alinea el contenido a la izquierda */
+    justify-content: flex-start;
+    align-items: flex-start;
     width: 100%;
     max-width: 1200px;
-    margin: 0; /* Elimina el margen automático para evitar centrado */
-    padding: 0; /* Elimina el padding para evitar que se mueva hacia abajo */
+    margin: 0;
+    padding: 0;
 }
 
-.footer-text,
-.footer-contact,
-.footer-social {
+.footer-contact, .footer-social {
     flex: 1;
     margin: 10px;
-    text-align: left; /* Asegura que el texto esté alineado a la izquierda */
+    text-align: left;
     max-width: 300px;
 }
 
-.footer-text p {
-    margin: 0;
-    font-size: 16px;
-}
-
-.footer-contact h4,
-.footer-social h4 {
+.footer-contact h4, .footer-social h4 {
     margin-bottom: 15px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
 }
 
-.footer-contact ul,
-.footer-social ul {
+.footer-contact ul, .footer-social ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.footer-contact ul li,
-.footer-social ul li {
+.footer-contact ul li, .footer-social ul li {
     margin-bottom: 10px;
     font-size: 14px;
 }
@@ -229,21 +223,21 @@ footer img {
     text-decoration: underline;
 }
 
-/* --- Estilos para el Modal --- */
+/* ===== Modales ===== */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    display: none; /* Se mostrará cuando se asigne display: flex desde JS */
+    display: none;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0,0,0,0.5); /* Fondo semitransparente */
-    z-index: 9999; /* Asegura que esté por encima de otros elementos */
-  }
-  
-  .modalContent {
+    background-color: rgba(0,0,0,0.5);
+    z-index: 9999;
+}
+
+.modalContent {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -251,18 +245,17 @@ footer img {
     max-height: 80%;
     overflow-y: auto;
     position: relative;
-  }
-  
-  .modalContent .close {
+}
+
+.modalContent .close {
     position: absolute;
     top: 10px;
     right: 15px;
     font-size: 20px;
     cursor: pointer;
-  }
-  
-  .modalMessage {
+}
+
+.modalMessage {
     margin-top: 20px;
     font-size: 16px;
-  }
-  
+}
