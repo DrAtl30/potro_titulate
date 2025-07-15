@@ -361,7 +361,10 @@ def uploadDocument(request):
         sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
 
         # Obtener el trámite actual del sustentante
-        tramite = Tramites.objects.filter(id_sustentante=sustentante).order_by('-fecha_inicio').first()
+        tramite = Tramites.objects.filter(
+            id_sustentante=sustentante,
+            estado_actual__in=['aprobado', 'en progreso']
+        ).order_by('-fecha_inicio', '-id_tramite').first()
         if not tramite:
             return JsonResponse({'success': False, 'error': 'No se encontró un trámite para el sustentante'}, status=404)   
         # Guardar el documento en la base de datos
