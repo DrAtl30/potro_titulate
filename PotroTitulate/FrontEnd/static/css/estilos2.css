@@ -1,3 +1,4 @@
+/* ========== ESTRUCTURA GENERAL ========== */
 body, html {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -6,26 +7,29 @@ body, html {
     height: 100%;
 }
 
+/* ========== HEADER ========== */
 header {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #679370;
+    border-bottom: 3px solid #9C8412;
     padding: 5px 20px;
     color: white;
-    z-index: 2; 
     width: 100%;
+    z-index: 2;
 }
 
 .header-left {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     flex: 1;
     margin-bottom: 5px;
 }
 
 header img {
-    max-height: 120px; 
+    max-height: 70px;
+    padding-right: 10px;
 }
 
 header nav {
@@ -39,16 +43,20 @@ header nav a {
     padding: 5px 8px;
 }
 
-
 header nav a:hover {
     text-decoration: underline;
 }
 
+.ms-auto {
+    margin-left: auto;
+}
+
+/* ========== BARRA VERDE DE PROGRESO ========== (sin uso)*/
 .barra-verde {
     width: 100%;
-    height: 30px; 
+    height: 30px;
     background-color: #679370;
-    margin-top: 10px; 
+    margin-top: 10px;
 }
 
 .progress-bar {
@@ -60,35 +68,37 @@ header nav a:hover {
     transition: width 0.5s ease-in-out;
 }
 
-
+/* ========== ESTADOS DE REQUISITOS ========== */
 .estado {
     display: inline-block;
     width: 15px;
     height: 15px;
     border-radius: 50%;
 }
+
 .estado.no-entregado {
     background-color: #6c757d;
     color: white;
 }
 
 .estado.pendiente {
-    background-color: #ffc107; 
+    background-color: #ffc107;
     color: black;
 }
 
 .estado.aceptado {
-    background-color: #28a745; 
+    background-color: #28a745;
     color: white;
 }
 
 .estado.rechazado {
-    background-color: #dc3545; 
+    background-color: #dc3545;
     color: white;
 }
 
+/* ========== BADGES DE ESTADO ========== */
 .badge.bg-secondary {
-    background-color: #6c757d; 
+    background-color: #6c757d;
     color: white;
 }
 
@@ -98,7 +108,7 @@ header nav a:hover {
 }
 
 .badge.bg-success {
-    background-color: #28a745; 
+    background-color: #28a745;
     color: white;
 }
 
@@ -106,6 +116,8 @@ header nav a:hover {
     background-color: #dc3545;
     color: white;
 }
+
+/* ========== REQUISITOS ========== */
 .requisito-item {
     display: flex;
     align-items: center;
@@ -115,9 +127,3 @@ header nav a:hover {
 .requisito-texto {
     flex: 1;
 }
-.ms-auto {
-    margin-left: auto;  /* Esto mueve el botón de cerrar sesión hacia la derecha */
-}
-
-
-

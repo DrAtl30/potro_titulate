@@ -15,6 +15,7 @@ header {
     justify-content: space-between;
     align-items: center;
     background-color: #679370;
+    border-bottom: 3px solid #9C8412;
     padding: 10px 20px;
     color: white;
     font-size: 18px;
@@ -27,7 +28,7 @@ header {
 }
 
 header img {
-    max-height: 90px;
+    max-height: 70px;
     padding-right: 10px;
 }
 
