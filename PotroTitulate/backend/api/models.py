@@ -135,6 +135,10 @@ class Sustentante(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(blank=True, null=True)
     id_opcion = models.ForeignKey(OpcionTitulacion, on_delete=models.CASCADE, db_column='id_opcion', null=True)  # Relaciona con OpciónTitulación
     oportunidades_restantes = models.IntegerField(default=3)
+    periodo_ingreso = models.CharField(max_length=5, default='2000A')
+    periodo_egreso = models.CharField(max_length=5, default='2020A')
+
+
 
 
     session_key = models.CharField(max_length=40, blank=True, null=True)
@@ -149,7 +153,7 @@ class Sustentante(AbstractBaseUser, PermissionsMixin):
     objects = SustentanteManager()
 
     USERNAME_FIELD = "correo_electronico"
-    REQUIRED_FIELDS = ["nombre", "apellido", "numero_cuenta", "licenciatura"]
+    REQUIRED_FIELDS = ["nombre", "apellido", "numero_cuenta", "licenciatura", "periodo_ingreso", "periodo_egreso"]
 
     @property
     def contrasena(self):
