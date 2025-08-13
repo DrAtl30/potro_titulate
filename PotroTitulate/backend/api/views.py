@@ -184,11 +184,21 @@ def enviar_solicitud(request):
 
 class RegistroView(APIView):
     def post(self, request, *args, **kwargs):
-        serializer = SustentanteRegistroSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'mensaje': 'Registro exitoso'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            data = request.data.copy()
+            
+            
+            if 'escuela_de_procedencia' not in data or not data['escuela_de_procedencia']:
+                data['escuela_de_procedencia'] = 'Universidad Autónoma del Estado de México'
+            serializer = SustentanteRegistroSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'mensaje': 'Registro exitoso'}, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            return Response({'error' : str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
 class LoginView(APIView):
     def post(self, request):
@@ -1231,3 +1241,39 @@ def actualizar_oportunidades(request, sustentante_id):
 
         except Sustentante.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Sustentante no encontrado'}, status=404)
+
+
+from pathlib import Path
+
+#Endpoint API para escuelas incorporadas
+class EscuelasIncorporadas(View):
+
+    def get(self, request):
+
+        #escuelas_incorporadas_path = os.path.join('FrontEnd', 'static', 'data', 'escuelas_incorporadas.json')
+        
+        #escuelas_incorporadas_path = os.path.join(settings.STATIC_ROOT, 'data', 'escuelas_incorporadas.json')
+        
+        escuelas_incorporadas_path = (Path(settings.BASE_DIR).parent / 'FrontEnd' / 'static' / 'data' / 'escuelas_incorporadas.json')
+        
+        try:
+            with open(escuelas_incorporadas_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            return JsonResponse(data)
+        
+        except FileNotFoundError:
+            return JsonResponse(
+                {'error' : 'Archivo de escuelas incorporadas'},
+                status = 404
+            )
+        except json.JSONDecodeError:
+            return JsonResponse(
+                {'error' : 'Error leyendo el archivo de las escuelas incorporadas'},
+                status = 500
+            )
+            
+        except Exception as e:
+            return JsonResponse(
+                {'error' : str(e)},
+                status = 500
+            )

@@ -78,6 +78,25 @@
                     <button type="button" class="stepper-btn" onclick="cambiarPeriodo(1, 'egreso')">+</button>
                 </div>
             </div>
+            <div class="mb-3">
+                <label>¿Es una escuela incorporada?</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="es_escuela_incorpor" id="escuela_no" value="false" checked>
+                    <label class="form-check-label" for="escuela_no">No</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="es_escuela_incorpor" id="escuela_si" value="true">
+                    <label class="form-check-label" for="escuela_si">Sí</label>
+                </div>
+                
+            </div>
+
+            <div class="mb-3" id="escuelas-container" style="display: none;">
+                <select class="form-control" id="escuela_seleccionada" name="escuela_seleccionada">
+                    <option value="" disabled selected> Cargando escuelas...</option>
+                </select>
+            </div>
+
             <button type="submit" class="btn btn-primary">Registrarse</button>
         </form>
         <div class="modal" id="errorModal">

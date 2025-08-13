@@ -215,14 +215,33 @@ document.addEventListener('DOMContentLoaded', function() {
             const apellido = document.getElementById('apellidos').value;
             const licenciatura = document.getElementById('licenciatura').value;
             const correo = document.getElementById('correo').value;
+            const periodo_ingreso = document.getElementById('periodo_ingreso').value;
+            const periodo_egreso = document.getElementById('periodo_egreso').value;
 
+            const year_ingreso = extraerAno(periodo_ingreso)
+            const year_egreso = extraerAno(periodo_egreso)
+
+            if ((year_egreso - year_ingreso) < 3) {
+                mostrarModal('Debe de haber un mínimo de 3 años entre el ingreso y el egreso',
+                    'errorModal'
+                );
+                return;
+            }
+
+            if (periodo_egreso < periodo_egreso) {
+                mostrarModal('El periodo de egreso no puede ser anterior al de ingreso',
+                    'errorModal');
+                    return;
+            }
             const data = {
                 nombre: nombre,
                 apellido: apellido,
                 numero_cuenta: numCuenta.value,
                 correo_electronico: correo,
                 contrasena: password,
-                licenciatura: licenciatura
+                licenciatura: licenciatura,
+                periodo_ingreso : periodo_ingreso,
+                periodo_egreso : periodo_egreso
             };
 
             fetch('/api/registro/', {
@@ -447,3 +466,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+
+// Función para manejar el 'Number input spinner'
+
+function extraerAno(periodo) {
+    return parseInt(periodo.substring(0, 4));
+}
+
+
+const periodos = []
+
+for (let year = 1960; year <=2051; year++){
+    periodos.push(`${year}A`);
+    periodos.push(`${year}B`);
+}
+
+function cambiarPeriodo(step, tipoPeriodo){
+
+    const inputID = tipoPeriodo === 'egreso' ? 'periodo_egreso' : 'periodo_ingreso';
+    const input = document.getElementById(inputID);
+    const currentIndex = periodos.indexOf(input.value);
+
+    let newIndex = currentIndex + step;
+
+    if (newIndex < 0) newIndex = periodos.length -1;
+    if (newIndex >= periodos.length) newIndex = 0;
+    
+    input.value = periodos[newIndex]
+}
+
+document.getElementById('periodo_ingreso').addEventListener('keydown',
+    function(e){
+        if(e.key === 'ArrowUp'){
+            cambiarPeriodo(1);
+            e.preventDefault();
+        }
+        else if (e.key === 'ArrowDown'){
+            cambiarPeriodo(-1);
+            e.preventDefault();
+        }
+    }
+)
+// ternima el Number input spinner

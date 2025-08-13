@@ -1,0 +1,9 @@
+{
+    "escuelas": [
+        {"id" : "Incorporada_1", "nombre" : "Universidad de Ixtlahuaca CUI"},
+        {"id" : "Incorporada_2", "nombre" : "Centro de Estudios Superiores Universitarios CESU"},
+        {"id" : "Incorporada_3", "nombre" : "Centro de Estudios Universitarios Horacio Zuñiga CEUHZ"},
+        {"id" : "Incorporada_4", "nombre" : "Instituto Universitario del Estado de México IUEM"},
+        {"id" : "Incorporada_5", "nombre" : "Universidad Isidro Fabela"}
+    ]
+}

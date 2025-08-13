@@ -52,7 +52,7 @@ urlpatterns = [
     path('verificarTramiteEnProgreso/<int:id_sustentante>/', verificar_tramite_en_progreso, name='verificarTramiteEnProgreso'),
     path('enviarSolicitud/', enviar_solicitud, name='enviarSolicitud'),
     
-
+    path('api/escuelas-incorporadas/', EscuelasIncorporadas.as_view(), name='escuelas_incorporadas'),
 
 
     # mensajeria 

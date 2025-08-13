@@ -113,7 +113,52 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordRequirements = document.getElementById('password-requirements');
     const passwordTooltip = document.getElementById('password-tooltip');
     
-    
+    //Manejo de escuelas incorporadas
+    const escuelasContainer = document.getElementById('escuelas-container');
+    const selectEscuelas = document.getElementById('escuela_seleccionada');
+    const escuelaSi = document.getElementById('escuela_si')
+    const escuelaNo = document.getElementById('escuela_no')
+
+    fetch('/api/escuelas-incorporadas/')
+        .then(response => {
+            if (!response.ok){
+                throw new Error('Error al cargar escuelas');
+            }
+            return response.json()
+        })
+        .then(data => {
+            selectEscuelas.innerHTML='';
+            const defaultOption  = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Seleciona tu escuela incorparada';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            selectEscuelas.appendChild(defaultOption);
+
+            data.escuelas.forEach(escuela => {
+                const option = document.createElement('option');
+                option.value = escuela.id;
+                option.textContent = escuela.nombre;
+                selectEscuelas.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            selectEscuelas.innerHTML='<option value="">Error cargando escuelasss</option>';
+        });
+        
+        escuelaSi.addEventListener('change', function() {
+            escuelasContainer.style.display = 'block';
+            selectEscuelas.required = true;
+        });
+
+        escuelaNo.addEventListener('change', function(){
+            escuelasContainer.style.display = 'none';
+            selectEscuelas.required = false;
+        });
+
+
+
     if (contrasena) {
         contrasena.addEventListener('focus', function() {
             passwordRequirements.style.display = 'block';
@@ -218,8 +263,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const periodo_ingreso = document.getElementById('periodo_ingreso').value;
             const periodo_egreso = document.getElementById('periodo_egreso').value;
 
-            const year_ingreso = extraerAno(periodo_ingreso)
-            const year_egreso = extraerAno(periodo_egreso)
+            const year_ingreso = extraerAno(periodo_ingreso);
+            const year_egreso = extraerAno(periodo_egreso);
+
+            const esEscuelaIncorporada = document.getElementById('escuela_si').checked;
+            const escuela = esEscuelaIncorporada
+                ? document.getElementById('escuela_seleccionada').options[document.getElementById('escuela_seleccionada').selectedIndex].text
+                : 'Universidad Autónoma del Estado de México';
 
             if ((year_egreso - year_ingreso) < 3) {
                 mostrarModal('Debe de haber un mínimo de 3 años entre el ingreso y el egreso',
@@ -241,8 +291,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 contrasena: password,
                 licenciatura: licenciatura,
                 periodo_ingreso : periodo_ingreso,
-                periodo_egreso : periodo_egreso
+                periodo_egreso : periodo_egreso,
+                es_escuela_incorporada: esEscuelaIncorporada,
+                escuela_de_procedencia: escuela
             };
+
+            // temporal
+            console.log("Datos a enviar:", {
+                es_escuela_incorporada: esEscuelaIncorporada,
+                escuela_de_procedencia: esEscuelaIncorporada
+                ? document.getElementById('escuela_seleccionada').options[document.getElementById('escuela_seleccionada').selectedIndex].text
+                : 'Universidad Autónoma del Estado de México'
+            });
+
+            console.log('Periodos:', {
+                ingreso: periodo_ingreso,
+                egreso: periodo_egreso
+            });
+            //finaliza temporal
 
             fetch('/api/registro/', {
                 method: 'POST',

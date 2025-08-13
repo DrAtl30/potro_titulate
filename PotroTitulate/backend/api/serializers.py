@@ -21,10 +21,18 @@ class SustentanteRegistroSerializer(serializers.ModelSerializer):
     contrasena = serializers.CharField(write_only=True)
     contrasena_temporal = serializers.BooleanField(required=False, default=False)
     id_opcion = serializers.PrimaryKeyRelatedField(queryset=OpcionTitulacion.objects.all(), required=False, allow_null=True)
+    es_escuela_incorporada = serializers.BooleanField(required=False, default=False)
+    escuela_de_procedencia = serializers.CharField(required=False, allow_blank=True)
+    periodo_ingreso = serializers.CharField(required=True) 
+    periodo_egreso = serializers.CharField(required=True)
+
 
     class Meta:
         model = Sustentante
-        fields = ['nombre', 'apellido', 'numero_cuenta', 'correo_electronico', 'contrasena', 'licenciatura', 'id_opcion', 'contrasena_temporal'] 
+        fields = ['nombre', 'apellido', 'numero_cuenta', 'correo_electronico', 
+                  'contrasena', 'licenciatura', 'id_opcion', 'contrasena_temporal',
+                  'es_escuela_incorporada', 'escuela_de_procedencia',
+                  'periodo_ingreso', 'periodo_egreso'] 
 
     def validate_contrasena(self, value):
         if len(value) < 8:
