@@ -9,3 +9,6 @@ __pycache__/
 
 # Isolated Environmente de prueba
 envprueba/
+
+#Para no subir lo de staticfiles
+backend/staticfiles/
