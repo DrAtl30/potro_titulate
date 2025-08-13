@@ -10,5 +10,6 @@ __pycache__/
 # Isolated Environmente de prueba
 envprueba/
 
-#Para no subir lo de staticfiles
+#Para no subir lo de staticfiles y archivos generados en debug
 backend/staticfiles/
+backend/debug.log
