@@ -71,10 +71,13 @@ document.addEventListener("DOMContentLoaded", function() {
     const tablaAspirante = document.getElementById("tablaAspirante");
     const mensajeSection = document.getElementById("mensajeSection");
     const tramitesSection = document.getElementById("tramitesSection");
+    const estadisticasSection = document.getElementById("estadisticasSection");
 
     const btnAspirantes = document.getElementById("btnAspirantes");
     const btnMensajes = document.getElementById("btnMensajes");
     const btnTramites = document.getElementById("btnTramites");
+    const btnEstadisticas = document.getElementById("btnEstadisticas");
+
 
     const aspirantesList = document.getElementById("aspirantesList");
     const btnRegresarAspirantes = document.getElementById("btnRegresarAspirantes");
@@ -96,6 +99,58 @@ document.addEventListener("DOMContentLoaded", function() {
   const seccionProgreso       = document.getElementById("tramitesProgreso");
   const seccionRechazados     = document.getElementById("tramitesRechazados");
   const listaRechazados = document.getElementById("listaTramitesRechazados");
+
+
+btnEstadisticas.addEventListener("click", () => {
+    showSection(estadisticasSection);
+    cargarEstadisticas();
+});
+// Función para cargar estadísticas
+function cargarEstadisticas() {
+    fetch("/api/estadisticas/")
+        .then(resp => resp.json())
+        .then(data => {
+            if (!data.success) throw new Error("Error en estadísticas");
+
+            // Actualizar totales
+            document.getElementById("totalAspirantes").textContent = data.total_aspirantes || 0;
+            document.getElementById("aspirantesUaemex").textContent = data.uaemex || 0;
+            document.getElementById("aspirantesIncorporadas").textContent = data.incorporadas || 0;
+
+            // Renderizar gráfico de titulaciones
+            renderGraficaTitulacion(data.titulacion || {});
+        })
+        .catch(err => {
+            console.error("Error cargando estadísticas:", err);
+        });
+}
+
+// Gráfica con Chart.js
+let graficaTitulacionChart = null;
+function renderGraficaTitulacion(titulacionData) {
+    const ctx = document.getElementById("graficaTitulacion").getContext("2d");
+
+    if (graficaTitulacionChart) {
+        graficaTitulacionChart.destroy();
+    }
+
+    graficaTitulacionChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: Object.keys(titulacionData),
+            datasets: [{
+                data: Object.values(titulacionData),
+                backgroundColor: ['#679370', '#ffc107', '#dc3545', '#0d6efd', '#6f42c1']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+}
 
 // Toggle “Trámites Rechazados” con AJAX
 btnMostrarRechazados.addEventListener("click", async function(e) {

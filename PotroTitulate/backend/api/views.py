@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_POST
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse, Http404, HttpResponse
+from django.db.models import Count
 from rest_framework import status
 from .serializers import *;
 from django.shortcuts import redirect, get_object_or_404, render
@@ -1277,3 +1278,30 @@ class EscuelasIncorporadas(View):
                 {'error' : str(e)},
                 status = 500
             )
+
+def estadisticas_view(request):
+    try:
+        # Totales de aspirantes
+        total_aspirantes = Sustentante.objects.count()
+        aspirantes_uaemex = Sustentante.objects.filter(es_escuela_incorporada=False).count()
+        aspirantes_incorporadas = Sustentante.objects.filter(es_escuela_incorporada=True).count()
+
+        # Trámites agrupados por opción de titulación
+        titulos_qs = (Tramites.objects
+                      .values("id_opcion__nombre_opcion")
+                      .annotate(total=Count("id_tramite"))
+                      .order_by("id_opcion__nombre_opcion"))
+
+        titulos_dict = {item["id_opcion__nombre_opcion"]: item["total"] for item in titulos_qs}
+
+        data = {
+            "success": True,
+            "total_aspirantes": total_aspirantes,
+            "uaemex": aspirantes_uaemex,
+            "incorporadas": aspirantes_incorporadas,
+            "titulacion": titulos_dict,
+        }
+        return JsonResponse(data)
+
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)})

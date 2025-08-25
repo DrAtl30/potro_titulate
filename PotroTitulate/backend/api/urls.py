@@ -9,4 +9,4 @@ urlpatterns = [
     path('descargar/<int:documento_id>/', descargar_documento, name='descargar_documento'),
     path('api/verificarSesion/', verificar_sesion, name='verificar_sesion'),
     path('descargar_formato/<str:nombre_archivo>/', descargar_formato, name='descargar_formato' ),
-]
+    path("estadisticas/", estadisticas_view, name="estadisticas"),]

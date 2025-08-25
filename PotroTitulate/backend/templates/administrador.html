@@ -18,6 +18,7 @@
         <button id="btnAspirantes" class="btn-plain">Aspirantes</button>
         <button id="btnMensajes" class="btn-plain">Mensajes</button>
         <button id="btnTramites" class="btn-plain">Revisar Trámites</button>
+        <button id="btnEstadisticas" class="btn-plain">Estadísticas</button>
       </nav>
     </div>
     <div class="header-right" style="display: flex; align-items: center; gap: 2rem;">
@@ -148,6 +149,51 @@
         </div>
       </div>
     </div>
+    
+    <!-- Sección de Estadísticas -->
+    <div id="estadisticasSection" class="container" style="display: none;">
+      <h3>Estadísticas Generales</h3>
+      
+      <!-- Tarjetas con totales -->
+      <div class="row my-4" id="estadisticasTotales">
+        <div class="col-md-4">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Total Aspirantes</h5>
+              <p id="totalAspirantes" class="card-text display-6">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Aspirantes UAEMex</h5>
+              <p id="aspirantesUaemex" class="card-text display-6">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Escuelas Incorporadas</h5>
+              <p id="aspirantesIncorporadas" class="card-text display-6">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico de opciones de titulación -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">Opciones de Titulación</h5>
+              <canvas id="graficaTitulacion"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!--
@@ -160,6 +206,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
    <!-- Cargar jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{% static 'js/scripts-admin.js' %}?v={{ timestamp }}"></script>
   
 </body>
