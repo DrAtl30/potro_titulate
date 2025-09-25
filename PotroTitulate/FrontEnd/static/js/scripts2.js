@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
     }
 
-    fetch(`/verificarTramiteEnProgreso/${idSustentante}/`)
+    fetch(`/api/verificarTramiteEnProgreso/${idSustentante}/`)
     .then(response => response.ok ? response.json() : Promise.reject(response))
     .then(data => {
 
@@ -424,7 +424,7 @@ function handleFileChange(requisito) {
         formData.append('requisito', requisito);
         formData.append('csrfmiddlewaretoken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
 
-        fetch('/uploadDocument/', {
+        fetch('/api/uploadDocument/', {
             method: 'POST',
             body: formData
         })
@@ -541,7 +541,7 @@ function esperarCierreModal(modalId) {
 function enviarOpcionTitulacion() {
     const opcionId = document.getElementById('opcion_titulacion').value;
 
-    fetch('/seleccionarOpcionTitulacion/', {
+    fetch('/api/seleccionarOpcionTitulacion/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

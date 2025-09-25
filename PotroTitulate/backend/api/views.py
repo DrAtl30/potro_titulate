@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from django.contrib.auth import login, authenticate
 from django.views import View
 from django.contrib.sessions.models import Session
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_POST
 from django.utils.decorators import method_decorator
@@ -42,6 +43,7 @@ def inicio_sesion(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'iniciosesion.html', {'timestamp': timestamp})
 
+@login_required(login_url='/iniciosesion/')
 def perfilUsuario(request):
     sustentante_id = request.session.get('sustentante_id')
     timestamp = datetime.now().timestamp()
@@ -88,6 +90,7 @@ def recuperarContrasenaExito(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
     return render(request, 'recuperarContrasenaExito.html', {'timestamp': timestamp})
 
+@login_required(login_url='/iniciosesion/')
 def opcionesTitulacion(request):
     sustentante_id = request.session.get('sustentante_id')
     timestamp = datetime.now().timestamp()
@@ -286,9 +289,7 @@ class AdministradorLoginView(APIView):
     def post(self, request):
         serializer = AdministradorLoginSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            user = serializer.context.get('user') or User.objects.get(
-                email=serializer.validated_data['correo_electronico']
-            )
+            user = serializer.context['user']
             login(request, user)
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -1255,7 +1256,7 @@ class EscuelasIncorporadas(View):
         
         #escuelas_incorporadas_path = os.path.join(settings.STATIC_ROOT, 'data', 'escuelas_incorporadas.json')
         
-        escuelas_incorporadas_path = (Path(settings.BASE_DIR).parent / 'FrontEnd' / 'static' / 'data' / 'escuelas_incorporadas.json')
+        escuelas_incorporadas_path = '/frontend/static/data/escuelas_incorporadas.json'
         
         try:
             with open(escuelas_incorporadas_path, 'r', encoding='utf-8') as f:

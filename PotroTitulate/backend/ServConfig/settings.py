@@ -23,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pxuos(7v8-+=ow25@mj-f$hwbi$4xd8r(_+%=2xd@5x(-p03=n'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'una-llave-secreta-de-respaldo-muy-larga')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', '0') == '1'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1'] # Permitir acceso local
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'corsheaders',
     'rest_framework',
     'api',
@@ -84,14 +85,11 @@ WSGI_APPLICATION = 'ServConfig.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'potrotitulate',
-        'USER': 'potroadmin',
-        'PASSWORD': 'admin',
-        'HOST': '127.0.0.1',
-        'PORT': '5433',
-        'OPTIONS': {
-            'sslmode': 'prefer',
-        },
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
+        'HOST': os.environ.get('DB_HOST'), # Esto apuntará al servicio 'db'
+        'PORT': '5432', # El puerto interno del contenedor de Postgres
     }
 }
 
@@ -137,7 +135,7 @@ STATIC_URL = '/static/'
 
 # Directorios donde Django buscará archivos estáticos
 STATICFILES_DIRS = [
-    BASE_DIR.parent / 'FrontEnd' / 'static',  # Tu frontend
+    '/frontend/static',  # Tu frontend
 ]
 
 # Directorio donde se recolectarán todos los archivos estáticos
@@ -212,4 +210,5 @@ LOGGING = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+AUTH_USER_MODEL = 'api.Sustentante'
 

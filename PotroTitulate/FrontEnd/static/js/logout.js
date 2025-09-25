@@ -2,7 +2,7 @@ function cerrarSesion() {
     // Crear un formulario oculto para enviar la solicitud de cierre de sesión con CSRF
     var form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/logout/';
+    form.action = '/api/logout/';
 
     // Obtener el token CSRF del formulario actual
     var csrfTokenElement = document.querySelector('input[name="csrfmiddlewaretoken"]');

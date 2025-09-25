@@ -18,32 +18,34 @@ from .models import Sustentante, Administrativos
 import re
 
 class SustentanteRegistroSerializer(serializers.ModelSerializer):
-    contrasena = serializers.CharField(write_only=True)
-    contrasena_temporal = serializers.BooleanField(required=False, default=False)
-    id_opcion = serializers.PrimaryKeyRelatedField(queryset=OpcionTitulacion.objects.all(), required=False, allow_null=True)
-    es_escuela_incorporada = serializers.BooleanField(required=False, default=False)
-    escuela_de_procedencia = serializers.CharField(required=False, allow_blank=True)
-    periodo_ingreso = serializers.CharField(required=True) 
-    periodo_egreso = serializers.CharField(required=True)
-
+    # Campo para recibir la contraseña (solo para escritura)
+    contrasena = serializers.CharField(
+        write_only=True, 
+        required=True, 
+        min_length=8,
+        style={'input_type': 'password'}
+    )
 
     class Meta:
         model = Sustentante
-        fields = ['nombre', 'apellido', 'numero_cuenta', 'correo_electronico', 
-                  'contrasena', 'licenciatura', 'id_opcion', 'contrasena_temporal',
-                  'es_escuela_incorporada', 'escuela_de_procedencia',
-                  'periodo_ingreso', 'periodo_egreso'] 
-
-    def validate_contrasena(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError("La contraseña debe tener al menos 8 caracteres.")
-        # Aquí no necesitas hacer el hash manualmente, ya que en el método `create` lo hacemos con `set_password`
-        return value
-
-    def validate_correo_electronico(self, value):
-        if Sustentante.objects.filter(correo_electronico=value).exists():
-            raise serializers.ValidationError("El correo electrónico ya está registrado.")
-        return value
+        # 1. Lista explícita de todos los campos que el serializador manejará
+        fields = [
+            'id_sustentante',  # Se incluye para que DRF lo conozca
+            'nombre', 
+            'apellido', 
+            'numero_cuenta', 
+            'correo_electronico', 
+            'contrasena',      # El campo de entrada de la contraseña
+            'licenciatura', 
+            'id_opcion', 
+            'contrasena_temporal',
+            'es_escuela_incorporada', 
+            'escuela_de_procedencia',
+            'periodo_ingreso', 
+            'periodo_egreso'
+        ]
+        # 2. Se especifica que la llave primaria es solo de lectura
+        read_only_fields = ['id_sustentante']
 
     def validate_numero_cuenta(self, value):
         if len(value) != 7:
@@ -53,25 +55,27 @@ class SustentanteRegistroSerializer(serializers.ModelSerializer):
         return value
     
     def create(self, validated_data):
-        contrasena = validated_data.pop('contrasena')  # Extrae la contraseña
-        contrasena_temporal = validated_data.pop('contrasena_temporal', False)  # Si existe, la extrae
-
-        # Crear el objeto Sustentante sin la contraseña
-        sustentante = Sustentante(**validated_data)
-        # Usamos `set_password` para encriptar la contraseña
-        sustentante.set_password(contrasena)  
-        sustentante.contrasena_temporal = contrasena_temporal  # Asigna el valor de contrasena_temporal si lo tiene
-        sustentante.save()  # Guarda el objeto en la base de datos
-
-        # Enviar correo de confirmación 
+        # 3. Se extrae 'contrasena' y se pasa como 'password' al método create_user
+        password_data = validated_data.pop('contrasena')
+        
+        # Se llama al manager del modelo, que es la forma correcta de crear usuarios
+        sustentante = Sustentante.objects.create_user(
+            password=password_data, 
+            **validated_data
+        )
+        
+        # Se envía el correo de confirmación
         self.enviar_correo_confirmacion(sustentante)
         return sustentante
+
     def enviar_correo_confirmacion(self, sustentante):
         token = default_token_generator.make_token(sustentante)
-        uid = urlsafe_base64_encode(force_bytes(sustentante.id_sustentante))
+        # Se usa .pk que siempre apunta a la llave primaria, sin importar el nombre
+        uid = urlsafe_base64_encode(force_bytes(sustentante.pk)) 
+        
         url_confirmacion = f"{settings.FRONTEND_URL}/confirmar-cuenta/{uid}/{token}/"
 
-        asunto = "Confirma tu cuenta"
+        asunto = "Confirma tu cuenta para PotroTitúlate"
         mensaje_html = render_to_string('confirmacion_correo.html', {'url_confirmacion': url_confirmacion})
         mensaje_texto = f"Por favor confirma tu cuenta ingresando al siguiente enlace: {url_confirmacion}"
 
@@ -90,7 +94,7 @@ class SustentanteLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Correo electrónico o contraseña incorrectos.")
         
         # Verifica la contraseña encriptada
-        if not check_password(data['contrasena'], sustentante.contrasena):
+        if not check_password(data['contrasena'], sustentante.password):
             raise serializers.ValidationError("Correo electrónico o contraseña incorrectos.")
         
         # Verificar si la contraseña es temporal
@@ -113,7 +117,6 @@ class AdministradorLoginSerializer(serializers.Serializer):
     contrasena = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        # Autenticar con el sistema de Django
         user = authenticate(
             username=data['correo_electronico'],
             password=data['contrasena']
@@ -123,13 +126,14 @@ class AdministradorLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Credenciales incorrectas")
         
         try:
-            # Verificar que tenga perfil administrativo
             administrativo = user.administrativo_profile
         except AttributeError:
             raise serializers.ValidationError("El usuario no tiene permisos de administrador")
         
+        self.context['user'] = user
+        
         return {
             'id_administrador': administrativo.id_administrativo,
-            'nombre': administrativo.nombre,
-            'correo_electronico': user.email
+            'nombre': administrativo.user.nombre,
+            'correo_electronico': user.correo_electronico,
         }

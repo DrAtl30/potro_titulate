@@ -369,7 +369,7 @@ btnMostrarRechazados.addEventListener("click", async function(e) {
     let sustentantesData = []; // Variable global para almacenar los datos originales
     function cargarListaSustentantes() {
 
-        fetch("/listaSustentantes/")
+        fetch("/api/listaSustentantes/")
         .then(response => response.json())
         .then(data => {
             if (data.success) {

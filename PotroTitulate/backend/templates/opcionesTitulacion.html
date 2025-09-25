@@ -204,7 +204,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
    <!-- <script src="{% static 'js/scripts2.js' %}?v={{ timestamp }}"></script> -->
     <script src="{% static 'js/logout.js' %}?v={{ timestamp }}"></script>
-    <script src="{% static 'js/session-check.js' %}?v={{ timestamp }}"></script>
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
     
     <script>
@@ -476,7 +475,7 @@ function enviarSolicitud() {
 
     const idSustentante = idSustentanteInput ? idSustentanteInput.value : "";
 
-    fetch('/enviarSolicitud/', {
+    fetch('/api/enviarSolicitud/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -503,31 +502,6 @@ function enviarSolicitud() {
     });
 }
 
-
-    // Función para verificar la sesión
-    function checkSession() {
-        fetch('/checkSession/')  // Endpoint para verificar la sesión
-            .then(response => response.json())
-            .then(data => {
-                if (!data.is_authenticated) {
-                    // Redirige al login si no está autenticado
-                    window.location.href = '/iniciosesion/';
-                }
-            })
-            .catch(error => {
-                console.error('Error al verificar la sesión:', error);
-            });
-    }
-
-    // Verifica la sesión cuando la página se carga
-    window.onload = checkSession;
-
-    // Verifica la sesión cuando el usuario navega hacia atrás
-    window.onpageshow = function(event) {
-        if (event.persisted) {
-            checkSession();
-        }
-    };
     
     function mostrarAlerta(mensaje, tipo = "success", duracion = 5000) {
         const toastEl = document.getElementById("toastAlerta");

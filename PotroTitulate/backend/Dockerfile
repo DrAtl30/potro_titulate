@@ -1,41 +1,20 @@
+# Dockerfile
+
+# 1. Usar una imagen base de Python ligera
 FROM python:3.11-slim
 
-# Instalar dependencias del sistema (incluyendo openssh-client)
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    gcc \
-    netcat-openbsd \
-    net-tools \
-    openssh-client \
-    postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+# 2. Establecer variables de entorno para Python
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# Crear directorio de trabajo
-WORKDIR /PotroTitulate
+# 3. Crear un directorio de trabajo
+WORKDIR /app
 
-# Copiar script de arranque
-COPY ssh/start_server.sh /start_server.sh
-COPY ssh/known_hosts /root/.ssh/known_hosts
-RUN chmod +x /start_server.sh
+# 4. Copiar e instalar las dependencias
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar todo el proyecto backend
-COPY . /PotroTitulate
-
-# Copiar requirements antes (desde contexto backend)
-COPY requirements.txt /PotroTitulate/requirements.txt
-
-# Instalar dependencias de Python
-RUN pip install --upgrade pip
-RUN pip install -r /PotroTitulate/requirements.txt
-
-# Configurar SSH
-RUN mkdir -p /root/.ssh
-COPY ssh/key-1.key /root/.ssh/key-1.key
-RUN chmod 600 /root/.ssh/key-1.key
-RUN touch /root/.ssh/known_hosts
-
-# **Elimina el collectstatic del build porque usarás los archivos estáticos montados localmente**
-# RUN rm -rf /PotroTitulate/staticfiles && python manage.py collectstatic --noinput
-
-# Comando de inicio
-CMD ["/start_server.sh"]
+# 5. Copiar el resto del código de la aplicación
+# (Nota: El volumen en docker-compose.yml lo sobreescribirá para desarrollo,
+# pero esto es útil para construir una imagen independiente)
+COPY . .

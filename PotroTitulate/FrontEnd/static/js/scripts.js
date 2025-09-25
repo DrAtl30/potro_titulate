@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const email = document.getElementById('correo_electronico').value;
             const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
-            fetch('/verificarCorreoConfirmado/', {
+            fetch('/api/verificarCorreoConfirmado/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     mostrarModal('Tu correo aún no ha sido confirmado. Verifica tu bandeja de entrada.', 'errorModal');
                     return;
                 }
-                return fetch('/recuperarContrasena/recuperarContra', {
+                return fetch('/api/recuperarContrasena/recuperarContra', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
