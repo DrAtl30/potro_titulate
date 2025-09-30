@@ -32,6 +32,7 @@ urlpatterns = [
     path('validar_documento/<int:documento_id>/', validar_documento, name='api_validar_documento'),
     path('verificarTramiteEnProgreso/<int:id_sustentante>/', verificar_tramite_en_progreso, name='api_verificar_tramite'),
     path('enviarSolicitud/', enviar_solicitud, name='api_enviar_solicitud'),
+    path('uploadDocument/', uploadDocument, name='api_upload_document'),
 
     # Notificaciones y Mensajería
     path('notificaciones/<int:sustentante_id>/', obtener_notificaciones, name='api_obtener_notificaciones'),

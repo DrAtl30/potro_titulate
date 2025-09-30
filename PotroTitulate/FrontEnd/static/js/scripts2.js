@@ -325,21 +325,31 @@ function obtenerTramiteSeleccionado() {
 }
 
 function cargarEstados(tramite_id) {
-    fetch(`/obtenerEstados/${tramite_id}/`)
-        .then(response => response.json())
+    // 1. URL CORREGIDA: Apunta al endpoint que devuelve los documentos de un trámite
+    fetch(`/api/tramites/documentos/${tramite_id}/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                Object.entries(data.estados).forEach(([requisito, estado]) => {
-                    updateEstado(requisito, estado);
-                    if (estado === 'pendiente' || estado === 'aceptado' || !aprobado) {
-                        const boton = document.querySelector(`button[onclick="uploadFile('${requisito}')"]`);
+                // 2. LÓGICA CORREGIDA: La API devuelve un array 'documentos', no un objeto 'estados'
+                data.documentos.forEach(doc => {
+                    // La lógica interna para actualizar la página se mantiene
+                    updateEstado(doc.nombre, doc.estado); // Asumiendo que 'nombre' es el nombre del requisito
+                    if (doc.estado === 'pendiente' || doc.estado === 'aceptado' || !aprobado) {
+                        const boton = document.querySelector(`button[onclick="uploadFile('${doc.nombre}')"]`);
                         if (boton) {
                             boton.disabled = true;
                         } else {
-                            console.warn(`No se encontró el botón para el requisito: ${requisito}`);
+                            console.warn(`No se encontró el botón para el requisito: ${doc.nombre}`);
                         }
                     }
                 });
+            } else {
+                console.error("La API devolvió un error:", data.error);
             }
         })
         .catch(error => console.error('Error al obtener estados:', error));
@@ -448,7 +458,7 @@ function handleFileChange(requisito) {
 function cerrarSesion() {
     var form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/logout/';
+    form.action = '/api/logout/';
 
     var csrfTokenElement = document.querySelector('input[name="csrfmiddlewaretoken"]');
     if (csrfTokenElement) {

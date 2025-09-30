@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import login, authenticate
+from django.contrib.auth import logout 
 from django.views import View
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
@@ -49,7 +50,7 @@ def perfilUsuario(request):
     timestamp = datetime.now().timestamp()
 
     if not sustentante_id:
-        return redirect('login')
+        return redirect('inicio_sesion')
 
     try:
         sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
@@ -72,7 +73,7 @@ def perfilUsuario(request):
         })
     
     except Sustentante.DoesNotExist:
-        return redirect('login')
+        return redirect('inicio_sesion')
         
 def recuperarContrasena(request):
     timestamp = datetime.now().timestamp() # Genera una marca de tiempo
@@ -95,7 +96,7 @@ def opcionesTitulacion(request):
     sustentante_id = request.session.get('sustentante_id')
     timestamp = datetime.now().timestamp()
     if not sustentante_id:
-        return redirect('login')
+        return redirect('inicio_sesion')
     try:
         sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
 
@@ -111,7 +112,7 @@ def opcionesTitulacion(request):
         return render(request, 'opcionesTitulacion.html', context)
     
     except Sustentante.DoesNotExist:
-        return redirect('login')
+        return redirect('inicio_sesion')
 
 #Vista para verificar si hay un trámite en progreso
 def verificar_tramite_en_progreso(request, id_sustentante):
@@ -206,6 +207,7 @@ class RegistroView(APIView):
 
 class LoginView(APIView):
     def post(self, request):
+        logout(request)
         serializer = SustentanteLoginSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
@@ -287,6 +289,7 @@ def checkSession(request):
     
 class AdministradorLoginView(APIView):
     def post(self, request):
+        logout(request) 
         serializer = AdministradorLoginSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             user = serializer.context['user']
@@ -879,6 +882,9 @@ def aprobar_tramite(request, tramite_id):
 @login_required
 def rechazar_tramite(request, tramite_id):
     if request.method == 'POST':
+        print(f"USUARIO EN LA VISTA: {request.user}")
+        print(f"ID DEL USUARIO: {request.user.id_sustentante}")
+
         try:
             # 1. Verificar que el usuario es un administrativo autorizado
             administrativo = Administrativos.objects.get(user=request.user)
@@ -1115,17 +1121,17 @@ def enviar_notificacion(sustentante_id, administrativo_id=None, mensaje="", es_d
 @require_GET
 def obtener_notificaciones(request, sustentante_id):
     """
-    Obtiene las notificaciones de un sustentante
+    Obtiene las notificaciones de un sustentante.
     """
     try:
-        # Verificar que el sustentante existe
-        Sustentante.objects.get(id_sustentante=sustentante_id)
+        # 1. Obtenemos el objeto sustentante para usarlo en el filtro
+        sustentante = Sustentante.objects.get(id_sustentante=sustentante_id)
         
-        # Obtener notificaciones no leídas
+        # 2. Optimizamos la consulta para incluir al admin y su usuario relacionado
         notificaciones = Notificaciones.objects.filter(
-            id_sustentante_id=sustentante_id,
+            id_sustentante=sustentante,
             estado_lectura=False
-        ).select_related('id_administrativo').order_by('-fecha_envio')[:10]
+        ).select_related('id_administrativo__user').order_by('-fecha_envio')[:10]
 
         resultados = []
         for n in notificaciones:
@@ -1136,9 +1142,9 @@ def obtener_notificaciones(request, sustentante_id):
                 'es_de_administrador': n.es_de_administrador,
             }
             
-            # Manejar caso cuando no hay administrativo (notificaciones del sistema)
-            if n.id_administrativo:
-                resultado['administrativo'] = n.id_administrativo.nombre
+            # 3. CORRECCIÓN: Accedemos al nombre a través de la relación con el usuario
+            if n.id_administrativo and hasattr(n.id_administrativo, 'user') and n.id_administrativo.user:
+                resultado['administrativo'] = n.id_administrativo.user.nombre
             else:
                 resultado['administrativo'] = 'Sistema'
                 
@@ -1156,6 +1162,8 @@ def obtener_notificaciones(request, sustentante_id):
             'error': 'Sustentante no encontrado'
         }, status=404)
     except Exception as e:
+        # Esto nos ayudará a ver cualquier otro error en la consola de Docker
+        print(f"ERROR EN obtener_notificaciones: {e}") 
         return JsonResponse({
             'success': False,
             'error': f'Error al obtener notificaciones: {str(e)}'

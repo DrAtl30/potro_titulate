@@ -905,7 +905,7 @@ btnMostrarRechazados.addEventListener("click", async function(e) {
         })
 
 
-        modal.querySelector('#cancelarAprobacion').addEventListener('click', () => {
+        modal.querySelector('#cancelarAccion').addEventListener('click', () => {
             ModalManager.hide();
             setTimeout(() => {
                 if (modal.parentNode) {
