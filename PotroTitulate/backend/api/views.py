@@ -1074,7 +1074,7 @@ def descargar_formato(request, nombre_archivo):
         if nombre_archivo not in FORMATOS_PERMITIDOS:
             raise Http404("Formato no válido")
         
-        file_path = os.path.join('/FrontEnd/static/formatos', nombre_archivo)
+        file_path = os.path.join('/frontend/static/formatos', nombre_archivo)
         
         if os.path.exists(file_path):
             return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=nombre_archivo)

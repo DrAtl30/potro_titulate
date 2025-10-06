@@ -403,7 +403,7 @@ btnMostrarRechazados.addEventListener("click", async function(e) {
                         ${s.oportunidades_restantes !== undefined ? s.oportunidades_restantes : 'No disponible'}
                     </strong>
                     <button class="btn btn-primary btn-sm"
-                        onclick="editarOportunidades(${s.id_sustentante}, '${s.nombre}', ${s.oportunidades_restantes})">
+                        onclick="editarOportunidades(${s.id_sustentante}, '${s.nombre}')">
                         Editar Oportunidades
                     </button>
                 </div>
@@ -1237,13 +1237,15 @@ function filtrarAspirantes() {
 
 // Variable global para almacenar el ID del sustentante
 let sustentanteSeleccionado = null;
+let oportunidadesActuales = 0;
 
-function editarOportunidades(idSustentante, nombreSustentante, oportunidades) {
-    sustentanteSeleccionado = idSustentante;
-    oportunidadesActuales = oportunidades;
-  
+function editarOportunidades(idSustentante, nombreSustentante) {
+    sustentanteSeleccionado = idSustentante;  
+    const oportunidadesElement = document.getElementById(`oportunidades-${idSustentante}`);
+    oportunidadesActuales = parseInt(oportunidadesElement.textContent.trim());
+
     document.getElementById('nombreSustentante').textContent = nombreSustentante;
-    document.getElementById('oportunidadesActuales').textContent = oportunidades;
+    document.getElementById('oportunidadesActuales').textContent = oportunidadesActuales;
   
     ModalManager.show(document.getElementById('modalEditarOportunidades'));
 }
